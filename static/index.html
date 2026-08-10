@@ -20,6 +20,12 @@
             padding: 0;
         }
 
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+        }
+
         body {
             font-family:
                 Arial,
@@ -39,46 +45,66 @@
             min-height: 100vh;
 
             display: flex;
+
             justify-content: center;
+
             align-items: center;
 
             padding: 15px;
         }
 
+
+        /* =====================================================
+           APPLICATION
+        ===================================================== */
+
         .app {
+
             width: 100%;
+
             max-width: 850px;
 
             height: 90vh;
+
             max-height: 850px;
 
-            background: rgba(15, 23, 42, 0.96);
+            background:
+                rgba(15, 23, 42, 0.96);
 
-            border: 1px solid rgba(255,255,255,0.1);
+            border:
+                1px solid
+                rgba(255,255,255,0.1);
 
             border-radius: 25px;
 
             overflow: hidden;
 
             display: flex;
+
             flex-direction: column;
 
             box-shadow:
-                0 25px 80px rgba(0,0,0,0.5);
+                0 25px 80px
+                rgba(0,0,0,0.5);
         }
 
-        /* =========================
+
+        /* =====================================================
            HEADER
-        ========================= */
+        ===================================================== */
 
         .header {
+
+            flex-shrink: 0;
+
             padding: 18px 20px;
 
             background:
                 rgba(2, 6, 23, 0.95);
 
             border-bottom:
-                1px solid rgba(255,255,255,0.08);
+                1px solid
+                rgba(255,255,255,0.08);
 
             display: flex;
 
@@ -87,20 +113,31 @@
             justify-content: space-between;
         }
 
+
         .logo {
+
             display: flex;
+
             align-items: center;
+
             gap: 12px;
         }
 
+
         .logo-icon {
+
             width: 45px;
+
             height: 45px;
+
+            flex-shrink: 0;
 
             border-radius: 50%;
 
             display: flex;
+
             align-items: center;
+
             justify-content: center;
 
             background:
@@ -115,11 +152,17 @@
             font-weight: bold;
         }
 
+
         .logo-text h1 {
+
             font-size: 20px;
+
+            color: white;
         }
 
+
         .logo-text p {
+
             font-size: 12px;
 
             color: #94a3b8;
@@ -127,7 +170,9 @@
             margin-top: 3px;
         }
 
+
         .status {
+
             display: flex;
 
             align-items: center;
@@ -139,21 +184,32 @@
             font-size: 12px;
         }
 
+
         .status-dot {
+
             width: 9px;
+
             height: 9px;
 
             background: #22c55e;
 
             border-radius: 50%;
+
+            box-shadow:
+                0 0 8px
+                rgba(34,197,94,0.7);
         }
 
-        /* =========================
-           CHAT
-        ========================= */
+
+        /* =====================================================
+           ZONE CHAT
+        ===================================================== */
 
         .chat {
+
             flex: 1;
+
+            min-height: 0;
 
             overflow-y: auto;
 
@@ -162,45 +218,85 @@
             scroll-behavior: smooth;
         }
 
+
+        .chat::-webkit-scrollbar {
+
+            width: 6px;
+        }
+
+
+        .chat::-webkit-scrollbar-thumb {
+
+            background: #334155;
+
+            border-radius: 10px;
+        }
+
+
+        /* =====================================================
+           MESSAGE D'ACCUEIL
+        ===================================================== */
+
         .welcome {
+
             text-align: center;
 
             padding: 40px 15px;
         }
 
+
         .welcome-icon {
+
             font-size: 55px;
 
             margin-bottom: 15px;
         }
 
+
         .welcome h2 {
+
             font-size: 28px;
 
             margin-bottom: 10px;
         }
 
+
         .welcome p {
+
             color: #94a3b8;
 
             line-height: 1.6;
         }
 
+
+        /* =====================================================
+           MESSAGES
+        ===================================================== */
+
         .message {
+
             display: flex;
+
+            width: 100%;
 
             margin-bottom: 20px;
         }
 
+
         .message.user {
+
             justify-content: flex-end;
         }
 
+
         .message.ai {
+
             justify-content: flex-start;
         }
 
+
         .bubble {
+
             max-width: 85%;
 
             padding: 13px 16px;
@@ -212,9 +308,15 @@
             white-space: pre-wrap;
 
             word-wrap: break-word;
+
+            overflow-wrap: break-word;
+
+            font-size: 15px;
         }
 
+
         .user .bubble {
+
             background:
                 linear-gradient(
                     135deg,
@@ -225,7 +327,9 @@
             border-bottom-right-radius: 5px;
         }
 
+
         .ai .bubble {
+
             background: #1e293b;
 
             border:
@@ -235,53 +339,76 @@
             border-bottom-left-radius: 5px;
         }
 
-        /* =========================
-           LOADING
-        ========================= */
+
+        /* =====================================================
+           CHARGEMENT
+        ===================================================== */
 
         .loading {
+
             display: flex;
 
             gap: 5px;
 
             align-items: center;
+
+            min-height: 20px;
         }
 
+
         .loading span {
+
             width: 7px;
+
             height: 7px;
 
             background: #94a3b8;
 
             border-radius: 50%;
 
-            animation: bounce 1.2s infinite;
+            animation:
+                bounce 1.2s infinite;
         }
 
+
         .loading span:nth-child(2) {
+
             animation-delay: .15s;
         }
 
+
         .loading span:nth-child(3) {
+
             animation-delay: .3s;
         }
 
+
         @keyframes bounce {
 
-            0%, 60%, 100% {
-                transform: translateY(0);
+            0%,
+            60%,
+            100% {
+
+                transform:
+                    translateY(0);
             }
 
             30% {
-                transform: translateY(-6px);
+
+                transform:
+                    translateY(-6px);
             }
         }
 
-        /* =========================
-           INPUT
-        ========================= */
+
+        /* =====================================================
+           ZONE DE SAISIE
+        ===================================================== */
 
         .input-area {
+
+            flex-shrink: 0;
+
             padding: 15px;
 
             background:
@@ -292,12 +419,16 @@
                 rgba(255,255,255,0.08);
         }
 
+
         .input-box {
+
             display: flex;
 
             align-items: flex-end;
 
             gap: 10px;
+
+            width: 100%;
 
             background: #1e293b;
 
@@ -310,8 +441,12 @@
             padding: 8px;
         }
 
+
         textarea {
+
             flex: 1;
+
+            width: 100%;
 
             resize: none;
 
@@ -332,13 +467,19 @@
             max-height: 140px;
 
             font-family: inherit;
+
+            line-height: 1.4;
         }
 
+
         textarea::placeholder {
+
             color: #64748b;
         }
 
+
         button {
+
             border: none;
 
             cursor: pointer;
@@ -346,9 +487,14 @@
             color: white;
         }
 
+
         #sendButton {
+
             width: 45px;
+
             height: 45px;
+
+            min-width: 45px;
 
             border-radius: 14px;
 
@@ -359,26 +505,46 @@
                     #7c3aed
                 );
 
-            font-size: 18px;
+            font-size: 20px;
 
             display: flex;
 
             justify-content: center;
 
             align-items: center;
+
+            transition:
+                transform .15s,
+                opacity .15s;
         }
+
 
         #sendButton:hover {
+
             opacity: .9;
+
+            transform: scale(1.03);
         }
 
+
+        #sendButton:active {
+
+            transform: scale(.95);
+        }
+
+
         #sendButton:disabled {
+
             opacity: .5;
 
             cursor: not-allowed;
+
+            transform: none;
         }
 
+
         .info {
+
             text-align: center;
 
             color: #64748b;
@@ -388,55 +554,130 @@
             margin-top: 8px;
         }
 
-        /* =========================
+
+        /* =====================================================
            MOBILE
-        ========================= */
+        ===================================================== */
 
         @media (max-width: 600px) {
 
             body {
+
                 padding: 0;
+
+                align-items: stretch;
             }
 
+
             .app {
+
+                width: 100%;
+
                 height: 100vh;
+
+                height: 100dvh;
 
                 max-height: none;
 
                 border-radius: 0;
+
+                border: none;
             }
 
+
             .header {
+
                 padding: 14px;
             }
 
-            .welcome {
-                padding-top: 70px;
+
+            .logo-icon {
+
+                width: 43px;
+
+                height: 43px;
             }
 
-            .welcome h2 {
-                font-size: 24px;
-            }
-
-            .bubble {
-                max-width: 90%;
-            }
 
             .logo-text h1 {
+
                 font-size: 18px;
             }
 
+
+            .status {
+
+                font-size: 11px;
+            }
+
+
+            .chat {
+
+                padding:
+                    20px 12px;
+            }
+
+
+            .welcome {
+
+                padding-top: 60px;
+            }
+
+
+            .welcome h2 {
+
+                font-size: 24px;
+            }
+
+
+            .welcome-icon {
+
+                font-size: 48px;
+            }
+
+
+            .bubble {
+
+                max-width: 90%;
+
+                font-size: 15px;
+            }
+
+
+            .input-area {
+
+                padding:
+                    10px;
+            }
+
+
+            .input-box {
+
+                border-radius: 16px;
+            }
+
+
+            textarea {
+
+                font-size: 16px;
+            }
         }
+
 
     </style>
 
 </head>
 
+
 <body>
+
 
 <div class="app">
 
-    <!-- HEADER -->
+
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
 
     <header class="header">
 
@@ -445,6 +686,7 @@
             <div class="logo-icon">
                 M
             </div>
+
 
             <div class="logo-text">
 
@@ -460,6 +702,499 @@
 
         </div>
 
+
         <div class="status">
 
-            <
+            <span class="status-dot"></span>
+
+            <span>
+                En ligne
+            </span>
+
+        </div>
+
+    </header>
+
+
+    <!-- =====================================================
+         CHAT
+    ====================================================== -->
+
+    <main
+        class="chat"
+        id="chat"
+    >
+
+        <div
+            class="welcome"
+            id="welcome"
+        >
+
+            <div class="welcome-icon">
+                🤖
+            </div>
+
+            <h2>
+                Bonjour 👋
+            </h2>
+
+            <p>
+                Je suis Messie IA.<br>
+                Pose-moi une question et je vais essayer
+                de t'aider.
+            </p>
+
+        </div>
+
+    </main>
+
+
+    <!-- =====================================================
+         ZONE DE MESSAGE
+    ====================================================== -->
+
+    <div class="input-area">
+
+        <div class="input-box">
+
+            <textarea
+                id="messageInput"
+                placeholder="Écris ton message..."
+                rows="1"
+                autocomplete="off"
+            ></textarea>
+
+
+            <button
+                id="sendButton"
+                type="button"
+                title="Envoyer"
+                aria-label="Envoyer le message"
+            >
+                ➤
+            </button>
+
+        </div>
+
+
+        <div class="info">
+
+            Messie IA peut parfois faire des erreurs.
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+
+<script>
+
+
+    /* =====================================================
+       RÉCUPÉRATION DES ÉLÉMENTS
+    ===================================================== */
+
+    const chat =
+        document.getElementById("chat");
+
+
+    const input =
+        document.getElementById("messageInput");
+
+
+    const sendButton =
+        document.getElementById("sendButton");
+
+
+    const welcome =
+        document.getElementById("welcome");
+
+
+
+    /* =====================================================
+       AJOUTER UN MESSAGE
+    ===================================================== */
+
+    function addMessage(text, type) {
+
+        const message =
+            document.createElement("div");
+
+
+        message.className =
+            "message " + type;
+
+
+        const bubble =
+            document.createElement("div");
+
+
+        bubble.className =
+            "bubble";
+
+
+        bubble.textContent =
+            text;
+
+
+        message.appendChild(bubble);
+
+
+        chat.appendChild(message);
+
+
+        chat.scrollTop =
+            chat.scrollHeight;
+    }
+
+
+
+    /* =====================================================
+       INDICATEUR DE CHARGEMENT
+    ===================================================== */
+
+    function addLoading() {
+
+        const message =
+            document.createElement("div");
+
+
+        message.className =
+            "message ai";
+
+
+        message.id =
+            "loadingMessage";
+
+
+        const bubble =
+            document.createElement("div");
+
+
+        bubble.className =
+            "bubble";
+
+
+        const loading =
+            document.createElement("div");
+
+
+        loading.className =
+            "loading";
+
+
+        loading.innerHTML = `
+            <span></span>
+            <span></span>
+            <span></span>
+        `;
+
+
+        bubble.appendChild(loading);
+
+
+        message.appendChild(bubble);
+
+
+        chat.appendChild(message);
+
+
+        chat.scrollTop =
+            chat.scrollHeight;
+    }
+
+
+
+    /* =====================================================
+       SUPPRIMER LE CHARGEMENT
+    ===================================================== */
+
+    function removeLoading() {
+
+        const loading =
+            document.getElementById(
+                "loadingMessage"
+            );
+
+
+        if (loading) {
+
+            loading.remove();
+        }
+    }
+
+
+
+    /* =====================================================
+       ENVOYER LE MESSAGE
+    ===================================================== */
+
+    async function sendMessage() {
+
+        const message =
+            input.value.trim();
+
+
+        /* Message vide */
+
+        if (!message) {
+
+            return;
+        }
+
+
+        /* Retirer l'accueil */
+
+        if (welcome) {
+
+            welcome.remove();
+        }
+
+
+        /* Afficher le message de l'utilisateur */
+
+        addMessage(
+            message,
+            "user"
+        );
+
+
+        /* Nettoyer le champ */
+
+        input.value = "";
+
+        input.style.height =
+            "45px";
+
+
+        /* Désactiver le bouton */
+
+        sendButton.disabled =
+            true;
+
+
+        /* Afficher les trois points */
+
+        addLoading();
+
+
+        try {
+
+
+            /* =================================================
+               APPEL À NOTRE SERVEUR FLASK
+            ================================================= */
+
+            const response =
+                await fetch(
+                    "/api/chat",
+                    {
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type":
+                                "application/json"
+                        },
+
+                        body:
+                            JSON.stringify({
+                                message:
+                                    message
+                            })
+                    }
+                );
+
+
+
+            /* =================================================
+               RÉCUPÉRER LA RÉPONSE JSON
+            ================================================= */
+
+            const data =
+                await response.json();
+
+
+            /* Retirer les trois points */
+
+            removeLoading();
+
+
+
+            /* =================================================
+               ERREUR SERVEUR
+            ================================================= */
+
+            if (!response.ok) {
+
+                addMessage(
+                    "❌ " +
+                    (
+                        data.error ||
+                        "Une erreur est survenue."
+                    ),
+                    "ai"
+                );
+
+                return;
+            }
+
+
+
+            /* =================================================
+               RÉPONSE DE MESSIE IA
+               
+               IMPORTANT :
+               app.py renvoie "response"
+               et non "answer".
+            ================================================= */
+
+            const answer =
+                data.response;
+
+
+            if (!answer) {
+
+                addMessage(
+                    "❌ Messie IA n'a renvoyé aucune réponse.",
+                    "ai"
+                );
+
+                return;
+            }
+
+
+            /* Afficher la réponse */
+
+            addMessage(
+                answer,
+                "ai"
+            );
+
+
+        }
+
+
+        /* =====================================================
+           ERREUR DE CONNEXION
+        ===================================================== */
+
+        catch (error) {
+
+            console.error(
+                "Erreur :",
+                error
+            );
+
+
+            removeLoading();
+
+
+            addMessage(
+                "❌ Impossible de contacter Messie IA. Vérifie ta connexion ou le serveur.",
+                "ai"
+            );
+        }
+
+
+        /* =====================================================
+           FIN
+        ===================================================== */
+
+        finally {
+
+            sendButton.disabled =
+                false;
+
+
+            input.focus();
+        }
+
+    }
+
+
+
+    /* =====================================================
+       BOUTON ENVOYER
+    ===================================================== */
+
+    sendButton.addEventListener(
+        "click",
+        sendMessage
+    );
+
+
+
+    /* =====================================================
+       TOUCHE ENTRÉE
+    ===================================================== */
+
+    input.addEventListener(
+        "keydown",
+        function(event) {
+
+
+            /* Entrée seule = envoyer */
+
+            if (
+                event.key === "Enter" &&
+                !event.shiftKey
+            ) {
+
+                event.preventDefault();
+
+
+                sendMessage();
+            }
+
+        }
+    );
+
+
+
+    /* =====================================================
+       AGRANDISSEMENT AUTOMATIQUE DU TEXTAREA
+    ===================================================== */
+
+    input.addEventListener(
+        "input",
+        function() {
+
+
+            this.style.height =
+                "45px";
+
+
+            this.style.height =
+                Math.min(
+                    this.scrollHeight,
+                    140
+                ) + "px";
+
+        }
+    );
+
+
+
+    /* =====================================================
+       FOCUS AUTOMATIQUE
+    ===================================================== */
+
+    window.addEventListener(
+        "load",
+        function() {
+
+            input.focus();
+
+        }
+    );
+
+
+</script>
+
+
+</body>
+
+</html>
