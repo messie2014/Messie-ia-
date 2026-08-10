@@ -21,18 +21,77 @@
         }
 
         :root {
+
             --bg: #020617;
             --panel: #0f172a;
             --panel2: #111827;
-            --border: rgba(255,255,255,0.09);
+            --card: #1e293b;
+
             --text: #ffffff;
+            --text-soft: #cbd5e1;
             --muted: #94a3b8;
-            --blue: #2563eb;
-            --purple: #7c3aed;
+
+            --border: rgba(255,255,255,0.09);
+
+            --primary: #2563eb;
+            --secondary: #7c3aed;
+
             --danger: #ef4444;
+
         }
 
+
+        /* =====================================================
+           MODE CLAIR
+        ===================================================== */
+
+        body.light {
+
+            --bg: #f1f5f9;
+            --panel: #ffffff;
+            --panel2: #f8fafc;
+            --card: #e2e8f0;
+
+            --text: #0f172a;
+            --text-soft: #334155;
+            --muted: #64748b;
+
+            --border: rgba(15,23,42,0.12);
+
+        }
+
+
+        /* =====================================================
+           COULEURS
+        ===================================================== */
+
+        body.theme-purple {
+            --primary: #7c3aed;
+            --secondary: #2563eb;
+        }
+
+        body.theme-green {
+            --primary: #16a34a;
+            --secondary: #0d9488;
+        }
+
+        body.theme-orange {
+            --primary: #ea580c;
+            --secondary: #e11d48;
+        }
+
+        body.theme-pink {
+            --primary: #db2777;
+            --secondary: #9333ea;
+        }
+
+
+        /* =====================================================
+           BODY
+        ===================================================== */
+
         body {
+
             font-family:
                 Arial,
                 Helvetica,
@@ -51,6 +110,24 @@
             min-height: 100vh;
 
             overflow: hidden;
+
+            transition:
+                background .25s,
+                color .25s;
+
+        }
+
+
+        body.light {
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #e2e8f0,
+                    #f8fafc,
+                    #cbd5e1
+                );
+
         }
 
 
@@ -59,12 +136,15 @@
         ===================================================== */
 
         .app {
+
             width: 100%;
+
             height: 100vh;
 
             display: flex;
 
             background: var(--panel);
+
         }
 
 
@@ -73,10 +153,11 @@
         ===================================================== */
 
         .sidebar {
+
             width: 280px;
 
             background:
-                rgba(2, 6, 23, 0.98);
+                rgba(2,6,23,.98);
 
             border-right:
                 1px solid var(--border);
@@ -88,18 +169,30 @@
             flex-shrink: 0;
 
             z-index: 20;
+
+        }
+
+
+        body.light .sidebar {
+
+            background:
+                rgba(255,255,255,.98);
+
         }
 
 
         .sidebar-header {
+
             padding: 18px;
 
             border-bottom:
                 1px solid var(--border);
+
         }
 
 
         .brand {
+
             display: flex;
 
             align-items: center;
@@ -107,11 +200,14 @@
             gap: 10px;
 
             margin-bottom: 18px;
+
         }
 
 
         .brand-icon {
+
             width: 42px;
+
             height: 42px;
 
             border-radius: 13px;
@@ -119,38 +215,49 @@
             display: flex;
 
             align-items: center;
+
             justify-content: center;
 
             background:
                 linear-gradient(
                     135deg,
-                    var(--purple),
-                    var(--blue)
+                    var(--primary),
+                    var(--secondary)
                 );
+
+            color: white;
 
             font-size: 20px;
 
             font-weight: bold;
+
         }
 
 
         .brand-text h1 {
+
             font-size: 18px;
+
         }
 
 
         .brand-text p {
+
             color: var(--muted);
 
             font-size: 11px;
 
             margin-top: 3px;
+
         }
 
 
-        /* NOUVELLE CONVERSATION */
+        /* =====================================================
+           NOUVELLE CONVERSATION
+        ===================================================== */
 
         #newChatButton {
+
             width: 100%;
 
             padding: 12px;
@@ -162,8 +269,8 @@
             background:
                 linear-gradient(
                     135deg,
-                    var(--blue),
-                    var(--purple)
+                    var(--primary),
+                    var(--secondary)
                 );
 
             color: white;
@@ -173,18 +280,25 @@
             font-weight: bold;
 
             cursor: pointer;
+
         }
 
 
         #newChatButton:hover {
+
             opacity: .9;
+
         }
 
 
-        /* TITRE HISTORIQUE */
+        /* =====================================================
+           HISTORIQUE
+        ===================================================== */
 
         .history-title {
-            padding: 16px 18px 8px;
+
+            padding:
+                16px 18px 8px;
 
             color: var(--muted);
 
@@ -193,34 +307,39 @@
             font-weight: bold;
 
             text-transform: uppercase;
+
         }
 
 
-        /* HISTORIQUE */
-
         .history {
+
             flex: 1;
 
             overflow-y: auto;
 
-            padding: 5px 10px 15px;
+            padding:
+                5px 10px 15px;
+
         }
 
 
         .history-empty {
+
             padding: 20px 10px;
 
             text-align: center;
 
-            color: #64748b;
+            color: var(--muted);
 
             font-size: 13px;
 
             line-height: 1.5;
+
         }
 
 
         .conversation {
+
             display: flex;
 
             align-items: center;
@@ -235,29 +354,48 @@
 
             cursor: pointer;
 
-            transition: background .2s;
+            transition:
+                background .2s;
+
         }
 
 
         .conversation:hover {
-            background: rgba(255,255,255,0.06);
+
+            background:
+                rgba(255,255,255,.06);
+
+        }
+
+
+        body.light .conversation:hover {
+
+            background:
+                rgba(15,23,42,.06);
+
         }
 
 
         .conversation.active {
-            background: rgba(37,99,235,0.18);
+
+            background:
+                rgba(37,99,235,.18);
+
         }
 
 
         .conversation-main {
+
             flex: 1;
 
             min-width: 0;
+
         }
 
 
         .conversation-title {
-            color: #e2e8f0;
+
+            color: var(--text-soft);
 
             font-size: 13px;
 
@@ -266,34 +404,44 @@
             overflow: hidden;
 
             text-overflow: ellipsis;
+
         }
 
 
         .conversation-date {
-            color: #64748b;
+
+            color: var(--muted);
 
             font-size: 10px;
 
             margin-top: 4px;
+
         }
 
 
         .conversation-actions {
+
             display: flex;
 
             gap: 3px;
 
             opacity: 0;
+
         }
 
 
-        .conversation:hover .conversation-actions {
+        .conversation:hover
+        .conversation-actions {
+
             opacity: 1;
+
         }
 
 
         .history-button {
+
             width: 28px;
+
             height: 28px;
 
             border: none;
@@ -302,21 +450,27 @@
 
             background: transparent;
 
-            color: #94a3b8;
+            color: var(--muted);
 
             cursor: pointer;
+
         }
 
 
         .history-button:hover {
-            background: rgba(255,255,255,0.08);
 
-            color: white;
+            background:
+                rgba(255,255,255,.08);
+
+            color: var(--text);
+
         }
 
 
         .history-button.delete:hover {
-            color: #ef4444;
+
+            color: var(--danger);
+
         }
 
 
@@ -325,16 +479,57 @@
         ===================================================== */
 
         .sidebar-footer {
-            padding: 13px 18px;
+
+            padding: 12px;
 
             border-top:
                 1px solid var(--border);
 
-            color: #64748b;
+        }
+
+
+        .settings-button {
+
+            width: 100%;
+
+            padding: 10px;
+
+            border: none;
+
+            border-radius: 10px;
+
+            background:
+                rgba(255,255,255,.05);
+
+            color: var(--text-soft);
+
+            cursor: pointer;
+
+            text-align: left;
+
+            font-size: 13px;
+
+        }
+
+
+        .settings-button:hover {
+
+            background:
+                rgba(255,255,255,.09);
+
+        }
+
+
+        .footer-brand {
 
             text-align: center;
 
+            color: var(--muted);
+
             font-size: 10px;
+
+            margin-top: 10px;
+
         }
 
 
@@ -343,6 +538,7 @@
         ===================================================== */
 
         .main {
+
             flex: 1;
 
             min-width: 0;
@@ -352,6 +548,7 @@
             flex-direction: column;
 
             height: 100vh;
+
         }
 
 
@@ -360,12 +557,14 @@
         ===================================================== */
 
         .header {
+
             height: 72px;
 
-            padding: 12px 20px;
+            padding:
+                12px 20px;
 
             background:
-                rgba(2, 6, 23, 0.95);
+                rgba(2,6,23,.95);
 
             border-bottom:
                 1px solid var(--border);
@@ -377,10 +576,20 @@
             justify-content: space-between;
 
             flex-shrink: 0;
+
+        }
+
+
+        body.light .header {
+
+            background:
+                rgba(255,255,255,.96);
+
         }
 
 
         .header-left {
+
             display: flex;
 
             align-items: center;
@@ -388,35 +597,42 @@
             gap: 12px;
 
             min-width: 0;
+
         }
 
 
         .mobile-menu {
+
             display: none;
 
             width: 40px;
+
             height: 40px;
 
             border: none;
 
             border-radius: 10px;
 
-            background: #1e293b;
+            background: var(--card);
 
-            color: white;
+            color: var(--text);
 
             font-size: 20px;
 
             cursor: pointer;
+
         }
 
 
         .current-chat {
+
             min-width: 0;
+
         }
 
 
         .current-chat h2 {
+
             font-size: 17px;
 
             white-space: nowrap;
@@ -424,22 +640,27 @@
             overflow: hidden;
 
             text-overflow: ellipsis;
+
         }
 
 
         .current-chat p {
+
             color: #22c55e;
 
             font-size: 11px;
 
             margin-top: 3px;
+
         }
 
 
         .online-dot {
+
             display: inline-block;
 
             width: 7px;
+
             height: 7px;
 
             background: #22c55e;
@@ -447,6 +668,7 @@
             border-radius: 50%;
 
             margin-right: 4px;
+
         }
 
 
@@ -455,51 +677,64 @@
         ===================================================== */
 
         .chat {
+
             flex: 1;
 
             overflow-y: auto;
 
-            padding: 25px 18px;
+            padding:
+                25px 18px;
 
             scroll-behavior: smooth;
+
         }
 
 
         .welcome {
+
             text-align: center;
 
             max-width: 650px;
 
             margin: 0 auto;
 
-            padding: 60px 15px;
+            padding:
+                60px 15px;
+
         }
 
 
         .welcome-icon {
+
             font-size: 55px;
 
             margin-bottom: 15px;
+
         }
 
 
         .welcome h2 {
+
             font-size: 28px;
 
             margin-bottom: 10px;
+
         }
 
 
         .welcome p {
+
             color: var(--muted);
 
             line-height: 1.7;
 
             font-size: 14px;
+
         }
 
 
         .suggestions {
+
             display: flex;
 
             flex-wrap: wrap;
@@ -509,28 +744,36 @@
             gap: 8px;
 
             margin-top: 25px;
+
         }
 
 
         .suggestion {
+
             padding: 9px 13px;
 
-            border: 1px solid var(--border);
+            border:
+                1px solid var(--border);
 
             border-radius: 20px;
 
-            background: rgba(255,255,255,0.03);
+            background:
+                rgba(255,255,255,.03);
 
-            color: #cbd5e1;
+            color: var(--text-soft);
 
             cursor: pointer;
 
             font-size: 12px;
+
         }
 
 
         .suggestion:hover {
-            background: rgba(255,255,255,0.08);
+
+            background:
+                rgba(255,255,255,.08);
+
         }
 
 
@@ -539,26 +782,34 @@
         ===================================================== */
 
         .message {
+
             display: flex;
 
             margin-bottom: 20px;
+
         }
 
 
         .message.user {
+
             justify-content: flex-end;
+
         }
 
 
         .message.ai {
+
             justify-content: flex-start;
+
         }
 
 
         .bubble {
+
             max-width: 85%;
 
-            padding: 13px 16px;
+            padding:
+                13px 16px;
 
             border-radius: 18px;
 
@@ -569,29 +820,37 @@
             word-wrap: break-word;
 
             font-size: 14px;
+
         }
 
 
         .user .bubble {
+
             background:
                 linear-gradient(
                     135deg,
-                    var(--blue),
-                    var(--purple)
+                    var(--primary),
+                    var(--secondary)
                 );
 
+            color: white;
+
             border-bottom-right-radius: 5px;
+
         }
 
 
         .ai .bubble {
-            background: #1e293b;
+
+            background: var(--card);
+
+            color: var(--text);
 
             border:
-                1px solid
-                rgba(255,255,255,0.06);
+                1px solid var(--border);
 
             border-bottom-left-radius: 5px;
+
         }
 
 
@@ -600,45 +859,62 @@
         ===================================================== */
 
         .loading {
+
             display: flex;
 
             gap: 5px;
 
             align-items: center;
+
         }
 
 
         .loading span {
+
             width: 7px;
+
             height: 7px;
 
-            background: #94a3b8;
+            background: var(--muted);
 
             border-radius: 50%;
 
-            animation: bounce 1.2s infinite;
+            animation:
+                bounce 1.2s infinite;
+
         }
 
 
         .loading span:nth-child(2) {
+
             animation-delay: .15s;
+
         }
 
 
         .loading span:nth-child(3) {
+
             animation-delay: .3s;
+
         }
 
 
         @keyframes bounce {
 
-            0%, 60%, 100% {
-                transform: translateY(0);
+            0%,60%,100% {
+
+                transform:
+                    translateY(0);
+
             }
 
             30% {
-                transform: translateY(-6px);
+
+                transform:
+                    translateY(-6px);
+
             }
+
         }
 
 
@@ -647,38 +923,50 @@
         ===================================================== */
 
         .input-area {
+
             padding: 15px;
 
             background:
-                rgba(2, 6, 23, 0.98);
+                rgba(2,6,23,.98);
 
             border-top:
                 1px solid var(--border);
 
             flex-shrink: 0;
+
+        }
+
+
+        body.light .input-area {
+
+            background:
+                rgba(255,255,255,.98);
+
         }
 
 
         .input-box {
+
             display: flex;
 
             align-items: flex-end;
 
             gap: 10px;
 
-            background: #1e293b;
+            background: var(--card);
 
             border:
-                1px solid
-                rgba(255,255,255,0.1);
+                1px solid var(--border);
 
             border-radius: 18px;
 
             padding: 8px;
+
         }
 
 
         textarea {
+
             flex: 1;
 
             resize: none;
@@ -689,7 +977,7 @@
 
             background: transparent;
 
-            color: white;
+            color: var(--text);
 
             font-size: 15px;
 
@@ -700,35 +988,35 @@
             max-height: 140px;
 
             font-family: inherit;
+
         }
 
 
         textarea::placeholder {
-            color: #64748b;
-        }
 
+            color: var(--muted);
 
-        button {
-            border: none;
-
-            cursor: pointer;
-
-            color: white;
         }
 
 
         #sendButton {
+
             width: 45px;
+
             height: 45px;
 
             border-radius: 14px;
 
+            border: none;
+
             background:
                 linear-gradient(
                     135deg,
-                    var(--blue),
-                    var(--purple)
+                    var(--primary),
+                    var(--secondary)
                 );
+
+            color: white;
 
             font-size: 18px;
 
@@ -737,46 +1025,438 @@
             justify-content: center;
 
             align-items: center;
+
+            cursor: pointer;
+
         }
 
 
         #sendButton:hover {
+
             opacity: .9;
+
         }
 
 
         #sendButton:disabled {
+
             opacity: .5;
 
             cursor: not-allowed;
+
         }
 
 
         .info {
+
             text-align: center;
 
-            color: #64748b;
+            color: var(--muted);
 
             font-size: 10px;
 
             margin-top: 8px;
+
         }
 
 
         /* =====================================================
-           OVERLAY MOBILE
+           OVERLAY
         ===================================================== */
 
         .overlay {
+
             display: none;
 
             position: fixed;
 
             inset: 0;
 
-            background: rgba(0,0,0,0.6);
+            background:
+                rgba(0,0,0,.6);
 
             z-index: 10;
+
+        }
+
+
+        /* =====================================================
+           MODAL PARAMÈTRES
+        ===================================================== */
+
+        .modal-overlay {
+
+            position: fixed;
+
+            inset: 0;
+
+            background:
+                rgba(0,0,0,.65);
+
+            display: none;
+
+            align-items: center;
+
+            justify-content: center;
+
+            padding: 15px;
+
+            z-index: 100;
+
+        }
+
+
+        .modal-overlay.open {
+
+            display: flex;
+
+        }
+
+
+        .settings-modal {
+
+            width: 100%;
+
+            max-width: 480px;
+
+            max-height: 90vh;
+
+            overflow-y: auto;
+
+            background: var(--panel);
+
+            border:
+                1px solid var(--border);
+
+            border-radius: 20px;
+
+            box-shadow:
+                0 30px 80px rgba(0,0,0,.5);
+
+        }
+
+
+        .settings-header {
+
+            padding: 18px;
+
+            border-bottom:
+                1px solid var(--border);
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+        }
+
+
+        .settings-header h2 {
+
+            font-size: 18px;
+
+        }
+
+
+        .close-settings {
+
+            width: 35px;
+
+            height: 35px;
+
+            border: none;
+
+            border-radius: 9px;
+
+            background: var(--card);
+
+            color: var(--text);
+
+            cursor: pointer;
+
+            font-size: 18px;
+
+        }
+
+
+        .settings-content {
+
+            padding: 18px;
+
+        }
+
+
+        .setting-group {
+
+            margin-bottom: 24px;
+
+        }
+
+
+        .setting-group:last-child {
+
+            margin-bottom: 0;
+
+        }
+
+
+        .setting-label {
+
+            display: block;
+
+            color: var(--text);
+
+            font-size: 14px;
+
+            font-weight: bold;
+
+            margin-bottom: 8px;
+
+        }
+
+
+        .setting-description {
+
+            color: var(--muted);
+
+            font-size: 11px;
+
+            line-height: 1.5;
+
+            margin-bottom: 10px;
+
+        }
+
+
+        .name-input {
+
+            width: 100%;
+
+            padding: 11px;
+
+            border:
+                1px solid var(--border);
+
+            border-radius: 10px;
+
+            outline: none;
+
+            background: var(--card);
+
+            color: var(--text);
+
+            font-size: 14px;
+
+        }
+
+
+        .save-name {
+
+            margin-top: 8px;
+
+            padding: 9px 14px;
+
+            border: none;
+
+            border-radius: 9px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--primary),
+                    var(--secondary)
+                );
+
+            color: white;
+
+            cursor: pointer;
+
+        }
+
+
+        /* OPTIONS */
+
+        .options {
+
+            display: flex;
+
+            flex-wrap: wrap;
+
+            gap: 8px;
+
+        }
+
+
+        .option {
+
+            padding: 9px 13px;
+
+            border:
+                1px solid var(--border);
+
+            border-radius: 10px;
+
+            background: var(--card);
+
+            color: var(--text-soft);
+
+            cursor: pointer;
+
+            font-size: 12px;
+
+        }
+
+
+        .option.active {
+
+            border-color:
+                var(--primary);
+
+            background:
+                rgba(37,99,235,.18);
+
+            color: var(--text);
+
+        }
+
+
+        /* COULEURS */
+
+        .color-options {
+
+            display: flex;
+
+            gap: 10px;
+
+        }
+
+
+        .color-option {
+
+            width: 35px;
+
+            height: 35px;
+
+            border-radius: 50%;
+
+            border: 3px solid transparent;
+
+            cursor: pointer;
+
+        }
+
+
+        .color-option.active {
+
+            border-color: white;
+
+            box-shadow:
+                0 0 0 2px #64748b;
+
+        }
+
+
+        .color-blue {
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #2563eb,
+                    #7c3aed
+                );
+
+        }
+
+
+        .color-purple {
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #7c3aed,
+                    #2563eb
+                );
+
+        }
+
+
+        .color-green {
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #16a34a,
+                    #0d9488
+                );
+
+        }
+
+
+        .color-orange {
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #ea580c,
+                    #e11d48
+                );
+
+        }
+
+
+        .color-pink {
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #db2777,
+                    #9333ea
+                );
+
+        }
+
+
+        /* DANGER */
+
+        .danger-zone {
+
+            padding-top: 18px;
+
+            border-top:
+                1px solid var(--border);
+
+        }
+
+
+        .delete-all {
+
+            width: 100%;
+
+            padding: 11px;
+
+            border:
+                1px solid rgba(239,68,68,.4);
+
+            border-radius: 10px;
+
+            background:
+                rgba(239,68,68,.08);
+
+            color: #f87171;
+
+            cursor: pointer;
+
+            font-size: 13px;
+
+        }
+
+
+        .delete-all:hover {
+
+            background:
+                rgba(239,68,68,.16);
+
         }
 
 
@@ -787,6 +1467,7 @@
         @media (max-width: 700px) {
 
             .sidebar {
+
                 position: fixed;
 
                 left: -290px;
@@ -795,64 +1476,88 @@
 
                 bottom: 0;
 
-                transition: left .25s ease;
+                transition:
+                    left .25s ease;
 
                 box-shadow:
                     10px 0 40px rgba(0,0,0,.4);
+
             }
 
 
             .sidebar.open {
+
                 left: 0;
+
             }
 
 
             .overlay.open {
+
                 display: block;
+
             }
 
 
             .mobile-menu {
+
                 display: block;
+
             }
 
 
             .header {
+
                 height: 64px;
 
-                padding: 10px 12px;
+                padding:
+                    10px 12px;
+
             }
 
 
             .chat {
-                padding: 18px 12px;
+
+                padding:
+                    18px 12px;
+
             }
 
 
             .welcome {
+
                 padding-top: 50px;
+
             }
 
 
             .welcome h2 {
+
                 font-size: 24px;
+
             }
 
 
             .bubble {
+
                 max-width: 90%;
 
                 font-size: 14px;
+
             }
 
 
             .input-area {
+
                 padding: 10px;
+
             }
 
 
             .conversation-actions {
+
                 opacity: 1;
+
             }
 
         }
@@ -877,7 +1582,9 @@
         id="sidebar"
     >
 
+
         <div class="sidebar-header">
+
 
             <div class="brand">
 
@@ -906,6 +1613,7 @@
                 ＋ Nouvelle conversation
             </button>
 
+
         </div>
 
 
@@ -917,14 +1625,27 @@
         <div
             class="history"
             id="history"
-        >
-
-        </div>
+        ></div>
 
 
         <div class="sidebar-footer">
-            Messie IA
+
+
+            <button
+                class="settings-button"
+                id="settingsButton"
+            >
+                ⚙️ Paramètres
+            </button>
+
+
+            <div class="footer-brand">
+                Messie IA
+            </div>
+
+
         </div>
+
 
     </aside>
 
@@ -965,16 +1686,25 @@
 
                 <div class="current-chat">
 
-                    <h2 id="currentChatTitle">
+                    <h2
+                        id="currentChatTitle"
+                    >
                         Nouvelle conversation
                     </h2>
 
+
                     <p>
-                        <span class="online-dot"></span>
+
+                        <span
+                            class="online-dot"
+                        ></span>
+
                         En ligne
+
                     </p>
 
                 </div>
+
 
             </div>
 
@@ -989,9 +1719,7 @@
         <section
             class="chat"
             id="chat"
-        >
-
-        </section>
+        ></section>
 
 
         <!-- =================================================
@@ -999,6 +1727,7 @@
         ================================================== -->
 
         <div class="input-area">
+
 
             <div class="input-box">
 
@@ -1025,10 +1754,292 @@
                 Messie IA peut parfois faire des erreurs.
             </div>
 
+
         </div>
 
 
     </main>
+
+
+</div>
+
+
+<!-- =========================================================
+     MODAL PARAMÈTRES
+========================================================= -->
+
+<div
+    class="modal-overlay"
+    id="settingsModal"
+>
+
+
+    <div class="settings-modal">
+
+
+        <div class="settings-header">
+
+
+            <h2>
+                ⚙️ Paramètres
+            </h2>
+
+
+            <button
+                class="close-settings"
+                id="closeSettings"
+            >
+                ×
+            </button>
+
+
+        </div>
+
+
+        <div class="settings-content">
+
+
+            <!-- NOM -->
+
+            <div class="setting-group">
+
+
+                <label
+                    class="setting-label"
+                >
+                    👤 Ton nom
+                </label>
+
+
+                <div
+                    class="setting-description"
+                >
+                    Personnalise le nom utilisé
+                    par Messie IA.
+                </div>
+
+
+                <input
+                    class="name-input"
+                    id="nameInput"
+                    type="text"
+                    maxlength="40"
+                    placeholder="Ton nom"
+                >
+
+
+                <button
+                    class="save-name"
+                    id="saveName"
+                >
+                    Enregistrer
+                </button>
+
+
+            </div>
+
+
+            <!-- APPARENCE -->
+
+            <div class="setting-group">
+
+
+                <label
+                    class="setting-label"
+                >
+                    🎨 Apparence
+                </label>
+
+
+                <div
+                    class="setting-description"
+                >
+                    Choisis l'apparence de Messie IA.
+                </div>
+
+
+                <div class="options">
+
+
+                    <button
+                        class="option"
+                        data-theme="dark"
+                    >
+                        🌙 Sombre
+                    </button>
+
+
+                    <button
+                        class="option"
+                        data-theme="light"
+                    >
+                        ☀️ Claire
+                    </button>
+
+
+                </div>
+
+
+            </div>
+
+
+            <!-- COULEUR -->
+
+            <div class="setting-group">
+
+
+                <label
+                    class="setting-label"
+                >
+                    🌈 Couleur principale
+                </label>
+
+
+                <div
+                    class="setting-description"
+                >
+                    Choisis la couleur de Messie IA.
+                </div>
+
+
+                <div
+                    class="color-options"
+                >
+
+
+                    <button
+                        class="color-option color-blue"
+                        data-color="blue"
+                        title="Bleu"
+                    ></button>
+
+
+                    <button
+                        class="color-option color-purple"
+                        data-color="purple"
+                        title="Violet"
+                    ></button>
+
+
+                    <button
+                        class="color-option color-green"
+                        data-color="green"
+                        title="Vert"
+                    ></button>
+
+
+                    <button
+                        class="color-option color-orange"
+                        data-color="orange"
+                        title="Orange"
+                    ></button>
+
+
+                    <button
+                        class="color-option color-pink"
+                        data-color="pink"
+                        title="Rose"
+                    ></button>
+
+
+                </div>
+
+
+            </div>
+
+
+            <!-- LONGUEUR -->
+
+            <div class="setting-group">
+
+
+                <label
+                    class="setting-label"
+                >
+                    🧠 Longueur des réponses
+                </label>
+
+
+                <div
+                    class="setting-description"
+                >
+                    Indique à Messie IA la longueur
+                    de réponse que tu préfères.
+                </div>
+
+
+                <div class="options">
+
+
+                    <button
+                        class="option"
+                        data-length="courte"
+                    >
+                        ⚡ Courte
+                    </button>
+
+
+                    <button
+                        class="option"
+                        data-length="normale"
+                    >
+                        💬 Normale
+                    </button>
+
+
+                    <button
+                        class="option"
+                        data-length="detaillee"
+                    >
+                        📚 Détaillée
+                    </button>
+
+
+                </div>
+
+
+            </div>
+
+
+            <!-- DANGER -->
+
+            <div
+                class="setting-group danger-zone"
+            >
+
+
+                <label
+                    class="setting-label"
+                >
+                    🗑️ Gestion des données
+                </label>
+
+
+                <div
+                    class="setting-description"
+                >
+                    Cette action supprime toutes les
+                    conversations enregistrées dans
+                    ce navigateur.
+                </div>
+
+
+                <button
+                    class="delete-all"
+                    id="deleteAll"
+                >
+                    🗑️ Effacer tout l'historique
+                </button>
+
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
 
 </div>
 
@@ -1043,28 +2054,74 @@
         document.getElementById("chat");
 
     const input =
-        document.getElementById("messageInput");
+        document.getElementById(
+            "messageInput"
+        );
 
     const sendButton =
-        document.getElementById("sendButton");
+        document.getElementById(
+            "sendButton"
+        );
 
     const historyElement =
-        document.getElementById("history");
+        document.getElementById(
+            "history"
+        );
 
     const newChatButton =
-        document.getElementById("newChatButton");
+        document.getElementById(
+            "newChatButton"
+        );
 
     const currentChatTitle =
-        document.getElementById("currentChatTitle");
+        document.getElementById(
+            "currentChatTitle"
+        );
 
     const sidebar =
-        document.getElementById("sidebar");
+        document.getElementById(
+            "sidebar"
+        );
 
     const overlay =
-        document.getElementById("overlay");
+        document.getElementById(
+            "overlay"
+        );
 
     const mobileMenu =
-        document.getElementById("mobileMenu");
+        document.getElementById(
+            "mobileMenu"
+        );
+
+    const settingsButton =
+        document.getElementById(
+            "settingsButton"
+        );
+
+    const settingsModal =
+        document.getElementById(
+            "settingsModal"
+        );
+
+    const closeSettings =
+        document.getElementById(
+            "closeSettings"
+        );
+
+    const nameInput =
+        document.getElementById(
+            "nameInput"
+        );
+
+    const saveName =
+        document.getElementById(
+            "saveName"
+        );
+
+    const deleteAll =
+        document.getElementById(
+            "deleteAll"
+        );
 
 
     /* =====================================================
@@ -1073,20 +2130,222 @@
 
     let conversations = [];
 
-    let currentConversationId = null;
+    let currentConversationId =
+        null;
 
     let isSending = false;
 
 
     /* =====================================================
-       STOCKAGE
+       RÉGLAGES
+    ===================================================== */
+
+    let settings = {
+
+        name: "",
+
+        theme: "dark",
+
+        color: "blue",
+
+        responseLength: "normale"
+
+    };
+
+
+    /* =====================================================
+       CHARGER LES RÉGLAGES
+    ===================================================== */
+
+    function loadSettings() {
+
+        try {
+
+            const saved =
+                localStorage.getItem(
+                    "messieIA_settings"
+                );
+
+
+            if (saved) {
+
+                settings =
+                    {
+                        ...settings,
+                        ...JSON.parse(saved)
+                    };
+
+            }
+
+        } catch (error) {
+
+            console.error(
+                "Erreur réglages :",
+                error
+            );
+
+        }
+
+
+        applySettings();
+
+    }
+
+
+    /* =====================================================
+       SAUVEGARDER LES RÉGLAGES
+    ===================================================== */
+
+    function saveSettings() {
+
+        localStorage.setItem(
+
+            "messieIA_settings",
+
+            JSON.stringify(settings)
+
+        );
+
+    }
+
+
+    /* =====================================================
+       APPLIQUER RÉGLAGES
+    ===================================================== */
+
+    function applySettings() {
+
+
+        /* MODE */
+
+        document.body.classList.remove(
+            "light"
+        );
+
+
+        if (
+            settings.theme ===
+            "light"
+        ) {
+
+            document.body.classList.add(
+                "light"
+            );
+
+        }
+
+
+        /* COULEUR */
+
+        document.body.classList.remove(
+            "theme-purple",
+            "theme-green",
+            "theme-orange",
+            "theme-pink"
+        );
+
+
+        if (
+            settings.color !==
+            "blue"
+        ) {
+
+            document.body.classList.add(
+                "theme-" +
+                settings.color
+            );
+
+        }
+
+
+        /* NOM */
+
+        nameInput.value =
+            settings.name || "";
+
+
+        updateSettingsButtons();
+
+    }
+
+
+    /* =====================================================
+       BOUTONS RÉGLAGES
+    ===================================================== */
+
+    function updateSettingsButtons() {
+
+
+        document
+            .querySelectorAll(
+                "[data-theme]"
+            )
+            .forEach(button => {
+
+                button.classList.toggle(
+
+                    "active",
+
+                    button.dataset.theme ===
+                    settings.theme
+
+                );
+
+            });
+
+
+        document
+            .querySelectorAll(
+                "[data-color]"
+            )
+            .forEach(button => {
+
+                button.classList.toggle(
+
+                    "active",
+
+                    button.dataset.color ===
+                    settings.color
+
+                );
+
+            });
+
+
+        document
+            .querySelectorAll(
+                "[data-length]"
+            )
+            .forEach(button => {
+
+                button.classList.toggle(
+
+                    "active",
+
+                    button.dataset.length ===
+                    settings.responseLength
+
+                );
+
+            });
+
+    }
+
+
+    /* =====================================================
+       STOCKAGE CONVERSATIONS
     ===================================================== */
 
     function saveConversations() {
 
         localStorage.setItem(
+
             "messieIA_conversations",
-            JSON.stringify(conversations)
+
+            JSON.stringify(
+                conversations
+            )
+
         );
 
     }
@@ -1100,6 +2359,7 @@
                 localStorage.getItem(
                     "messieIA_conversations"
                 );
+
 
             if (saved) {
 
@@ -1123,16 +2383,19 @@
 
 
     /* =====================================================
-       ID UNIQUE
+       ID
     ===================================================== */
 
     function createId() {
 
         return (
+
             Date.now().toString() +
+
             Math.random()
                 .toString(36)
                 .substring(2, 9)
+
         );
 
     }
@@ -1142,32 +2405,43 @@
        DATE
     ===================================================== */
 
-    function formatDate(timestamp) {
+    function formatDate(
+        timestamp
+    ) {
 
         const date =
             new Date(timestamp);
 
+
         return date.toLocaleDateString(
+
             "fr-FR",
+
             {
+
                 day: "2-digit",
+
                 month: "2-digit",
+
                 year: "numeric"
+
             }
+
         );
 
     }
 
 
     /* =====================================================
-       CRÉER UNE CONVERSATION
+       CRÉER CONVERSATION
     ===================================================== */
 
     function createConversation() {
 
         const conversation = {
 
-            id: createId(),
+            id:
+                createId(),
 
             title:
                 "Nouvelle conversation",
@@ -1212,22 +2486,28 @@
     function getCurrentConversation() {
 
         return conversations.find(
+
             conversation =>
+
                 conversation.id ===
                 currentConversationId
+
         );
 
     }
 
 
     /* =====================================================
-       TITRE AUTOMATIQUE
+       TITRE
     ===================================================== */
 
-    function generateTitle(text) {
+    function generateTitle(
+        text
+    ) {
 
         let title =
             text.trim();
+
 
         if (!title) {
 
@@ -1239,7 +2519,7 @@
         if (title.length > 35) {
 
             title =
-                title.substring(0, 35) +
+                title.substring(0,35) +
                 "...";
 
         }
@@ -1251,12 +2531,15 @@
 
 
     /* =====================================================
-       AJOUTER MESSAGE
+       AJOUT MESSAGE
     ===================================================== */
 
     function addMessageToConversation(
+
         role,
+
         content
+
     ) {
 
         const conversation =
@@ -1272,11 +2555,14 @@
 
         conversation.messages.push({
 
-            role: role,
+            role:
+                role,
 
-            content: content,
+            content:
+                content,
 
-            timestamp: Date.now()
+            timestamp:
+                Date.now()
 
         });
 
@@ -1286,12 +2572,17 @@
 
 
         if (
+
             role === "user" &&
+
             conversation.messages.length === 1
+
         ) {
 
             conversation.title =
-                generateTitle(content);
+                generateTitle(
+                    content
+                );
 
         }
 
@@ -1308,19 +2599,28 @@
     ===================================================== */
 
     function displayMessage(
+
         text,
+
         type
+
     ) {
 
         const message =
-            document.createElement("div");
+            document.createElement(
+                "div"
+            );
+
 
         message.className =
             "message " + type;
 
 
         const bubble =
-            document.createElement("div");
+            document.createElement(
+                "div"
+            );
+
 
         bubble.className =
             "bubble";
@@ -1347,10 +2647,16 @@
 
 
     /* =====================================================
-       MESSAGE D'ACCUEIL
+       ACCUEIL
     ===================================================== */
 
     function showWelcome() {
+
+        const name =
+            settings.name
+                ? " " + settings.name
+                : "";
+
 
         chat.innerHTML = `
 
@@ -1361,12 +2667,13 @@
                 </div>
 
                 <h2>
-                    Bonjour 👋
+                    Bonjour${name} 👋
                 </h2>
 
                 <p>
                     Je suis Messie IA.<br>
-                    Pose-moi une question et je vais essayer de t'aider.
+                    Pose-moi une question et
+                    je vais essayer de t'aider.
                 </p>
 
                 <div class="suggestions">
@@ -1400,24 +2707,31 @@
 
 
         document
-            .querySelectorAll(".suggestion")
-            .forEach(button => {
+            .querySelectorAll(
+                ".suggestion"
+            )
+            .forEach(
+                button => {
 
-                button.addEventListener(
-                    "click",
-                    () => {
+                    button.addEventListener(
 
-                        input.value =
-                            button.dataset.text;
+                        "click",
 
-                        input.focus();
+                        () => {
 
-                        autoResize();
+                            input.value =
+                                button.dataset.text;
 
-                    }
-                );
+                            input.focus();
 
-            });
+                            autoResize();
+
+                        }
+
+                    );
+
+                }
+            );
 
     }
 
@@ -1463,16 +2777,21 @@
 
 
         conversation.messages.forEach(
+
             message => {
 
                 displayMessage(
+
                     message.content,
+
                     message.role === "user"
                         ? "user"
                         : "ai"
+
                 );
 
             }
+
         );
 
 
@@ -1500,6 +2819,7 @@
                 <div class="history-empty">
 
                     Aucune conversation.<br>
+
                     Commence une nouvelle discussion.
 
                 </div>
@@ -1512,16 +2832,24 @@
 
 
         conversations
+
             .sort(
-                (a, b) =>
+
+                (a,b) =>
                     b.updatedAt -
                     a.updatedAt
+
             )
+
             .forEach(
+
                 conversation => {
 
+
                     const item =
-                        document.createElement("div");
+                        document.createElement(
+                            "div"
+                        );
 
 
                     item.className =
@@ -1529,8 +2857,10 @@
 
 
                     if (
+
                         conversation.id ===
                         currentConversationId
+
                     ) {
 
                         item.classList.add(
@@ -1541,27 +2871,38 @@
 
 
                     const main =
-                        document.createElement("div");
+                        document.createElement(
+                            "div"
+                        );
+
 
                     main.className =
                         "conversation-main";
 
 
                     const title =
-                        document.createElement("div");
+                        document.createElement(
+                            "div"
+                        );
+
 
                     title.className =
                         "conversation-title";
+
 
                     title.textContent =
                         conversation.title;
 
 
                     const date =
-                        document.createElement("div");
+                        document.createElement(
+                            "div"
+                        );
+
 
                     date.className =
                         "conversation-date";
+
 
                     date.textContent =
                         formatDate(
@@ -1569,13 +2910,21 @@
                         );
 
 
-                    main.appendChild(title);
+                    main.appendChild(
+                        title
+                    );
 
-                    main.appendChild(date);
+
+                    main.appendChild(
+                        date
+                    );
 
 
                     const actions =
-                        document.createElement("div");
+                        document.createElement(
+                            "div"
+                        );
+
 
                     actions.className =
                         "conversation-actions";
@@ -1584,20 +2933,27 @@
                     /* RENOMMER */
 
                     const renameButton =
-                        document.createElement("button");
+                        document.createElement(
+                            "button"
+                        );
+
 
                     renameButton.className =
                         "history-button";
 
+
                     renameButton.title =
                         "Renommer";
+
 
                     renameButton.textContent =
                         "✏️";
 
 
                     renameButton.addEventListener(
+
                         "click",
+
                         event => {
 
                             event.stopPropagation();
@@ -1607,26 +2963,34 @@
                             );
 
                         }
+
                     );
 
 
                     /* SUPPRIMER */
 
                     const deleteButton =
-                        document.createElement("button");
+                        document.createElement(
+                            "button"
+                        );
+
 
                     deleteButton.className =
                         "history-button delete";
 
+
                     deleteButton.title =
                         "Supprimer";
+
 
                     deleteButton.textContent =
                         "🗑️";
 
 
                     deleteButton.addEventListener(
+
                         "click",
+
                         event => {
 
                             event.stopPropagation();
@@ -1636,6 +3000,7 @@
                             );
 
                         }
+
                     );
 
 
@@ -1643,18 +3008,26 @@
                         renameButton
                     );
 
+
                     actions.appendChild(
                         deleteButton
                     );
 
 
-                    item.appendChild(main);
+                    item.appendChild(
+                        main
+                    );
 
-                    item.appendChild(actions);
+
+                    item.appendChild(
+                        actions
+                    );
 
 
                     item.addEventListener(
+
                         "click",
+
                         () => {
 
                             openConversation(
@@ -1662,6 +3035,7 @@
                             );
 
                         }
+
                     );
 
 
@@ -1670,6 +3044,7 @@
                     );
 
                 }
+
             );
 
     }
@@ -1684,8 +3059,6 @@
         currentConversationId =
             id;
 
-
-        saveConversations();
 
         renderHistory();
 
@@ -1706,8 +3079,10 @@
 
         const conversation =
             conversations.find(
+
                 item =>
                     item.id === id
+
             );
 
 
@@ -1720,14 +3095,15 @@
 
         const newTitle =
             prompt(
+
                 "Nouveau nom de la conversation :",
+
                 conversation.title
+
             );
 
 
-        if (
-            newTitle === null
-        ) {
+        if (newTitle === null) {
 
             return;
 
@@ -1746,7 +3122,7 @@
 
 
         conversation.title =
-            title.substring(0, 60);
+            title.substring(0,60);
 
 
         conversation.updatedAt =
@@ -1763,24 +3139,10 @@
 
 
     /* =====================================================
-       SUPPRIMER
+       SUPPRIMER CONVERSATION
     ===================================================== */
 
     function deleteConversation(id) {
-
-        const conversation =
-            conversations.find(
-                item =>
-                    item.id === id
-            );
-
-
-        if (!conversation) {
-
-            return;
-
-        }
-
 
         const confirmed =
             confirm(
@@ -1797,13 +3159,17 @@
 
         conversations =
             conversations.filter(
+
                 item =>
                     item.id !== id
+
             );
 
 
         if (
+
             currentConversationId === id
+
         ) {
 
             if (
@@ -1839,24 +3205,34 @@
     function addLoading() {
 
         const message =
-            document.createElement("div");
+            document.createElement(
+                "div"
+            );
+
 
         message.className =
             "message ai";
+
 
         message.id =
             "loadingMessage";
 
 
         const bubble =
-            document.createElement("div");
+            document.createElement(
+                "div"
+            );
+
 
         bubble.className =
             "bubble";
 
 
         const loading =
-            document.createElement("div");
+            document.createElement(
+                "div"
+            );
+
 
         loading.className =
             "loading";
@@ -1865,7 +3241,9 @@
         loading.innerHTML = `
 
             <span></span>
+
             <span></span>
+
             <span></span>
 
         `;
@@ -1914,13 +3292,14 @@
 
 
     /* =====================================================
-       NETTOYER LES RÉPONSES INDÉSIRABLES
+       NETTOYER RÉPONSE
     ===================================================== */
 
     function cleanAIResponse(text) {
 
         if (
-            typeof text !== "string"
+            typeof text !==
+            "string"
         ) {
 
             return "";
@@ -1928,76 +3307,122 @@
         }
 
 
-        /*
-         * Certaines réponses de fournisseurs
-         * peuvent contenir accidentellement
-         * des informations techniques de sécurité.
-         *
-         * On retire uniquement les lignes
-         * correspondant clairement à ces métadonnées.
-         */
-
         const lines =
             text.split("\n");
 
 
         const filtered =
-            lines.filter(line => {
+            lines.filter(
 
-                const lower =
-                    line.toLowerCase().trim();
+                line => {
+
+                    const lower =
+                        line
+                            .toLowerCase()
+                            .trim();
 
 
-                if (
-                    lower ===
-                    "user safety: safe"
-                ) {
+                    if (
 
-                    return false;
+                        lower ===
+                        "user safety: safe"
+
+                    ) {
+
+                        return false;
+
+                    }
+
+
+                    if (
+
+                        lower ===
+                        "response safety: safe"
+
+                    ) {
+
+                        return false;
+
+                    }
+
+
+                    if (
+
+                        lower.startsWith(
+                            "user safety:"
+                        )
+
+                    ) {
+
+                        return false;
+
+                    }
+
+
+                    if (
+
+                        lower.startsWith(
+                            "response safety:"
+                        )
+
+                    ) {
+
+                        return false;
+
+                    }
+
+
+                    return true;
 
                 }
 
-
-                if (
-                    lower ===
-                    "response safety: safe"
-                ) {
-
-                    return false;
-
-                }
-
-
-                if (
-                    lower.startsWith(
-                        "user safety:"
-                    )
-                ) {
-
-                    return false;
-
-                }
-
-
-                if (
-                    lower.startsWith(
-                        "response safety:"
-                    )
-                ) {
-
-                    return false;
-
-                }
-
-
-                return true;
-
-            });
+            );
 
 
         return filtered
             .join("\n")
             .trim();
+
+    }
+
+
+    /* =====================================================
+       INSTRUCTION LONGUEUR
+    ===================================================== */
+
+    function getResponseInstruction() {
+
+        if (
+            settings.responseLength ===
+            "courte"
+        ) {
+
+            return (
+                "Donne des réponses courtes, " +
+                "directes et faciles à comprendre."
+            );
+
+        }
+
+
+        if (
+            settings.responseLength ===
+            "detaillee"
+        ) {
+
+            return (
+                "Donne des réponses détaillées, " +
+                "avec des explications et des exemples " +
+                "lorsque c'est utile."
+            );
+
+        }
+
+
+        return (
+            "Donne des réponses équilibrées, " +
+            "claires et suffisamment détaillées."
+        );
 
     }
 
@@ -2026,8 +3451,6 @@
         }
 
 
-        /* Si aucune conversation n'existe */
-
         if (
             !currentConversationId
         ) {
@@ -2050,10 +3473,9 @@
 
         isSending = true;
 
-        sendButton.disabled = true;
+        sendButton.disabled =
+            true;
 
-
-        /* Afficher utilisateur */
 
         displayMessage(
             message,
@@ -2061,11 +3483,12 @@
         );
 
 
-        /* Sauvegarder utilisateur */
-
         addMessageToConversation(
+
             "user",
+
             message
+
         );
 
 
@@ -2080,31 +3503,55 @@
 
         try {
 
+
             /*
-             * Construire l'historique
-             * pour app.py
+             * Historique sans le dernier message
              */
 
             const history =
                 conversation.messages
-                    .slice(0, -1)
-                    .map(message => ({
 
-                        role:
-                            message.role,
+                    .slice(0,-1)
 
-                        content:
-                            message.content
+                    .map(
+                        message => ({
 
-                    }));
+                            role:
+                                message.role,
+
+                            content:
+                                message.content
+
+                        })
+                    );
+
+
+            /*
+             * Ajouter une indication
+             * de longueur dans l'historique
+             * envoyé à l'API.
+             */
+
+            const finalMessage =
+
+                message +
+
+                "\n\n[Préférence de réponse : " +
+
+                getResponseInstruction() +
+
+                "]";
 
 
             const response =
                 await fetch(
+
                     "/api/chat",
+
                     {
 
-                        method: "POST",
+                        method:
+                            "POST",
 
                         headers: {
 
@@ -2114,10 +3561,11 @@
                         },
 
                         body:
+
                             JSON.stringify({
 
                                 message:
-                                    message,
+                                    finalMessage,
 
                                 history:
                                     history
@@ -2125,13 +3573,9 @@
                             })
 
                     }
+
                 );
 
-
-            /*
-             * Vérifier que le serveur
-             * a bien renvoyé du JSON.
-             */
 
             let data;
 
@@ -2141,7 +3585,7 @@
                 data =
                     await response.json();
 
-            } catch (jsonError) {
+            } catch {
 
                 throw new Error(
                     "Réponse invalide du serveur."
@@ -2155,14 +3599,20 @@
 
             if (!response.ok) {
 
-                const errorMessage =
-                    data.error ||
-                    "Une erreur est survenue.";
-
-
                 displayMessage(
-                    "❌ " + errorMessage,
+
+                    "❌ " +
+
+                    (
+
+                        data.error ||
+
+                        "Une erreur est survenue."
+
+                    ),
+
                     "ai"
+
                 );
 
 
@@ -2170,18 +3620,6 @@
 
             }
 
-
-            /*
-             * IMPORTANT :
-             *
-             * app.py renvoie :
-             *
-             * {
-             *     "response": answer
-             * }
-             *
-             * donc on utilise data.response
-             */
 
             let answer =
                 cleanAIResponse(
@@ -2198,14 +3636,20 @@
 
 
             displayMessage(
+
                 answer,
+
                 "ai"
+
             );
 
 
             addMessageToConversation(
+
                 "assistant",
+
                 answer
+
             );
 
 
@@ -2225,8 +3669,11 @@
 
 
             displayMessage(
+
                 "❌ Impossible de contacter Messie IA. Vérifie ta connexion ou le serveur.",
+
                 "ai"
+
             );
 
         } finally {
@@ -2254,41 +3701,57 @@
 
 
         input.style.height =
+
             Math.min(
+
                 input.scrollHeight,
+
                 140
+
             ) + "px";
 
     }
 
 
     input.addEventListener(
+
         "input",
+
         autoResize
+
     );
 
 
     /* =====================================================
-       BOUTON ENVOYER
+       ENVOI BOUTON
     ===================================================== */
 
     sendButton.addEventListener(
+
         "click",
+
         sendMessage
+
     );
 
 
     /* =====================================================
-       CLAVIER
+       ENTRÉE CLAVIER
     ===================================================== */
 
     input.addEventListener(
+
         "keydown",
+
         function(event) {
 
             if (
-                event.key === "Enter" &&
+
+                event.key ===
+                "Enter" &&
+
                 !event.shiftKey
+
             ) {
 
                 event.preventDefault();
@@ -2298,6 +3761,7 @@
             }
 
         }
+
     );
 
 
@@ -2306,8 +3770,11 @@
     ===================================================== */
 
     newChatButton.addEventListener(
+
         "click",
+
         createConversation
+
     );
 
 
@@ -2342,14 +3809,270 @@
 
 
     mobileMenu.addEventListener(
+
         "click",
+
         openMobileMenu
+
     );
 
 
     overlay.addEventListener(
+
         "click",
+
         closeMobileMenu
+
+    );
+
+
+    /* =====================================================
+       PARAMÈTRES
+    ===================================================== */
+
+    settingsButton.addEventListener(
+
+        "click",
+
+        () => {
+
+            settingsModal.classList.add(
+                "open"
+            );
+
+            closeMobileMenu();
+
+        }
+
+    );
+
+
+    closeSettings.addEventListener(
+
+        "click",
+
+        () => {
+
+            settingsModal.classList.remove(
+                "open"
+            );
+
+        }
+
+    );
+
+
+    settingsModal.addEventListener(
+
+        "click",
+
+        event => {
+
+            if (
+                event.target ===
+                settingsModal
+            ) {
+
+                settingsModal.classList.remove(
+                    "open"
+                );
+
+            }
+
+        }
+
+    );
+
+
+    /* =====================================================
+       MODE
+    ===================================================== */
+
+    document
+        .querySelectorAll(
+            "[data-theme]"
+        )
+        .forEach(
+
+            button => {
+
+                button.addEventListener(
+
+                    "click",
+
+                    () => {
+
+                        settings.theme =
+                            button.dataset.theme;
+
+                        saveSettings();
+
+                        applySettings();
+
+                    }
+
+                );
+
+            }
+
+        );
+
+
+    /* =====================================================
+       COULEUR
+    ===================================================== */
+
+    document
+        .querySelectorAll(
+            "[data-color]"
+        )
+        .forEach(
+
+            button => {
+
+                button.addEventListener(
+
+                    "click",
+
+                    () => {
+
+                        settings.color =
+                            button.dataset.color;
+
+                        saveSettings();
+
+                        applySettings();
+
+                    }
+
+                );
+
+            }
+
+        );
+
+
+    /* =====================================================
+       LONGUEUR
+    ===================================================== */
+
+    document
+        .querySelectorAll(
+            "[data-length]"
+        )
+        .forEach(
+
+            button => {
+
+                button.addEventListener(
+
+                    "click",
+
+                    () => {
+
+                        settings.responseLength =
+                            button.dataset.length;
+
+                        saveSettings();
+
+                        applySettings();
+
+                    }
+
+                );
+
+            }
+
+        );
+
+
+    /* =====================================================
+       NOM
+    ===================================================== */
+
+    saveName.addEventListener(
+
+        "click",
+
+        () => {
+
+            settings.name =
+                nameInput.value.trim();
+
+            saveSettings();
+
+            applySettings();
+
+            renderConversation();
+
+        }
+
+    );
+
+
+    /* =====================================================
+       EFFACER TOUT
+    ===================================================== */
+
+    deleteAll.addEventListener(
+
+        "click",
+
+        () => {
+
+            if (
+                conversations.length === 0
+            ) {
+
+                alert(
+                    "Il n'y a aucune conversation à supprimer."
+                );
+
+                return;
+
+            }
+
+
+            const confirmed =
+                confirm(
+
+                    "⚠️ Attention !\n\n" +
+
+                    "Toutes tes conversations " +
+                    "seront définitivement supprimées " +
+                    "de ce navigateur.\n\n" +
+
+                    "Continuer ?"
+
+                );
+
+
+            if (!confirmed) {
+
+                return;
+
+            }
+
+
+            conversations = [];
+
+            currentConversationId =
+                null;
+
+
+            saveConversations();
+
+            renderHistory();
+
+            renderConversation();
+
+
+            alert(
+                "L'historique a été supprimé."
+            );
+
+        }
+
     );
 
 
@@ -2359,6 +4082,8 @@
 
     function initialize() {
 
+        loadSettings();
+
         loadConversations();
 
 
@@ -2367,9 +4092,11 @@
         ) {
 
             conversations.sort(
-                (a, b) =>
+
+                (a,b) =>
                     b.updatedAt -
                     a.updatedAt
+
             );
 
 
@@ -2399,6 +4126,7 @@
 
 </script>
 
+
 </body>
 
-    </html>
+                     </html>
