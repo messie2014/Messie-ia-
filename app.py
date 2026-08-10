@@ -17,6 +17,7 @@ app = Flask(__name__, static_folder="static")
 
 @app.route("/")
 def home():
+
     return send_from_directory(
         os.path.join(app.root_path, "static"),
         "index.html"
@@ -34,24 +35,39 @@ def chat():
     # Récupérer la clé OpenRouter
     # --------------------------------------------------------
 
-    api_key = os.environ.get("OPENROUTER_API_KEY")
+    api_key = os.environ.get(
+        "OPENROUTER_API_KEY"
+    )
 
     if not api_key:
+
         return jsonify({
-            "error": "La clé OPENROUTER_API_KEY n'est pas configurée."
+            "error":
+                "La clé OPENROUTER_API_KEY n'est pas configurée."
         }), 500
 
 
     # --------------------------------------------------------
-    # Récupérer les données envoyées par le site
+    # Récupérer les données
     # --------------------------------------------------------
 
-    data = request.get_json(silent=True) or {}
+    data = request.get_json(
+        silent=True
+    ) or {}
 
-    message = data.get("message", "").strip()
 
-    # Historique de la conversation
-    history = data.get("history", [])
+    message = data.get(
+        "message",
+        ""
+    )
+
+
+    if not isinstance(message, str):
+
+        message = ""
+
+
+    message = message.strip()
 
 
     # --------------------------------------------------------
@@ -59,41 +75,69 @@ def chat():
     # --------------------------------------------------------
 
     if not message:
+
         return jsonify({
             "error": "Message vide."
         }), 400
 
 
     # --------------------------------------------------------
-    # Vérifier l'historique
+    # Récupérer l'historique
     # --------------------------------------------------------
 
+    history = data.get(
+        "history",
+        []
+    )
+
+
     if not isinstance(history, list):
+
         history = []
 
 
-    # Limiter l'historique pour éviter des requêtes trop grandes
+    # --------------------------------------------------------
+    # Limiter l'historique
+    # --------------------------------------------------------
+
     history = history[-20:]
 
 
     # --------------------------------------------------------
-    # Préparer les messages pour l'IA
+    # Préparer le contexte
     # --------------------------------------------------------
 
     messages = [
+
         {
             "role": "system",
+
             "content": (
-                "Tu es Messie IA, un assistant intelligent, "
-                "utile, respectueux et précis. "
+                "Tu es Messie IA, un assistant intelligent "
+                "utile, respectueux, naturel et précis. "
+
                 "Tu réponds principalement en français. "
-                "Réponds de manière claire et naturelle. "
-                "Tu dois tenir compte du contexte et des messages "
-                "précédents de la conversation. "
-                "Si l'utilisateur écrit dans une autre langue, "
-                "tu peux répondre dans cette langue."
+
+                "Tu dois utiliser le contexte de la "
+                "conversation lorsqu'il est disponible. "
+
+                "Lorsque l'utilisateur pose une question "
+                "qui dépend d'un message précédent, "
+                "utilise les messages précédents pour "
+                "comprendre sa demande. "
+
+                "Réponds directement à la question. "
+
+                "Évite les réponses inutiles ou répétitives. "
+
+                "Si l'utilisateur écrit dans une autre "
+                "langue, réponds dans cette langue. "
+
+                "Ne prétends pas avoir accès à des informations "
+                "que tu n'as pas."
             )
         }
+
     ]
 
 
@@ -103,90 +147,152 @@ def chat():
 
     for item in history:
 
-        if not isinstance(item, dict):
+        if not isinstance(
+            item,
+            dict
+        ):
             continue
 
-        role = item.get("role")
-        content = item.get("content")
 
-        if role not in ["user", "assistant"]:
+        role = item.get(
+            "role"
+        )
+
+
+        content = item.get(
+            "content"
+        )
+
+
+        # Vérifier le rôle
+
+        if role not in [
+            "user",
+            "assistant"
+        ]:
+
             continue
 
-        if not isinstance(content, str):
+
+        # Vérifier le contenu
+
+        if not isinstance(
+            content,
+            str
+        ):
+
             continue
+
 
         content = content.strip()
 
+
         if not content:
+
             continue
 
+
         messages.append({
+
             "role": role,
+
             "content": content
+
         })
 
 
     # --------------------------------------------------------
-    # Ajouter le nouveau message
+    # Éviter de doubler le dernier message utilisateur
     # --------------------------------------------------------
 
-    messages.append({
-        "role": "user",
-        "content": message
-    })
+    if not messages or messages[-1].get(
+        "role"
+    ) != "user" or messages[-1].get(
+        "content"
+    ) != message:
+
+        messages.append({
+
+            "role": "user",
+
+            "content": message
+
+        })
 
 
     # --------------------------------------------------------
-    # URL OpenRouter
+    # OpenRouter
     # --------------------------------------------------------
 
-    url = "https://openrouter.ai/api/v1/chat/completions"
+    url = (
+        "https://openrouter.ai/api/v1/"
+        "chat/completions"
+    )
 
 
     # --------------------------------------------------------
-    # En-têtes
+    # Headers
     # --------------------------------------------------------
 
     headers = {
-        "Authorization": f"Bearer {api_key}",
-        "Content-Type": "application/json",
 
-        "HTTP-Referer": "https://messie-ia.onrender.com",
-        "X-Title": "Messie IA"
+        "Authorization":
+            f"Bearer {api_key}",
+
+        "Content-Type":
+            "application/json",
+
+        "HTTP-Referer":
+            "https://messie-ia.onrender.com",
+
+        "X-Title":
+            "Messie IA"
+
     }
 
 
     # --------------------------------------------------------
-    # Requête envoyée à OpenRouter
+    # Requête OpenRouter
     # --------------------------------------------------------
 
     payload = {
-        "model": "openrouter/free",
 
-        "messages": messages,
+        "model":
+            "openrouter/free",
 
-        "temperature": 0.7,
+        "messages":
+            messages,
 
-        "max_tokens": 1000
+        "temperature":
+            0.7,
+
+        "max_tokens":
+            1000
+
     }
 
 
     # --------------------------------------------------------
-    # Contacter OpenRouter
+    # Envoyer la requête
     # --------------------------------------------------------
 
     try:
 
         response = requests.post(
+
             url,
+
             headers=headers,
+
             json=payload,
+
             timeout=60
+
         )
 
 
         # ----------------------------------------------------
-        # Transformer la réponse en JSON
+        # Lire le JSON
         # ----------------------------------------------------
 
         try:
@@ -195,13 +301,21 @@ def chat():
 
         except ValueError:
 
+            print(
+                "Réponse OpenRouter invalide :",
+                response.text
+            )
+
             return jsonify({
-                "error": "OpenRouter a renvoyé une réponse invalide."
+
+                "error":
+                    "OpenRouter a renvoyé une réponse invalide."
+
             }), 502
 
 
         # ----------------------------------------------------
-        # Vérifier les erreurs OpenRouter
+        # Gestion des erreurs OpenRouter
         # ----------------------------------------------------
 
         if response.status_code != 200:
@@ -211,59 +325,112 @@ def chat():
                 result
             )
 
-            error_message = (
-                result
-                .get("error", {})
-                .get(
-                    "message",
-                    "Une erreur est survenue avec OpenRouter."
-                )
+
+            error_data = result.get(
+                "error",
+                {}
             )
 
+
+            if isinstance(
+                error_data,
+                dict
+            ):
+
+                error_message = error_data.get(
+
+                    "message",
+
+                    "Une erreur est survenue avec OpenRouter."
+
+                )
+
+            else:
+
+                error_message = (
+                    "Une erreur est survenue "
+                    "avec OpenRouter."
+                )
+
+
             return jsonify({
-                "error": error_message
+
+                "error":
+                    error_message
+
             }), response.status_code
 
 
         # ----------------------------------------------------
-        # Récupérer la réponse de l'IA
+        # Récupérer les choix
         # ----------------------------------------------------
 
-        choices = result.get("choices", [])
+        choices = result.get(
+            "choices",
+            []
+        )
 
 
         if not choices:
 
+            print(
+                "OpenRouter n'a renvoyé aucun choix :",
+                result
+            )
+
             return jsonify({
-                "error": "OpenRouter n'a renvoyé aucune réponse."
+
+                "error":
+                    "OpenRouter n'a renvoyé aucune réponse."
+
             }), 500
 
 
+        # ----------------------------------------------------
+        # Récupérer le message IA
+        # ----------------------------------------------------
+
         ai_message = choices[0].get(
+
             "message",
+
             {}
+
         )
 
 
         answer = ai_message.get(
+
             "content",
+
             ""
+
         )
 
+
+        # ----------------------------------------------------
+        # Vérifier la réponse
+        # ----------------------------------------------------
 
         if not answer:
 
             return jsonify({
-                "error": "La réponse de l'IA est vide."
+
+                "error":
+                    "La réponse de Messie IA est vide."
+
             }), 500
 
 
         # ----------------------------------------------------
-        # Renvoyer la réponse au site
+        # Réponse au navigateur
         # ----------------------------------------------------
 
         return jsonify({
-            "response": answer
+
+            "response":
+                answer
+
         })
 
 
@@ -274,7 +441,10 @@ def chat():
     except requests.exceptions.Timeout:
 
         return jsonify({
-            "error": "OpenRouter met trop de temps à répondre."
+
+            "error":
+                "OpenRouter met trop de temps à répondre."
+
         }), 504
 
 
@@ -289,13 +459,17 @@ def chat():
             str(e)
         )
 
+
         return jsonify({
-            "error": "Impossible de contacter OpenRouter."
+
+            "error":
+                "Impossible de contacter OpenRouter."
+
         }), 500
 
 
     # --------------------------------------------------------
-    # Autres erreurs
+    # Autre erreur
     # --------------------------------------------------------
 
     except Exception as e:
@@ -305,8 +479,12 @@ def chat():
             str(e)
         )
 
+
         return jsonify({
-            "error": "Une erreur inattendue est survenue."
+
+            "error":
+                "Une erreur inattendue est survenue."
+
         }), 500
 
 
@@ -318,8 +496,13 @@ def chat():
 def health():
 
     return jsonify({
-        "status": "ok",
-        "service": "Messie IA"
+
+        "status":
+            "ok",
+
+        "service":
+            "Messie IA"
+
     })
 
 
@@ -330,13 +513,22 @@ def health():
 if __name__ == "__main__":
 
     port = int(
+
         os.environ.get(
+
             "PORT",
+
             10000
+
         )
+
     )
 
+
     app.run(
+
         host="0.0.0.0",
+
         port=port
-            )
+
+    )
