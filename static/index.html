@@ -2,6 +2,7 @@
 <html lang="fr">
 
 <head>
+
     <meta charset="UTF-8">
 
     <meta
@@ -66,7 +67,9 @@
                 0 25px 80px rgba(0,0,0,0.5);
         }
 
-        /* HEADER */
+        /* =========================
+           HEADER
+        ========================= */
 
         .header {
             padding: 18px 20px;
@@ -145,7 +148,9 @@
             border-radius: 50%;
         }
 
-        /* CHAT */
+        /* =========================
+           CHAT
+        ========================= */
 
         .chat {
             flex: 1;
@@ -230,7 +235,9 @@
             border-bottom-left-radius: 5px;
         }
 
-        /* LOADING */
+        /* =========================
+           LOADING
+        ========================= */
 
         .loading {
             display: flex;
@@ -270,7 +277,9 @@
             }
         }
 
-        /* INPUT */
+        /* =========================
+           INPUT
+        ========================= */
 
         .input-area {
             padding: 15px;
@@ -379,7 +388,9 @@
             margin-top: 8px;
         }
 
-        /* MOBILE */
+        /* =========================
+           MOBILE
+        ========================= */
 
         @media (max-width: 600px) {
 
@@ -451,503 +462,4 @@
 
         <div class="status">
 
-            <span class="status-dot"></span>
-
-            En ligne
-
-        </div>
-
-    </header>
-
-
-    <!-- CHAT -->
-
-    <main
-        class="chat"
-        id="chat"
-    >
-
-        <div
-            class="welcome"
-            id="welcome"
-        >
-
-            <div class="welcome-icon">
-                🤖
-            </div>
-
-            <h2>
-                Bonjour 👋
-            </h2>
-
-            <p>
-                Je suis Messie IA.<br>
-                Pose-moi une question et je vais essayer
-                de t'aider.
-            </p>
-
-        </div>
-
-    </main>
-
-
-    <!-- INPUT -->
-
-    <div class="input-area">
-
-        <div class="input-box">
-
-            <textarea
-                id="messageInput"
-                placeholder="Écris ton message..."
-                rows="1"
-            ></textarea>
-
-            <button
-                id="sendButton"
-                title="Envoyer"
-                type="button"
-            >
-                ➤
-            </button>
-
-        </div>
-
-        <div class="info">
-            Messie IA peut parfois faire des erreurs.
-        </div>
-
-    </div>
-
-</div>
-
-
-<script>
-
-    // =====================================================
-    // ÉLÉMENTS
-    // =====================================================
-
-    const chat =
-        document.getElementById("chat");
-
-    const input =
-        document.getElementById("messageInput");
-
-    const sendButton =
-        document.getElementById("sendButton");
-
-    const welcome =
-        document.getElementById("welcome");
-
-
-    // =====================================================
-    // MÉMOIRE DE LA CONVERSATION
-    // =====================================================
-
-    let conversationHistory = [];
-
-
-    // =====================================================
-    // AJOUTER UN MESSAGE À L'ÉCRAN
-    // =====================================================
-
-    function addMessage(text, type) {
-
-        const message =
-            document.createElement("div");
-
-        message.className =
-            "message " + type;
-
-
-        const bubble =
-            document.createElement("div");
-
-        bubble.className =
-            "bubble";
-
-
-        if (
-            text === null ||
-            text === undefined ||
-            text === ""
-        ) {
-
-            text =
-                "Désolé, je n'ai reçu aucune réponse.";
-
-        }
-
-
-        bubble.textContent =
-            String(text);
-
-
-        message.appendChild(
-            bubble
-        );
-
-
-        chat.appendChild(
-            message
-        );
-
-
-        chat.scrollTop =
-            chat.scrollHeight;
-    }
-
-
-    // =====================================================
-    // CHARGEMENT
-    // =====================================================
-
-    function addLoading() {
-
-        const message =
-            document.createElement("div");
-
-        message.className =
-            "message ai";
-
-        message.id =
-            "loadingMessage";
-
-
-        const bubble =
-            document.createElement("div");
-
-        bubble.className =
-            "bubble";
-
-
-        const loading =
-            document.createElement("div");
-
-        loading.className =
-            "loading";
-
-
-        loading.innerHTML = `
-            <span></span>
-            <span></span>
-            <span></span>
-        `;
-
-
-        bubble.appendChild(
-            loading
-        );
-
-
-        message.appendChild(
-            bubble
-        );
-
-
-        chat.appendChild(
-            message
-        );
-
-
-        chat.scrollTop =
-            chat.scrollHeight;
-    }
-
-
-    // =====================================================
-    // SUPPRIMER LE CHARGEMENT
-    // =====================================================
-
-    function removeLoading() {
-
-        const loading =
-            document.getElementById(
-                "loadingMessage"
-            );
-
-
-        if (loading) {
-
-            loading.remove();
-
-        }
-    }
-
-
-    // =====================================================
-    // ENVOYER MESSAGE
-    // =====================================================
-
-    async function sendMessage() {
-
-        const message =
-            input.value.trim();
-
-
-        if (!message) {
-
-            return;
-
-        }
-
-
-        // Retirer l'accueil
-
-        if (welcome) {
-
-            welcome.remove();
-
-        }
-
-
-        // Afficher le message utilisateur
-
-        addMessage(
-            message,
-            "user"
-        );
-
-
-        // =================================================
-        // AJOUTER LE MESSAGE À LA MÉMOIRE
-        // =================================================
-
-        conversationHistory.push({
-            role: "user",
-            content: message
-        });
-
-
-        // Garder seulement les 20 derniers messages
-
-        conversationHistory =
-            conversationHistory.slice(-20);
-
-
-        // Vider le champ
-
-        input.value = "";
-
-        input.style.height =
-            "45px";
-
-
-        // Désactiver le bouton
-
-        sendButton.disabled =
-            true;
-
-
-        // Afficher chargement
-
-        addLoading();
-
-
-        try {
-
-            // =================================================
-            // ENVOYER MESSAGE + HISTORIQUE AU SERVEUR
-            // =================================================
-
-            const response =
-                await fetch(
-                    "/api/chat",
-                    {
-                        method: "POST",
-
-                        headers: {
-                            "Content-Type":
-                                "application/json"
-                        },
-
-                        body:
-                            JSON.stringify({
-
-                                message: message,
-
-                                history:
-                                    conversationHistory
-
-                            })
-                    }
-                );
-
-
-            // =================================================
-            // RÉCUPÉRER LA RÉPONSE
-            // =================================================
-
-            const data =
-                await response.json();
-
-
-            removeLoading();
-
-
-            // =================================================
-            // ERREUR
-            // =================================================
-
-            if (!response.ok) {
-
-                // Retirer le dernier message utilisateur
-                // de l'historique en cas d'erreur
-
-                conversationHistory.pop();
-
-
-                addMessage(
-                    "❌ " +
-                    (
-                        data.error ||
-                        "Une erreur est survenue."
-                    ),
-                    "ai"
-                );
-
-
-                return;
-            }
-
-
-            // =================================================
-            // RÉPONSE DE MESSIE IA
-            // =================================================
-
-            const answer =
-                data.response;
-
-
-            addMessage(
-                answer,
-                "ai"
-            );
-
-
-            // =================================================
-            // AJOUTER LA RÉPONSE À LA MÉMOIRE
-            // =================================================
-
-            conversationHistory.push({
-
-                role: "assistant",
-
-                content: answer
-
-            });
-
-
-            // Garder les 20 derniers messages
-
-            conversationHistory =
-                conversationHistory.slice(-20);
-
-        }
-
-
-        // =====================================================
-        // ERREUR RÉSEAU
-        // =====================================================
-
-        catch (error) {
-
-            removeLoading();
-
-
-            // Retirer le message utilisateur
-            // puisque la requête n'a pas fonctionné
-
-            conversationHistory.pop();
-
-
-            console.error(
-                "Erreur Messie IA :",
-                error
-            );
-
-
-            addMessage(
-                "❌ Impossible de contacter Messie IA. Vérifie ta connexion ou le serveur.",
-                "ai"
-            );
-
-        }
-
-
-        // =====================================================
-        // FIN
-        // =====================================================
-
-        finally {
-
-            sendButton.disabled =
-                false;
-
-            input.focus();
-
-        }
-
-    }
-
-
-    // =====================================================
-    // BOUTON ENVOYER
-    // =====================================================
-
-    sendButton.addEventListener(
-        "click",
-        sendMessage
-    );
-
-
-    // =====================================================
-    // TOUCHE ENTRÉE
-    // =====================================================
-
-    input.addEventListener(
-        "keydown",
-        function(event) {
-
-            if (
-                event.key === "Enter" &&
-                !event.shiftKey
-            ) {
-
-                event.preventDefault();
-
-                sendMessage();
-
-            }
-
-        }
-    );
-
-
-    // =====================================================
-    // AGRANDIR LE TEXTAREA
-    // =====================================================
-
-    input.addEventListener(
-        "input",
-        function() {
-
-            this.style.height =
-                "45px";
-
-
-            this.style.height =
-                Math.min(
-                    this.scrollHeight,
-                    140
-                ) + "px";
-
-        }
-    );
-
-</script>
-
-</body>
-
-    </html>
+            <
