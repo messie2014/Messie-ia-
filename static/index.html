@@ -7,7 +7,7 @@
 
     <meta
         name="viewport"
-        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+        content="width=device-width, initial-scale=1.0"
     >
 
     <title>Messie IA</title>
@@ -20,10 +20,16 @@
             padding: 0;
         }
 
-        html,
-        body {
-            width: 100%;
-            height: 100%;
+        :root {
+            --bg: #020617;
+            --panel: #0f172a;
+            --panel2: #111827;
+            --border: rgba(255,255,255,0.09);
+            --text: #ffffff;
+            --muted: #94a3b8;
+            --blue: #2563eb;
+            --purple: #7c3aed;
+            --danger: #ef4444;
         }
 
         body {
@@ -40,16 +46,13 @@
                     #020617
                 );
 
-            color: white;
+            color: var(--text);
 
             min-height: 100vh;
 
             overflow: hidden;
         }
 
-        button {
-            font-family: inherit;
-        }
 
         /* =====================================================
            APPLICATION
@@ -59,14 +62,296 @@
             width: 100%;
             height: 100vh;
 
-            background: #020617;
+            display: flex;
+
+            background: var(--panel);
+        }
+
+
+        /* =====================================================
+           SIDEBAR
+        ===================================================== */
+
+        .sidebar {
+            width: 280px;
+
+            background:
+                rgba(2, 6, 23, 0.98);
+
+            border-right:
+                1px solid var(--border);
 
             display: flex;
+
             flex-direction: column;
 
-            position: relative;
+            flex-shrink: 0;
+
+            z-index: 20;
+        }
+
+
+        .sidebar-header {
+            padding: 18px;
+
+            border-bottom:
+                1px solid var(--border);
+        }
+
+
+        .brand {
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+
+            margin-bottom: 18px;
+        }
+
+
+        .brand-icon {
+            width: 42px;
+            height: 42px;
+
+            border-radius: 13px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--purple),
+                    var(--blue)
+                );
+
+            font-size: 20px;
+
+            font-weight: bold;
+        }
+
+
+        .brand-text h1 {
+            font-size: 18px;
+        }
+
+
+        .brand-text p {
+            color: var(--muted);
+
+            font-size: 11px;
+
+            margin-top: 3px;
+        }
+
+
+        /* NOUVELLE CONVERSATION */
+
+        #newChatButton {
+            width: 100%;
+
+            padding: 12px;
+
+            border: none;
+
+            border-radius: 12px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--blue),
+                    var(--purple)
+                );
+
+            color: white;
+
+            font-size: 14px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+        }
+
+
+        #newChatButton:hover {
+            opacity: .9;
+        }
+
+
+        /* TITRE HISTORIQUE */
+
+        .history-title {
+            padding: 16px 18px 8px;
+
+            color: var(--muted);
+
+            font-size: 12px;
+
+            font-weight: bold;
+
+            text-transform: uppercase;
+        }
+
+
+        /* HISTORIQUE */
+
+        .history {
+            flex: 1;
+
+            overflow-y: auto;
+
+            padding: 5px 10px 15px;
+        }
+
+
+        .history-empty {
+            padding: 20px 10px;
+
+            text-align: center;
+
+            color: #64748b;
+
+            font-size: 13px;
+
+            line-height: 1.5;
+        }
+
+
+        .conversation {
+            display: flex;
+
+            align-items: center;
+
+            gap: 8px;
+
+            padding: 11px 10px;
+
+            margin-bottom: 5px;
+
+            border-radius: 10px;
+
+            cursor: pointer;
+
+            transition: background .2s;
+        }
+
+
+        .conversation:hover {
+            background: rgba(255,255,255,0.06);
+        }
+
+
+        .conversation.active {
+            background: rgba(37,99,235,0.18);
+        }
+
+
+        .conversation-main {
+            flex: 1;
+
+            min-width: 0;
+        }
+
+
+        .conversation-title {
+            color: #e2e8f0;
+
+            font-size: 13px;
+
+            white-space: nowrap;
 
             overflow: hidden;
+
+            text-overflow: ellipsis;
+        }
+
+
+        .conversation-date {
+            color: #64748b;
+
+            font-size: 10px;
+
+            margin-top: 4px;
+        }
+
+
+        .conversation-actions {
+            display: flex;
+
+            gap: 3px;
+
+            opacity: 0;
+        }
+
+
+        .conversation:hover .conversation-actions {
+            opacity: 1;
+        }
+
+
+        .history-button {
+            width: 28px;
+            height: 28px;
+
+            border: none;
+
+            border-radius: 7px;
+
+            background: transparent;
+
+            color: #94a3b8;
+
+            cursor: pointer;
+        }
+
+
+        .history-button:hover {
+            background: rgba(255,255,255,0.08);
+
+            color: white;
+        }
+
+
+        .history-button.delete:hover {
+            color: #ef4444;
+        }
+
+
+        /* =====================================================
+           SIDEBAR FOOTER
+        ===================================================== */
+
+        .sidebar-footer {
+            padding: 13px 18px;
+
+            border-top:
+                1px solid var(--border);
+
+            color: #64748b;
+
+            text-align: center;
+
+            font-size: 10px;
+        }
+
+
+        /* =====================================================
+           ZONE PRINCIPALE
+        ===================================================== */
+
+        .main {
+            flex: 1;
+
+            min-width: 0;
+
+            display: flex;
+
+            flex-direction: column;
+
+            height: 100vh;
         }
 
 
@@ -75,15 +360,15 @@
         ===================================================== */
 
         .header {
-            height: 75px;
+            height: 72px;
 
-            padding: 12px 18px;
+            padding: 12px 20px;
 
             background:
-                rgba(2, 6, 23, 0.97);
+                rgba(2, 6, 23, 0.95);
 
             border-bottom:
-                1px solid rgba(255,255,255,0.08);
+                1px solid var(--border);
 
             display: flex;
 
@@ -92,127 +377,76 @@
             justify-content: space-between;
 
             flex-shrink: 0;
-
-            z-index: 10;
         }
 
 
-        .logo {
+        .header-left {
             display: flex;
 
             align-items: center;
 
-            gap: 11px;
+            gap: 12px;
 
             min-width: 0;
         }
 
 
-        .logo-icon {
-            width: 45px;
-            height: 45px;
+        .mobile-menu {
+            display: none;
 
-            flex-shrink: 0;
+            width: 40px;
+            height: 40px;
 
-            border-radius: 50%;
+            border: none;
 
-            display: flex;
+            border-radius: 10px;
 
-            align-items: center;
-            justify-content: center;
+            background: #1e293b;
 
-            background:
-                linear-gradient(
-                    135deg,
-                    #7c3aed,
-                    #2563eb
-                );
+            color: white;
 
-            font-size: 21px;
+            font-size: 20px;
 
-            font-weight: bold;
+            cursor: pointer;
         }
 
 
-        .logo-text {
+        .current-chat {
             min-width: 0;
         }
 
 
-        .logo-text h1 {
-            font-size: 19px;
+        .current-chat h2 {
+            font-size: 17px;
 
             white-space: nowrap;
+
+            overflow: hidden;
+
+            text-overflow: ellipsis;
         }
 
 
-        .logo-text p {
-            font-size: 11px;
+        .current-chat p {
+            color: #22c55e;
 
-            color: #94a3b8;
+            font-size: 11px;
 
             margin-top: 3px;
         }
 
 
-        /* =====================================================
-           HEADER BUTTONS
-        ===================================================== */
+        .online-dot {
+            display: inline-block;
 
-        .header-buttons {
-            display: flex;
+            width: 7px;
+            height: 7px;
 
-            align-items: center;
+            background: #22c55e;
 
-            gap: 7px;
-        }
+            border-radius: 50%;
 
-
-        .header-button {
-            border: none;
-
-            color: white;
-
-            background: #111827;
-
-            border:
-                1px solid
-                rgba(255,255,255,0.1);
-
-            border-radius: 11px;
-
-            height: 40px;
-
-            padding: 0 11px;
-
-            cursor: pointer;
-
-            font-size: 13px;
-
-            display: flex;
-
-            align-items: center;
-
-            justify-content: center;
-
-            gap: 5px;
-        }
-
-
-        .header-button:hover {
-            background: #1e293b;
-        }
-
-
-        .header-button.new {
-            background:
-                linear-gradient(
-                    135deg,
-                    #2563eb,
-                    #7c3aed
-                );
-
-            border: none;
+            margin-right: 4px;
         }
 
 
@@ -225,84 +459,78 @@
 
             overflow-y: auto;
 
-            overflow-x: hidden;
-
-            padding: 25px 18px 20px;
+            padding: 25px 18px;
 
             scroll-behavior: smooth;
-
-            -webkit-overflow-scrolling: touch;
         }
 
-
-        .chat::-webkit-scrollbar {
-            width: 6px;
-        }
-
-
-        .chat::-webkit-scrollbar-thumb {
-            background: #334155;
-
-            border-radius: 10px;
-        }
-
-
-        /* =====================================================
-           WELCOME
-        ===================================================== */
 
         .welcome {
             text-align: center;
 
-            padding: 55px 15px 40px;
+            max-width: 650px;
+
+            margin: 0 auto;
+
+            padding: 60px 15px;
         }
 
 
         .welcome-icon {
-            width: 75px;
-            height: 75px;
+            font-size: 55px;
 
-            margin: 0 auto 18px;
-
-            border-radius: 50%;
-
-            display: flex;
-
-            align-items: center;
-            justify-content: center;
-
-            background:
-                linear-gradient(
-                    135deg,
-                    #7c3aed,
-                    #2563eb
-                );
-
-            font-size: 34px;
-
-            font-weight: bold;
-
-            box-shadow:
-                0 10px 35px
-                rgba(37,99,235,0.25);
+            margin-bottom: 15px;
         }
 
 
         .welcome h2 {
-            font-size: 27px;
+            font-size: 28px;
 
             margin-bottom: 10px;
         }
 
 
         .welcome p {
-            color: #94a3b8;
+            color: var(--muted);
 
-            line-height: 1.6;
+            line-height: 1.7;
 
-            max-width: 500px;
+            font-size: 14px;
+        }
 
-            margin: auto;
+
+        .suggestions {
+            display: flex;
+
+            flex-wrap: wrap;
+
+            justify-content: center;
+
+            gap: 8px;
+
+            margin-top: 25px;
+        }
+
+
+        .suggestion {
+            padding: 9px 13px;
+
+            border: 1px solid var(--border);
+
+            border-radius: 20px;
+
+            background: rgba(255,255,255,0.03);
+
+            color: #cbd5e1;
+
+            cursor: pointer;
+
+            font-size: 12px;
+        }
+
+
+        .suggestion:hover {
+            background: rgba(255,255,255,0.08);
         }
 
 
@@ -314,8 +542,6 @@
             display: flex;
 
             margin-bottom: 20px;
-
-            width: 100%;
         }
 
 
@@ -332,7 +558,7 @@
         .bubble {
             max-width: 85%;
 
-            padding: 14px 17px;
+            padding: 13px 16px;
 
             border-radius: 18px;
 
@@ -342,9 +568,7 @@
 
             word-wrap: break-word;
 
-            overflow-wrap: anywhere;
-
-            font-size: 15px;
+            font-size: 14px;
         }
 
 
@@ -352,8 +576,8 @@
             background:
                 linear-gradient(
                     135deg,
-                    #2563eb,
-                    #7c3aed
+                    var(--blue),
+                    var(--purple)
                 );
 
             border-bottom-right-radius: 5px;
@@ -361,11 +585,11 @@
 
 
         .ai .bubble {
-            background: #0f172a;
+            background: #1e293b;
 
             border:
                 1px solid
-                rgba(255,255,255,0.07);
+                rgba(255,255,255,0.06);
 
             border-bottom-left-radius: 5px;
         }
@@ -381,8 +605,6 @@
             gap: 5px;
 
             align-items: center;
-
-            min-height: 20px;
         }
 
 
@@ -425,14 +647,13 @@
         ===================================================== */
 
         .input-area {
-            padding: 12px 15px 14px;
+            padding: 15px;
 
             background:
                 rgba(2, 6, 23, 0.98);
 
             border-top:
-                1px solid
-                rgba(255,255,255,0.08);
+                1px solid var(--border);
 
             flex-shrink: 0;
         }
@@ -443,9 +664,9 @@
 
             align-items: flex-end;
 
-            gap: 9px;
+            gap: 10px;
 
-            background: #0f172a;
+            background: #1e293b;
 
             border:
                 1px solid
@@ -453,7 +674,7 @@
 
             border-radius: 18px;
 
-            padding: 7px;
+            padding: 8px;
         }
 
 
@@ -479,8 +700,6 @@
             max-height: 140px;
 
             font-family: inherit;
-
-            line-height: 1.4;
         }
 
 
@@ -489,34 +708,35 @@
         }
 
 
+        button {
+            border: none;
+
+            cursor: pointer;
+
+            color: white;
+        }
+
+
         #sendButton {
             width: 45px;
             height: 45px;
-
-            flex-shrink: 0;
-
-            border: none;
 
             border-radius: 14px;
 
             background:
                 linear-gradient(
                     135deg,
-                    #2563eb,
-                    #7c3aed
+                    var(--blue),
+                    var(--purple)
                 );
 
-            color: white;
-
-            font-size: 19px;
+            font-size: 18px;
 
             display: flex;
 
             justify-content: center;
 
             align-items: center;
-
-            cursor: pointer;
         }
 
 
@@ -539,300 +759,24 @@
 
             font-size: 10px;
 
-            margin-top: 7px;
+            margin-top: 8px;
         }
 
 
         /* =====================================================
-           PANNEAU HISTORIQUE
+           OVERLAY MOBILE
         ===================================================== */
 
-        .history-overlay {
+        .overlay {
+            display: none;
+
             position: fixed;
 
             inset: 0;
 
-            background:
-                rgba(0,0,0,0.65);
+            background: rgba(0,0,0,0.6);
 
-            z-index: 100;
-
-            display: none;
-        }
-
-
-        .history-overlay.show {
-            display: block;
-        }
-
-
-        .history-panel {
-            position: absolute;
-
-            top: 0;
-            left: 0;
-
-            width: min(360px, 88vw);
-
-            height: 100%;
-
-            background:
-                #020617;
-
-            border-right:
-                1px solid
-                rgba(255,255,255,0.1);
-
-            box-shadow:
-                10px 0 40px
-                rgba(0,0,0,0.45);
-
-            display: flex;
-
-            flex-direction: column;
-
-            animation:
-                slideIn .22s ease;
-        }
-
-
-        @keyframes slideIn {
-
-            from {
-                transform: translateX(-100%);
-            }
-
-            to {
-                transform: translateX(0);
-            }
-        }
-
-
-        .history-header {
-            padding: 17px;
-
-            border-bottom:
-                1px solid
-                rgba(255,255,255,0.08);
-
-            display: flex;
-
-            align-items: center;
-
-            justify-content: space-between;
-        }
-
-
-        .history-header h2 {
-            font-size: 19px;
-        }
-
-
-        .close-history {
-            width: 38px;
-            height: 38px;
-
-            border: none;
-
-            border-radius: 10px;
-
-            background: #111827;
-
-            color: white;
-
-            font-size: 20px;
-
-            cursor: pointer;
-        }
-
-
-        .history-new {
-            margin: 14px;
-
-            padding: 12px;
-
-            border: none;
-
-            border-radius: 12px;
-
-            color: white;
-
-            background:
-                linear-gradient(
-                    135deg,
-                    #2563eb,
-                    #7c3aed
-                );
-
-            cursor: pointer;
-
-            font-size: 14px;
-
-            font-weight: bold;
-        }
-
-
-        .history-list {
-            flex: 1;
-
-            overflow-y: auto;
-
-            padding: 0 10px 15px;
-        }
-
-
-        .history-empty {
-            text-align: center;
-
-            color: #64748b;
-
-            padding: 35px 20px;
-
-            line-height: 1.6;
-        }
-
-
-        .history-item {
-            display: flex;
-
-            align-items: center;
-
-            gap: 8px;
-
-            padding: 12px;
-
-            margin-bottom: 7px;
-
-            border-radius: 12px;
-
-            cursor: pointer;
-
-            background: #0f172a;
-
-            border:
-                1px solid
-                rgba(255,255,255,0.04);
-        }
-
-
-        .history-item:hover {
-            background: #1e293b;
-        }
-
-
-        .history-item.active {
-            background: #172554;
-
-            border-color:
-                rgba(59,130,246,0.3);
-        }
-
-
-        .history-content {
-            flex: 1;
-
-            min-width: 0;
-        }
-
-
-        .history-title {
-            font-size: 14px;
-
-            color: white;
-
-            white-space: nowrap;
-
-            overflow: hidden;
-
-            text-overflow: ellipsis;
-        }
-
-
-        .history-date {
-            font-size: 10px;
-
-            color: #64748b;
-
-            margin-top: 5px;
-        }
-
-
-        .delete-history {
-            width: 34px;
-            height: 34px;
-
-            flex-shrink: 0;
-
-            border: none;
-
-            border-radius: 9px;
-
-            background: transparent;
-
-            color: #94a3b8;
-
-            cursor: pointer;
-
-            font-size: 16px;
-        }
-
-
-        .delete-history:hover {
-            background: #3f172a;
-
-            color: #f87171;
-        }
-
-
-        /* =====================================================
-           TOAST
-        ===================================================== */
-
-        .toast {
-            position: fixed;
-
-            left: 50%;
-
-            bottom: 95px;
-
-            transform:
-                translate(-50%, 20px);
-
-            background: #1e293b;
-
-            border:
-                1px solid
-                rgba(255,255,255,0.1);
-
-            color: white;
-
-            padding: 11px 16px;
-
-            border-radius: 12px;
-
-            font-size: 13px;
-
-            opacity: 0;
-
-            pointer-events: none;
-
-            transition:
-                opacity .2s,
-                transform .2s;
-
-            z-index: 300;
-
-            max-width: 85%;
-
-            text-align: center;
-        }
-
-
-        .toast.show {
-            opacity: 1;
-
-            transform:
-                translate(-50%, 0);
+            z-index: 10;
         }
 
 
@@ -840,122 +784,75 @@
            MOBILE
         ===================================================== */
 
-        @media (max-width: 600px) {
+        @media (max-width: 700px) {
+
+            .sidebar {
+                position: fixed;
+
+                left: -290px;
+
+                top: 0;
+
+                bottom: 0;
+
+                transition: left .25s ease;
+
+                box-shadow:
+                    10px 0 40px rgba(0,0,0,.4);
+            }
+
+
+            .sidebar.open {
+                left: 0;
+            }
+
+
+            .overlay.open {
+                display: block;
+            }
+
+
+            .mobile-menu {
+                display: block;
+            }
+
 
             .header {
-                height: 68px;
+                height: 64px;
 
-                padding:
-                    10px 12px;
-            }
-
-
-            .logo-icon {
-                width: 40px;
-                height: 40px;
-
-                font-size: 19px;
-            }
-
-
-            .logo-text h1 {
-                font-size: 17px;
-            }
-
-
-            .logo-text p {
-                font-size: 10px;
-            }
-
-
-            .header-buttons {
-                gap: 5px;
-            }
-
-
-            .header-button {
-                width: 40px;
-                height: 40px;
-
-                padding: 0;
-
-                font-size: 0;
-            }
-
-
-            .header-button span {
-                font-size: 18px;
+                padding: 10px 12px;
             }
 
 
             .chat {
-                padding:
-                    18px 12px 15px;
+                padding: 18px 12px;
             }
 
 
             .welcome {
-                padding:
-                    45px 12px 30px;
+                padding-top: 50px;
             }
 
 
             .welcome h2 {
-                font-size: 23px;
-            }
-
-
-            .welcome p {
-                font-size: 14px;
+                font-size: 24px;
             }
 
 
             .bubble {
-                max-width: 91%;
+                max-width: 90%;
 
-                font-size: 15px;
-
-                padding:
-                    13px 14px;
+                font-size: 14px;
             }
 
 
             .input-area {
-                padding:
-                    9px 10px 10px;
+                padding: 10px;
             }
 
 
-            .info {
-                font-size: 9px;
-            }
-
-        }
-
-
-        /* =====================================================
-           PETITS ÉCRANS
-        ===================================================== */
-
-        @media (max-height: 650px) {
-
-            .welcome {
-                padding-top: 25px;
-            }
-
-
-            .welcome-icon {
-                width: 60px;
-                height: 60px;
-
-                font-size: 27px;
-
-                margin-bottom: 12px;
-            }
-
-
-            .welcome h2 {
-                font-size: 21px;
+            .conversation-actions {
+                opacity: 1;
             }
 
         }
@@ -972,238 +869,207 @@
 
 
     <!-- =====================================================
-         HEADER
+         SIDEBAR
     ====================================================== -->
 
-    <header class="header">
-
-        <div class="logo">
-
-            <div class="logo-icon">
-                M
-            </div>
-
-            <div class="logo-text">
-
-                <h1>
-                    Messie IA
-                </h1>
-
-                <p>
-                    Ton assistant intelligent
-                </p>
-
-            </div>
-
-        </div>
-
-
-        <div class="header-buttons">
-
-            <!-- HISTORIQUE -->
-
-            <button
-                class="header-button"
-                id="historyButton"
-                type="button"
-                title="Historique"
-            >
-
-                <span>📚</span>
-
-                <span>
-                    Historique
-                </span>
-
-            </button>
-
-
-            <!-- NOUVELLE CONVERSATION -->
-
-            <button
-                class="header-button new"
-                id="newConversationButton"
-                type="button"
-                title="Nouvelle conversation"
-            >
-
-                <span>＋</span>
-
-                <span>
-                    Nouveau
-                </span>
-
-            </button>
-
-        </div>
-
-    </header>
-
-
-    <!-- =====================================================
-         CHAT
-    ====================================================== -->
-
-    <main
-        class="chat"
-        id="chat"
+    <aside
+        class="sidebar"
+        id="sidebar"
     >
 
-    </main>
+        <div class="sidebar-header">
 
+            <div class="brand">
 
-    <!-- =====================================================
-         INPUT
-    ====================================================== -->
+                <div class="brand-icon">
+                    M
+                </div>
 
-    <section class="input-area">
+                <div class="brand-text">
 
-        <div class="input-box">
+                    <h1>
+                        Messie IA
+                    </h1>
 
-            <textarea
-                id="messageInput"
-                placeholder="Écris ton message..."
-                rows="1"
-                autocomplete="off"
-            ></textarea>
+                    <p>
+                        Ton assistant intelligent
+                    </p>
+
+                </div>
+
+            </div>
 
 
             <button
-                id="sendButton"
-                type="button"
-                title="Envoyer"
+                id="newChatButton"
             >
-                ➤
+                ＋ Nouvelle conversation
             </button>
 
         </div>
 
 
-        <div class="info">
-            Messie IA peut parfois faire des erreurs.
+        <div class="history-title">
+            Historique
         </div>
-
-    </section>
-
-
-</div>
-
-
-<!-- =========================================================
-     PANNEAU HISTORIQUE
-========================================================= -->
-
-<div
-    class="history-overlay"
-    id="historyOverlay"
->
-
-    <aside class="history-panel">
-
-
-        <div class="history-header">
-
-            <h2>
-                📚 Historique
-            </h2>
-
-
-            <button
-                class="close-history"
-                id="closeHistory"
-                type="button"
-            >
-                ×
-            </button>
-
-        </div>
-
-
-        <button
-            class="history-new"
-            id="historyNewButton"
-            type="button"
-        >
-            ＋ Nouvelle conversation
-        </button>
 
 
         <div
-            class="history-list"
-            id="historyList"
+            class="history"
+            id="history"
         >
 
         </div>
 
 
+        <div class="sidebar-footer">
+            Messie IA
+        </div>
+
     </aside>
 
-</div>
+
+    <!-- =====================================================
+         OVERLAY MOBILE
+    ====================================================== -->
+
+    <div
+        class="overlay"
+        id="overlay"
+    ></div>
 
 
-<!-- =========================================================
-     TOAST
-========================================================= -->
+    <!-- =====================================================
+         ZONE PRINCIPALE
+    ====================================================== -->
 
-<div
-    class="toast"
-    id="toast"
->
+    <main class="main">
+
+
+        <!-- HEADER -->
+
+        <header class="header">
+
+
+            <div class="header-left">
+
+
+                <button
+                    class="mobile-menu"
+                    id="mobileMenu"
+                    aria-label="Menu"
+                >
+                    ☰
+                </button>
+
+
+                <div class="current-chat">
+
+                    <h2 id="currentChatTitle">
+                        Nouvelle conversation
+                    </h2>
+
+                    <p>
+                        <span class="online-dot"></span>
+                        En ligne
+                    </p>
+
+                </div>
+
+            </div>
+
+
+        </header>
+
+
+        <!-- =================================================
+             CHAT
+        ================================================== -->
+
+        <section
+            class="chat"
+            id="chat"
+        >
+
+        </section>
+
+
+        <!-- =================================================
+             INPUT
+        ================================================== -->
+
+        <div class="input-area">
+
+            <div class="input-box">
+
+
+                <textarea
+                    id="messageInput"
+                    placeholder="Écris ton message..."
+                    rows="1"
+                ></textarea>
+
+
+                <button
+                    id="sendButton"
+                    title="Envoyer"
+                >
+                    ➤
+                </button>
+
+
+            </div>
+
+
+            <div class="info">
+                Messie IA peut parfois faire des erreurs.
+            </div>
+
+        </div>
+
+
+    </main>
+
 </div>
 
 
 <script>
 
-    /* ========================================================
-       CONFIGURATION
-    ======================================================== */
-
-    const STORAGE_KEY =
-        "messie_ia_conversations_v1";
-
-
-    /* ========================================================
-       ÉLÉMENTS HTML
-    ======================================================== */
+    /* =====================================================
+       VARIABLES
+    ===================================================== */
 
     const chat =
         document.getElementById("chat");
 
-    const messageInput =
+    const input =
         document.getElementById("messageInput");
 
     const sendButton =
         document.getElementById("sendButton");
 
-    const historyButton =
-        document.getElementById("historyButton");
+    const historyElement =
+        document.getElementById("history");
 
-    const historyOverlay =
-        document.getElementById("historyOverlay");
+    const newChatButton =
+        document.getElementById("newChatButton");
 
-    const closeHistory =
-        document.getElementById("closeHistory");
+    const currentChatTitle =
+        document.getElementById("currentChatTitle");
 
-    const historyList =
-        document.getElementById("historyList");
+    const sidebar =
+        document.getElementById("sidebar");
 
-    const newConversationButton =
-        document.getElementById(
-            "newConversationButton"
-        );
+    const overlay =
+        document.getElementById("overlay");
 
-    const historyNewButton =
-        document.getElementById(
-            "historyNewButton"
-        );
-
-    const toast =
-        document.getElementById("toast");
+    const mobileMenu =
+        document.getElementById("mobileMenu");
 
 
-    /* ========================================================
-       VARIABLES
-    ======================================================== */
+    /* =====================================================
+       DONNÉES
+    ===================================================== */
 
     let conversations = [];
 
@@ -1212,9 +1078,19 @@
     let isSending = false;
 
 
-    /* ========================================================
-       CHARGER LES CONVERSATIONS
-    ======================================================== */
+    /* =====================================================
+       STOCKAGE
+    ===================================================== */
+
+    function saveConversations() {
+
+        localStorage.setItem(
+            "messieIA_conversations",
+            JSON.stringify(conversations)
+        );
+
+    }
+
 
     function loadConversations() {
 
@@ -1222,92 +1098,70 @@
 
             const saved =
                 localStorage.getItem(
-                    STORAGE_KEY
+                    "messieIA_conversations"
                 );
 
+            if (saved) {
 
-            if (!saved) {
-
-                conversations = [];
-
-                return;
-            }
-
-
-            const parsed =
-                JSON.parse(saved);
-
-
-            if (Array.isArray(parsed)) {
-
-                conversations = parsed;
-
-            } else {
-
-                conversations = [];
+                conversations =
+                    JSON.parse(saved);
 
             }
 
         } catch (error) {
 
             console.error(
-                "Erreur chargement historique:",
+                "Erreur historique :",
                 error
             );
 
             conversations = [];
+
         }
+
     }
 
 
-    /* ========================================================
-       SAUVEGARDER LES CONVERSATIONS
-    ======================================================== */
-
-    function saveConversations() {
-
-        try {
-
-            localStorage.setItem(
-                STORAGE_KEY,
-                JSON.stringify(
-                    conversations
-                )
-            );
-
-        } catch (error) {
-
-            console.error(
-                "Erreur sauvegarde historique:",
-                error
-            );
-
-            showToast(
-                "Impossible de sauvegarder l'historique."
-            );
-        }
-    }
-
-
-    /* ========================================================
+    /* =====================================================
        ID UNIQUE
-    ======================================================== */
+    ===================================================== */
 
     function createId() {
 
         return (
-            Date.now().toString(36)
-            +
+            Date.now().toString() +
             Math.random()
                 .toString(36)
                 .substring(2, 9)
         );
+
     }
 
 
-    /* ========================================================
+    /* =====================================================
+       DATE
+    ===================================================== */
+
+    function formatDate(timestamp) {
+
+        const date =
+            new Date(timestamp);
+
+        return date.toLocaleDateString(
+            "fr-FR",
+            {
+                day: "2-digit",
+                month: "2-digit",
+                year: "numeric"
+            }
+        );
+
+    }
+
+
+    /* =====================================================
        CRÉER UNE CONVERSATION
-    ======================================================== */
+    ===================================================== */
 
     function createConversation() {
 
@@ -1315,13 +1169,14 @@
 
             id: createId(),
 
-            title: "Nouvelle conversation",
+            title:
+                "Nouvelle conversation",
 
             createdAt:
-                new Date().toISOString(),
+                Date.now(),
 
             updatedAt:
-                new Date().toISOString(),
+                Date.now(),
 
             messages: []
 
@@ -1339,19 +1194,20 @@
 
         saveConversations();
 
-        renderChat();
-
         renderHistory();
 
-        closeHistoryPanel();
+        renderConversation();
 
-        messageInput.focus();
+        closeMobileMenu();
+
+        input.focus();
+
     }
 
 
-    /* ========================================================
+    /* =====================================================
        CONVERSATION ACTUELLE
-    ======================================================== */
+    ===================================================== */
 
     function getCurrentConversation() {
 
@@ -1364,257 +1220,489 @@
     }
 
 
-    /* ========================================================
+    /* =====================================================
        TITRE AUTOMATIQUE
-    ======================================================== */
+    ===================================================== */
 
-    function createTitle(text) {
+    function generateTitle(text) {
 
-        if (!text) {
+        let title =
+            text.trim();
+
+        if (!title) {
 
             return "Nouvelle conversation";
+
         }
 
 
-        let title =
-            text
-                .replace(/\s+/g, " ")
-                .trim();
-
-
-        if (title.length > 38) {
+        if (title.length > 35) {
 
             title =
-                title.substring(0, 38)
-                + "...";
+                title.substring(0, 35) +
+                "...";
+
         }
 
 
         return title;
+
     }
 
 
-    /* ========================================================
-       FORMAT DATE
-    ======================================================== */
+    /* =====================================================
+       AJOUTER MESSAGE
+    ===================================================== */
 
-    function formatDate(dateString) {
+    function addMessageToConversation(
+        role,
+        content
+    ) {
 
-        try {
-
-            const date =
-                new Date(dateString);
-
-
-            return date.toLocaleString(
-                "fr-FR",
-                {
-                    day: "2-digit",
-                    month: "2-digit",
-                    year: "numeric",
-                    hour: "2-digit",
-                    minute: "2-digit"
-                }
-            );
-
-        } catch {
-
-            return "";
-        }
-    }
+        const conversation =
+            getCurrentConversation();
 
 
-    /* ========================================================
-       AFFICHER L'HISTORIQUE
-    ======================================================== */
-
-    function renderHistory() {
-
-        historyList.innerHTML = "";
-
-
-        if (!conversations.length) {
-
-            const empty =
-                document.createElement(
-                    "div"
-                );
-
-
-            empty.className =
-                "history-empty";
-
-
-            empty.innerHTML =
-                `
-                <div style="font-size:32px;margin-bottom:10px;">
-                    📭
-                </div>
-
-                <div>
-                    Aucune conversation enregistrée.
-                </div>
-
-                <div style="margin-top:7px;">
-                    Commence une conversation pour
-                    créer ton premier historique.
-                </div>
-                `;
-
-
-            historyList.appendChild(
-                empty
-            );
-
+        if (!conversation) {
 
             return;
+
         }
 
 
-        conversations.forEach(
-            conversation => {
+        conversation.messages.push({
 
-                const item =
-                    document.createElement(
-                        "div"
-                    );
+            role: role,
 
+            content: content,
 
-                item.className =
-                    "history-item";
+            timestamp: Date.now()
+
+        });
 
 
-                if (
-                    conversation.id ===
-                    currentConversationId
-                ) {
-
-                    item.classList.add(
-                        "active"
-                    );
-                }
+        conversation.updatedAt =
+            Date.now();
 
 
-                const content =
-                    document.createElement(
-                        "div"
-                    );
+        if (
+            role === "user" &&
+            conversation.messages.length === 1
+        ) {
+
+            conversation.title =
+                generateTitle(content);
+
+        }
 
 
-                content.className =
-                    "history-content";
+        saveConversations();
+
+        renderHistory();
+
+    }
 
 
-                const title =
-                    document.createElement(
-                        "div"
-                    );
+    /* =====================================================
+       AFFICHER MESSAGE
+    ===================================================== */
+
+    function displayMessage(
+        text,
+        type
+    ) {
+
+        const message =
+            document.createElement("div");
+
+        message.className =
+            "message " + type;
 
 
-                title.className =
-                    "history-title";
+        const bubble =
+            document.createElement("div");
+
+        bubble.className =
+            "bubble";
 
 
-                title.textContent =
-                    conversation.title ||
-                    "Nouvelle conversation";
+        bubble.textContent =
+            text;
 
 
-                const date =
-                    document.createElement(
-                        "div"
-                    );
+        message.appendChild(
+            bubble
+        );
 
 
-                date.className =
-                    "history-date";
+        chat.appendChild(
+            message
+        );
 
 
-                date.textContent =
-                    formatDate(
-                        conversation.updatedAt ||
-                        conversation.createdAt
-                    );
+        chat.scrollTop =
+            chat.scrollHeight;
+
+    }
 
 
-                content.appendChild(title);
+    /* =====================================================
+       MESSAGE D'ACCUEIL
+    ===================================================== */
 
-                content.appendChild(date);
+    function showWelcome() {
+
+        chat.innerHTML = `
+
+            <div class="welcome">
+
+                <div class="welcome-icon">
+                    🤖
+                </div>
+
+                <h2>
+                    Bonjour 👋
+                </h2>
+
+                <p>
+                    Je suis Messie IA.<br>
+                    Pose-moi une question et je vais essayer de t'aider.
+                </p>
+
+                <div class="suggestions">
+
+                    <button
+                        class="suggestion"
+                        data-text="Explique-moi quelque chose d'intéressant."
+                    >
+                        💡 Explique-moi quelque chose
+                    </button>
+
+                    <button
+                        class="suggestion"
+                        data-text="Aide-moi à créer une application."
+                    >
+                        💻 Aide-moi à créer une application
+                    </button>
+
+                    <button
+                        class="suggestion"
+                        data-text="Donne-moi une idée de projet."
+                    >
+                        🚀 Donne-moi une idée de projet
+                    </button>
+
+                </div>
+
+            </div>
+
+        `;
 
 
-                /* Ouvrir la conversation */
+        document
+            .querySelectorAll(".suggestion")
+            .forEach(button => {
 
-                content.addEventListener(
+                button.addEventListener(
                     "click",
                     () => {
 
-                        openConversation(
-                            conversation.id
-                        );
+                        input.value =
+                            button.dataset.text;
+
+                        input.focus();
+
+                        autoResize();
 
                     }
                 );
 
+            });
 
-                /* Supprimer */
-
-                const deleteButton =
-                    document.createElement(
-                        "button"
-                    );
+    }
 
 
-                deleteButton.className =
-                    "delete-history";
+    /* =====================================================
+       AFFICHER CONVERSATION
+    ===================================================== */
+
+    function renderConversation() {
+
+        const conversation =
+            getCurrentConversation();
 
 
-                deleteButton.type =
-                    "button";
+        if (!conversation) {
+
+            currentChatTitle.textContent =
+                "Nouvelle conversation";
+
+            showWelcome();
+
+            return;
+
+        }
 
 
-                deleteButton.title =
-                    "Supprimer";
+        currentChatTitle.textContent =
+            conversation.title;
 
 
-                deleteButton.textContent =
-                    "🗑️";
+        chat.innerHTML = "";
 
 
-                deleteButton.addEventListener(
-                    "click",
-                    event => {
+        if (
+            conversation.messages.length === 0
+        ) {
 
-                        event.stopPropagation();
+            showWelcome();
 
-                        deleteConversation(
-                            conversation.id
-                        );
+            return;
 
-                    }
-                );
+        }
 
 
-                item.appendChild(content);
+        conversation.messages.forEach(
+            message => {
 
-                item.appendChild(
-                    deleteButton
-                );
-
-
-                historyList.appendChild(
-                    item
+                displayMessage(
+                    message.content,
+                    message.role === "user"
+                        ? "user"
+                        : "ai"
                 );
 
             }
         );
+
+
+        chat.scrollTop =
+            chat.scrollHeight;
+
     }
 
 
-    /* ========================================================
-       OUVRIR UNE CONVERSATION
-    ======================================================== */
+    /* =====================================================
+       HISTORIQUE
+    ===================================================== */
+
+    function renderHistory() {
+
+        historyElement.innerHTML = "";
+
+
+        if (
+            conversations.length === 0
+        ) {
+
+            historyElement.innerHTML = `
+
+                <div class="history-empty">
+
+                    Aucune conversation.<br>
+                    Commence une nouvelle discussion.
+
+                </div>
+
+            `;
+
+            return;
+
+        }
+
+
+        conversations
+            .sort(
+                (a, b) =>
+                    b.updatedAt -
+                    a.updatedAt
+            )
+            .forEach(
+                conversation => {
+
+                    const item =
+                        document.createElement("div");
+
+
+                    item.className =
+                        "conversation";
+
+
+                    if (
+                        conversation.id ===
+                        currentConversationId
+                    ) {
+
+                        item.classList.add(
+                            "active"
+                        );
+
+                    }
+
+
+                    const main =
+                        document.createElement("div");
+
+                    main.className =
+                        "conversation-main";
+
+
+                    const title =
+                        document.createElement("div");
+
+                    title.className =
+                        "conversation-title";
+
+                    title.textContent =
+                        conversation.title;
+
+
+                    const date =
+                        document.createElement("div");
+
+                    date.className =
+                        "conversation-date";
+
+                    date.textContent =
+                        formatDate(
+                            conversation.updatedAt
+                        );
+
+
+                    main.appendChild(title);
+
+                    main.appendChild(date);
+
+
+                    const actions =
+                        document.createElement("div");
+
+                    actions.className =
+                        "conversation-actions";
+
+
+                    /* RENOMMER */
+
+                    const renameButton =
+                        document.createElement("button");
+
+                    renameButton.className =
+                        "history-button";
+
+                    renameButton.title =
+                        "Renommer";
+
+                    renameButton.textContent =
+                        "✏️";
+
+
+                    renameButton.addEventListener(
+                        "click",
+                        event => {
+
+                            event.stopPropagation();
+
+                            renameConversation(
+                                conversation.id
+                            );
+
+                        }
+                    );
+
+
+                    /* SUPPRIMER */
+
+                    const deleteButton =
+                        document.createElement("button");
+
+                    deleteButton.className =
+                        "history-button delete";
+
+                    deleteButton.title =
+                        "Supprimer";
+
+                    deleteButton.textContent =
+                        "🗑️";
+
+
+                    deleteButton.addEventListener(
+                        "click",
+                        event => {
+
+                            event.stopPropagation();
+
+                            deleteConversation(
+                                conversation.id
+                            );
+
+                        }
+                    );
+
+
+                    actions.appendChild(
+                        renameButton
+                    );
+
+                    actions.appendChild(
+                        deleteButton
+                    );
+
+
+                    item.appendChild(main);
+
+                    item.appendChild(actions);
+
+
+                    item.addEventListener(
+                        "click",
+                        () => {
+
+                            openConversation(
+                                conversation.id
+                            );
+
+                        }
+                    );
+
+
+                    historyElement.appendChild(
+                        item
+                    );
+
+                }
+            );
+
+    }
+
+
+    /* =====================================================
+       OUVRIR CONVERSATION
+    ===================================================== */
 
     function openConversation(id) {
+
+        currentConversationId =
+            id;
+
+
+        saveConversations();
+
+        renderHistory();
+
+        renderConversation();
+
+        closeMobileMenu();
+
+        input.focus();
+
+    }
+
+
+    /* =====================================================
+       RENOMMER
+    ===================================================== */
+
+    function renameConversation(id) {
 
         const conversation =
             conversations.find(
@@ -1626,31 +1714,57 @@
         if (!conversation) {
 
             return;
+
         }
 
 
-        currentConversationId =
-            id;
+        const newTitle =
+            prompt(
+                "Nouveau nom de la conversation :",
+                conversation.title
+            );
 
 
-        renderChat();
+        if (
+            newTitle === null
+        ) {
+
+            return;
+
+        }
+
+
+        const title =
+            newTitle.trim();
+
+
+        if (!title) {
+
+            return;
+
+        }
+
+
+        conversation.title =
+            title.substring(0, 60);
+
+
+        conversation.updatedAt =
+            Date.now();
+
+
+        saveConversations();
 
         renderHistory();
 
-        closeHistoryPanel();
+        renderConversation();
 
-        setTimeout(
-            () => {
-                scrollChatToBottom();
-            },
-            50
-        );
     }
 
 
-    /* ========================================================
-       SUPPRIMER UNE CONVERSATION
-    ======================================================== */
+    /* =====================================================
+       SUPPRIMER
+    ===================================================== */
 
     function deleteConversation(id) {
 
@@ -1664,6 +1778,7 @@
         if (!conversation) {
 
             return;
+
         }
 
 
@@ -1676,6 +1791,7 @@
         if (!confirmed) {
 
             return;
+
         }
 
 
@@ -1690,7 +1806,9 @@
             currentConversationId === id
         ) {
 
-            if (conversations.length) {
+            if (
+                conversations.length > 0
+            ) {
 
                 currentConversationId =
                     conversations[0].id;
@@ -1699,7 +1817,9 @@
 
                 currentConversationId =
                     null;
+
             }
+
         }
 
 
@@ -1707,216 +1827,53 @@
 
         renderHistory();
 
-        renderChat();
+        renderConversation();
 
-
-        showToast(
-            "Conversation supprimée."
-        );
     }
 
 
-    /* ========================================================
-       NOUVELLE CONVERSATION
-    ======================================================== */
+    /* =====================================================
+       LOADING
+    ===================================================== */
 
-    function startNewConversation() {
-
-        createConversation();
-
-        showToast(
-            "Nouvelle conversation créée."
-        );
-    }
-
-
-    /* ========================================================
-       RENDRE LE CHAT
-    ======================================================== */
-
-    function renderChat() {
-
-        chat.innerHTML = "";
-
-
-        const conversation =
-            getCurrentConversation();
-
-
-        if (
-            !conversation ||
-            !conversation.messages ||
-            !conversation.messages.length
-        ) {
-
-            renderWelcome();
-
-            return;
-        }
-
-
-        conversation.messages.forEach(
-            message => {
-
-                if (
-                    message.role !== "user" &&
-                    message.role !== "assistant"
-                ) {
-
-                    return;
-                }
-
-
-                addMessageToScreen(
-                    message.role,
-                    message.content
-                );
-
-            }
-        );
-
-
-        scrollChatToBottom();
-    }
-
-
-    /* ========================================================
-       MESSAGE D'ACCUEIL
-    ======================================================== */
-
-    function renderWelcome() {
-
-        const welcome =
-            document.createElement(
-                "div"
-            );
-
-
-        welcome.className =
-            "welcome";
-
-
-        welcome.innerHTML =
-            `
-            <div class="welcome-icon">
-                M
-            </div>
-
-            <h2>
-                Bonjour 👋
-            </h2>
-
-            <p>
-                Je suis Messie IA.
-                Pose-moi une question, demande-moi
-                de l'aide ou parle-moi simplement.
-            </p>
-            `;
-
-
-        chat.appendChild(
-            welcome
-        );
-    }
-
-
-    /* ========================================================
-       AJOUTER UN MESSAGE À L'ÉCRAN
-    ======================================================== */
-
-    function addMessageToScreen(
-        role,
-        content
-    ) {
+    function addLoading() {
 
         const message =
-            document.createElement(
-                "div"
-            );
-
-
-        message.className =
-            "message " +
-            (
-                role === "user"
-                    ? "user"
-                    : "ai"
-            );
-
-
-        const bubble =
-            document.createElement(
-                "div"
-            );
-
-
-        bubble.className =
-            "bubble";
-
-
-        /*
-         * IMPORTANT :
-         * textContent est utilisé ici et non innerHTML.
-         * Cela évite qu'une réponse de l'IA puisse
-         * injecter du HTML ou du JavaScript.
-         */
-
-        bubble.textContent =
-            content;
-
-
-        message.appendChild(
-            bubble
-        );
-
-
-        chat.appendChild(
-            message
-        );
-
-
-        return message;
-    }
-
-
-    /* ========================================================
-       INDICATEUR DE CHARGEMENT
-    ======================================================== */
-
-    function addLoadingMessage() {
-
-        const message =
-            document.createElement(
-                "div"
-            );
-
+            document.createElement("div");
 
         message.className =
             "message ai";
-
 
         message.id =
             "loadingMessage";
 
 
         const bubble =
-            document.createElement(
-                "div"
-            );
-
+            document.createElement("div");
 
         bubble.className =
             "bubble";
 
 
-        bubble.innerHTML =
-            `
-            <div class="loading">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
-            `;
+        const loading =
+            document.createElement("div");
+
+        loading.className =
+            "loading";
+
+
+        loading.innerHTML = `
+
+            <span></span>
+            <span></span>
+            <span></span>
+
+        `;
+
+
+        bubble.appendChild(
+            loading
+        );
 
 
         message.appendChild(
@@ -1929,15 +1886,17 @@
         );
 
 
-        scrollChatToBottom();
+        chat.scrollTop =
+            chat.scrollHeight;
+
     }
 
 
-    /* ========================================================
-       RETIRER LE CHARGEMENT
-    ======================================================== */
+    /* =====================================================
+       SUPPRIMER LOADING
+    ===================================================== */
 
-    function removeLoadingMessage() {
+    function removeLoading() {
 
         const loading =
             document.getElementById(
@@ -1948,494 +1907,370 @@
         if (loading) {
 
             loading.remove();
+
         }
+
     }
 
 
-    /* ========================================================
-       SCROLL
-    ======================================================== */
+    /* =====================================================
+       NETTOYER LES RÉPONSES INDÉSIRABLES
+    ===================================================== */
 
-    function scrollChatToBottom() {
+    function cleanAIResponse(text) {
 
-        setTimeout(
-            () => {
+        if (
+            typeof text !== "string"
+        ) {
 
-                chat.scrollTop =
-                    chat.scrollHeight;
+            return "";
 
-            },
-            50
-        );
+        }
+
+
+        /*
+         * Certaines réponses de fournisseurs
+         * peuvent contenir accidentellement
+         * des informations techniques de sécurité.
+         *
+         * On retire uniquement les lignes
+         * correspondant clairement à ces métadonnées.
+         */
+
+        const lines =
+            text.split("\n");
+
+
+        const filtered =
+            lines.filter(line => {
+
+                const lower =
+                    line.toLowerCase().trim();
+
+
+                if (
+                    lower ===
+                    "user safety: safe"
+                ) {
+
+                    return false;
+
+                }
+
+
+                if (
+                    lower ===
+                    "response safety: safe"
+                ) {
+
+                    return false;
+
+                }
+
+
+                if (
+                    lower.startsWith(
+                        "user safety:"
+                    )
+                ) {
+
+                    return false;
+
+                }
+
+
+                if (
+                    lower.startsWith(
+                        "response safety:"
+                    )
+                ) {
+
+                    return false;
+
+                }
+
+
+                return true;
+
+            });
+
+
+        return filtered
+            .join("\n")
+            .trim();
+
     }
 
 
-    /* ========================================================
-       ENVOYER UN MESSAGE
-    ======================================================== */
+    /* =====================================================
+       ENVOYER MESSAGE
+    ===================================================== */
 
     async function sendMessage() {
 
         if (isSending) {
 
             return;
+
         }
 
 
         const message =
-            messageInput.value.trim();
+            input.value.trim();
 
 
         if (!message) {
 
             return;
+
         }
 
 
-        /*
-         * Si aucune conversation n'existe,
-         * on en crée automatiquement une.
-         */
+        /* Si aucune conversation n'existe */
 
-        if (!currentConversationId) {
+        if (
+            !currentConversationId
+        ) {
 
             createConversation();
+
         }
 
 
-        let conversation =
+        const conversation =
             getCurrentConversation();
 
 
         if (!conversation) {
 
-            createConversation();
+            return;
 
-            conversation =
-                getCurrentConversation();
         }
 
-
-        /*
-         * Ajouter le message utilisateur
-         */
-
-        conversation.messages.push({
-
-            role: "user",
-
-            content: message,
-
-            createdAt:
-                new Date().toISOString()
-
-        });
-
-
-        /*
-         * Premier message = titre
-         */
-
-        if (
-            conversation.messages.length === 1
-        ) {
-
-            conversation.title =
-                createTitle(message);
-        }
-
-
-        conversation.updatedAt =
-            new Date().toISOString();
-
-
-        saveConversations();
-
-        renderHistory();
-
-
-        /*
-         * Afficher le message
-         */
-
-        renderChat();
-
-
-        /*
-         * Vider la zone de texte
-         */
-
-        messageInput.value = "";
-
-        resizeTextarea();
-
-
-        /*
-         * Désactiver le bouton
-         */
 
         isSending = true;
 
         sendButton.disabled = true;
 
 
-        /*
-         * Afficher chargement
-         */
+        /* Afficher utilisateur */
 
-        addLoadingMessage();
+        displayMessage(
+            message,
+            "user"
+        );
+
+
+        /* Sauvegarder utilisateur */
+
+        addMessageToConversation(
+            "user",
+            message
+        );
+
+
+        input.value = "";
+
+        input.style.height =
+            "45px";
+
+
+        addLoading();
 
 
         try {
 
             /*
-             * Préparer l'historique pour Python.
-             *
-             * On envoie les messages déjà présents.
+             * Construire l'historique
+             * pour app.py
              */
 
             const history =
                 conversation.messages
-                    .map(item => ({
-                        role: item.role,
-                        content: item.content
+                    .slice(0, -1)
+                    .map(message => ({
+
+                        role:
+                            message.role,
+
+                        content:
+                            message.content
+
                     }));
 
-
-            /*
-             * Appel à ton serveur Flask.
-             */
 
             const response =
                 await fetch(
                     "/api/chat",
                     {
+
                         method: "POST",
 
                         headers: {
+
                             "Content-Type":
                                 "application/json"
+
                         },
 
-                        body: JSON.stringify({
+                        body:
+                            JSON.stringify({
 
-                            message:
-                                message,
+                                message:
+                                    message,
 
-                            history:
-                                history.slice(
-                                    0,
-                                    -1
-                                )
+                                history:
+                                    history
 
-                        })
+                            })
+
                     }
                 );
 
 
             /*
-             * Lire la réponse
+             * Vérifier que le serveur
+             * a bien renvoyé du JSON.
              */
 
             let data;
+
 
             try {
 
                 data =
                     await response.json();
 
-            } catch {
+            } catch (jsonError) {
 
                 throw new Error(
-                    "Le serveur a renvoyé une réponse invalide."
+                    "Réponse invalide du serveur."
                 );
+
             }
 
 
-            /*
-             * Vérifier erreur HTTP
-             */
+            removeLoading();
+
 
             if (!response.ok) {
 
-                throw new Error(
+                const errorMessage =
                     data.error ||
-                    "Une erreur est survenue."
+                    "Une erreur est survenue.";
+
+
+                displayMessage(
+                    "❌ " + errorMessage,
+                    "ai"
                 );
+
+
+                return;
+
             }
 
 
             /*
              * IMPORTANT :
              *
-             * On récupère UNIQUEMENT data.response.
+             * app.py renvoie :
              *
-             * Cela empêche d'afficher des informations
-             * comme :
+             * {
+             *     "response": answer
+             * }
              *
-             * User Safety: safe
-             * Response Safety: safe
-             *
-             * dans la conversation.
+             * donc on utilise data.response
              */
 
             let answer =
-                data.response;
+                cleanAIResponse(
+                    data.response
+                );
 
 
-            /*
-             * Vérification de sécurité supplémentaire.
-             */
-
-            if (
-                typeof answer !== "string"
-            ) {
+            if (!answer) {
 
                 answer =
-                    String(answer || "");
+                    "Je n'ai pas reçu de réponse.";
+
             }
 
 
-            answer =
-                cleanAIResponse(answer);
+            displayMessage(
+                answer,
+                "ai"
+            );
 
 
-            if (!answer.trim()) {
-
-                throw new Error(
-                    "Messie IA n'a pas renvoyé de réponse."
-                );
-            }
+            addMessageToConversation(
+                "assistant",
+                answer
+            );
 
 
-            /*
-             * Supprimer le chargement
-             */
-
-            removeLoadingMessage();
-
-
-            /*
-             * Sauvegarder la réponse IA
-             */
-
-            conversation.messages.push({
-
-                role: "assistant",
-
-                content: answer,
-
-                createdAt:
-                    new Date().toISOString()
-
-            });
-
-
-            conversation.updatedAt =
-                new Date().toISOString();
-
-
-            saveConversations();
-
-
-            /*
-             * Afficher
-             */
-
-            renderChat();
-
-            renderHistory();
-
-            scrollChatToBottom();
+            currentChatTitle.textContent =
+                conversation.title;
 
 
         } catch (error) {
 
+            removeLoading();
+
+
             console.error(
-                "Erreur:",
+                "Erreur :",
                 error
             );
 
 
-            removeLoadingMessage();
-
-
-            /*
-             * Message d'erreur visible
-             */
-
-            addMessageToScreen(
-                "assistant",
-                "Désolé, une erreur est survenue :\n" +
-                error.message
+            displayMessage(
+                "❌ Impossible de contacter Messie IA. Vérifie ta connexion ou le serveur.",
+                "ai"
             );
 
         } finally {
 
             isSending = false;
 
-            sendButton.disabled = false;
+            sendButton.disabled =
+                false;
 
-            messageInput.focus();
+            input.focus();
+
         }
+
     }
 
 
-    /* ========================================================
-       NETTOYAGE RÉPONSE IA
-    ======================================================== */
+    /* =====================================================
+       TEXTAREA
+    ===================================================== */
 
-    function cleanAIResponse(text) {
+    function autoResize() {
 
-        if (!text) {
-
-            return "";
-        }
+        input.style.height =
+            "45px";
 
 
-        let result =
-            String(text);
-
-
-        /*
-         * Supprimer des blocs de sécurité qui pourraient
-         * accidentellement arriver dans la réponse.
-         */
-
-        result =
-            result.replace(
-                /User Safety\s*:\s*safe/gi,
-                ""
-            );
-
-
-        result =
-            result.replace(
-                /Response Safety\s*:\s*safe/gi,
-                ""
-            );
-
-
-        result =
-            result.replace(
-                /User Safety\s*:\s*unsafe/gi,
-                ""
-            );
-
-
-        result =
-            result.replace(
-                /Response Safety\s*:\s*unsafe/gi,
-                ""
-            );
-
-
-        /*
-         * Nettoyer les espaces inutiles laissés
-         * par la suppression.
-         */
-
-        result =
-            result.replace(
-                /\n\s*\n\s*\n+/g,
-                "\n\n"
-            );
-
-
-        return result.trim();
-    }
-
-
-    /* ========================================================
-       TEXTAREA AUTO-RESIZE
-    ======================================================== */
-
-    function resizeTextarea() {
-
-        messageInput.style.height =
-            "auto";
-
-
-        messageInput.style.height =
+        input.style.height =
             Math.min(
-                messageInput.scrollHeight,
+                input.scrollHeight,
                 140
-            )
-            + "px";
+            ) + "px";
+
     }
 
 
-    /* ========================================================
-       OUVRIR HISTORIQUE
-    ======================================================== */
-
-    function openHistoryPanel() {
-
-        renderHistory();
-
-        historyOverlay.classList.add(
-            "show"
-        );
-    }
+    input.addEventListener(
+        "input",
+        autoResize
+    );
 
 
-    /* ========================================================
-       FERMER HISTORIQUE
-    ======================================================== */
-
-    function closeHistoryPanel() {
-
-        historyOverlay.classList.remove(
-            "show"
-        );
-    }
-
-
-    /* ========================================================
-       TOAST
-    ======================================================== */
-
-    let toastTimer = null;
-
-
-    function showToast(message) {
-
-        toast.textContent =
-            message;
-
-
-        toast.classList.add(
-            "show"
-        );
-
-
-        clearTimeout(
-            toastTimer
-        );
-
-
-        toastTimer =
-            setTimeout(
-                () => {
-
-                    toast.classList.remove(
-                        "show"
-                    );
-
-                },
-                2500
-            );
-    }
-
-
-    /* ========================================================
-       ÉVÉNEMENTS
-    ======================================================== */
-
-
-    /*
-     * Envoyer
-     */
+    /* =====================================================
+       BOUTON ENVOYER
+    ===================================================== */
 
     sendButton.addEventListener(
         "click",
@@ -2443,15 +2278,13 @@
     );
 
 
-    /*
-     * Entrée = envoyer
-     *
-     * Shift + Entrée = nouvelle ligne
-     */
+    /* =====================================================
+       CLAVIER
+    ===================================================== */
 
-    messageInput.addEventListener(
+    input.addEventListener(
         "keydown",
-        event => {
+        function(event) {
 
             if (
                 event.key === "Enter" &&
@@ -2461,130 +2294,110 @@
                 event.preventDefault();
 
                 sendMessage();
+
             }
 
         }
     );
 
 
-    /*
-     * Agrandir textarea
-     */
+    /* =====================================================
+       NOUVELLE CONVERSATION
+    ===================================================== */
 
-    messageInput.addEventListener(
-        "input",
-        resizeTextarea
-    );
-
-
-    /*
-     * Ouvrir historique
-     */
-
-    historyButton.addEventListener(
+    newChatButton.addEventListener(
         "click",
-        openHistoryPanel
+        createConversation
     );
 
 
-    /*
-     * Fermer historique
-     */
+    /* =====================================================
+       MENU MOBILE
+    ===================================================== */
 
-    closeHistory.addEventListener(
+    function openMobileMenu() {
+
+        sidebar.classList.add(
+            "open"
+        );
+
+        overlay.classList.add(
+            "open"
+        );
+
+    }
+
+
+    function closeMobileMenu() {
+
+        sidebar.classList.remove(
+            "open"
+        );
+
+        overlay.classList.remove(
+            "open"
+        );
+
+    }
+
+
+    mobileMenu.addEventListener(
         "click",
-        closeHistoryPanel
+        openMobileMenu
     );
 
 
-    /*
-     * Cliquer en dehors du panneau
-     */
-
-    historyOverlay.addEventListener(
+    overlay.addEventListener(
         "click",
-        event => {
-
-            if (
-                event.target ===
-                historyOverlay
-            ) {
-
-                closeHistoryPanel();
-            }
-
-        }
+        closeMobileMenu
     );
 
 
-    /*
-     * Nouvelle conversation
-     */
-
-    newConversationButton.addEventListener(
-        "click",
-        startNewConversation
-    );
-
-
-    /*
-     * Nouvelle conversation depuis historique
-     */
-
-    historyNewButton.addEventListener(
-        "click",
-        startNewConversation
-    );
-
-
-    /* ========================================================
+    /* =====================================================
        INITIALISATION
-    ======================================================== */
+    ===================================================== */
 
     function initialize() {
 
         loadConversations();
 
 
-        /*
-         * S'il existe déjà des conversations,
-         * ouvrir la dernière.
-         */
+        if (
+            conversations.length > 0
+        ) {
 
-        if (conversations.length > 0) {
+            conversations.sort(
+                (a, b) =>
+                    b.updatedAt -
+                    a.updatedAt
+            );
+
 
             currentConversationId =
                 conversations[0].id;
 
+
+            renderHistory();
+
+            renderConversation();
+
         } else {
 
-            /*
-             * Première utilisation :
-             * créer automatiquement une conversation.
-             */
+            renderHistory();
 
-            createConversation();
+            showWelcome();
 
-            return;
         }
 
 
-        renderChat();
+        input.focus();
 
-        renderHistory();
-
-        messageInput.focus();
     }
 
-
-    /* ========================================================
-       DÉMARRER
-    ======================================================== */
 
     initialize();
 
 </script>
-
 
 </body>
 
