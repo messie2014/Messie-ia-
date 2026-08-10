@@ -2,11 +2,12 @@
 <html lang="fr">
 
 <head>
+
     <meta charset="UTF-8">
 
     <meta
         name="viewport"
-        content="width=device-width, initial-scale=1.0"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
     >
 
     <title>Messie IA</title>
@@ -17,6 +18,12 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+        }
+
+        html,
+        body {
+            width: 100%;
+            height: 100%;
         }
 
         body {
@@ -37,33 +44,29 @@
 
             min-height: 100vh;
 
-            display: flex;
-            justify-content: center;
-            align-items: center;
-
-            padding: 15px;
+            overflow: hidden;
         }
+
+        button {
+            font-family: inherit;
+        }
+
+        /* =====================================================
+           APPLICATION
+        ===================================================== */
 
         .app {
             width: 100%;
-            max-width: 850px;
+            height: 100vh;
 
-            height: 90vh;
-            max-height: 850px;
-
-            background: rgba(15, 23, 42, 0.97);
-
-            border: 1px solid rgba(255,255,255,0.1);
-
-            border-radius: 25px;
-
-            overflow: hidden;
+            background: #020617;
 
             display: flex;
             flex-direction: column;
 
-            box-shadow:
-                0 25px 80px rgba(0,0,0,0.5);
+            position: relative;
+
+            overflow: hidden;
         }
 
 
@@ -72,10 +75,12 @@
         ===================================================== */
 
         .header {
-            padding: 15px 18px;
+            height: 75px;
+
+            padding: 12px 18px;
 
             background:
-                rgba(2, 6, 23, 0.98);
+                rgba(2, 6, 23, 0.97);
 
             border-bottom:
                 1px solid rgba(255,255,255,0.08);
@@ -86,7 +91,9 @@
 
             justify-content: space-between;
 
-            gap: 10px;
+            flex-shrink: 0;
+
+            z-index: 10;
         }
 
 
@@ -105,7 +112,7 @@
             width: 45px;
             height: 45px;
 
-            min-width: 45px;
+            flex-shrink: 0;
 
             border-radius: 50%;
 
@@ -121,7 +128,7 @@
                     #2563eb
                 );
 
-            font-size: 22px;
+            font-size: 21px;
 
             font-weight: bold;
         }
@@ -133,12 +140,14 @@
 
 
         .logo-text h1 {
-            font-size: 20px;
+            font-size: 19px;
+
+            white-space: nowrap;
         }
 
 
         .logo-text p {
-            font-size: 12px;
+            font-size: 11px;
 
             color: #94a3b8;
 
@@ -146,8 +155,14 @@
         }
 
 
+        /* =====================================================
+           HEADER BUTTONS
+        ===================================================== */
+
         .header-buttons {
             display: flex;
+
+            align-items: center;
 
             gap: 7px;
         }
@@ -156,22 +171,48 @@
         .header-button {
             border: none;
 
-            color: #cbd5e1;
+            color: white;
 
-            background: #1e293b;
+            background: #111827;
 
-            border-radius: 10px;
+            border:
+                1px solid
+                rgba(255,255,255,0.1);
 
-            padding: 9px 11px;
+            border-radius: 11px;
 
-            font-size: 12px;
+            height: 40px;
+
+            padding: 0 11px;
 
             cursor: pointer;
+
+            font-size: 13px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            gap: 5px;
         }
 
 
         .header-button:hover {
-            background: #334155;
+            background: #1e293b;
+        }
+
+
+        .header-button.new {
+            background:
+                linear-gradient(
+                    135deg,
+                    #2563eb,
+                    #7c3aed
+                );
+
+            border: none;
         }
 
 
@@ -184,22 +225,42 @@
 
             overflow-y: auto;
 
-            padding: 25px 18px;
+            overflow-x: hidden;
+
+            padding: 25px 18px 20px;
 
             scroll-behavior: smooth;
+
+            -webkit-overflow-scrolling: touch;
         }
 
+
+        .chat::-webkit-scrollbar {
+            width: 6px;
+        }
+
+
+        .chat::-webkit-scrollbar-thumb {
+            background: #334155;
+
+            border-radius: 10px;
+        }
+
+
+        /* =====================================================
+           WELCOME
+        ===================================================== */
 
         .welcome {
             text-align: center;
 
-            padding: 45px 15px;
+            padding: 55px 15px 40px;
         }
 
 
         .welcome-icon {
-            width: 70px;
-            height: 70px;
+            width: 75px;
+            height: 75px;
 
             margin: 0 auto 18px;
 
@@ -207,11 +268,8 @@
 
             display: flex;
 
-            justify-content: center;
             align-items: center;
-
-            font-size: 32px;
-            font-weight: bold;
+            justify-content: center;
 
             background:
                 linear-gradient(
@@ -219,11 +277,19 @@
                     #7c3aed,
                     #2563eb
                 );
+
+            font-size: 34px;
+
+            font-weight: bold;
+
+            box-shadow:
+                0 10px 35px
+                rgba(37,99,235,0.25);
         }
 
 
         .welcome h2 {
-            font-size: 28px;
+            font-size: 27px;
 
             margin-bottom: 10px;
         }
@@ -233,6 +299,10 @@
             color: #94a3b8;
 
             line-height: 1.6;
+
+            max-width: 500px;
+
+            margin: auto;
         }
 
 
@@ -262,7 +332,7 @@
         .bubble {
             max-width: 85%;
 
-            padding: 13px 16px;
+            padding: 14px 17px;
 
             border-radius: 18px;
 
@@ -272,7 +342,7 @@
 
             word-wrap: break-word;
 
-            overflow-wrap: break-word;
+            overflow-wrap: anywhere;
 
             font-size: 15px;
         }
@@ -291,11 +361,11 @@
 
 
         .ai .bubble {
-            background: #1e293b;
+            background: #0f172a;
 
             border:
                 1px solid
-                rgba(255,255,255,0.06);
+                rgba(255,255,255,0.07);
 
             border-bottom-left-radius: 5px;
         }
@@ -305,45 +375,14 @@
            LOADING
         ===================================================== */
 
-        .loading-message {
-            display: flex;
-
-            justify-content: flex-start;
-
-            margin-bottom: 20px;
-        }
-
-
-        .loading-bubble {
-            background: #1e293b;
-
-            border:
-                1px solid
-                rgba(255,255,255,0.06);
-
-            border-radius: 18px;
-
-            border-bottom-left-radius: 5px;
-
-            padding: 15px 18px;
-        }
-
-
         .loading {
             display: flex;
 
+            gap: 5px;
+
             align-items: center;
 
-            gap: 5px;
-        }
-
-
-        .loading-text {
-            color: #94a3b8;
-
-            font-size: 13px;
-
-            margin-right: 7px;
+            min-height: 20px;
         }
 
 
@@ -359,12 +398,12 @@
         }
 
 
-        .loading span:nth-child(3) {
+        .loading span:nth-child(2) {
             animation-delay: .15s;
         }
 
 
-        .loading span:nth-child(4) {
+        .loading span:nth-child(3) {
             animation-delay: .3s;
         }
 
@@ -378,7 +417,6 @@
             30% {
                 transform: translateY(-6px);
             }
-
         }
 
 
@@ -387,7 +425,7 @@
         ===================================================== */
 
         .input-area {
-            padding: 15px;
+            padding: 12px 15px 14px;
 
             background:
                 rgba(2, 6, 23, 0.98);
@@ -395,6 +433,8 @@
             border-top:
                 1px solid
                 rgba(255,255,255,0.08);
+
+            flex-shrink: 0;
         }
 
 
@@ -403,9 +443,9 @@
 
             align-items: flex-end;
 
-            gap: 10px;
+            gap: 9px;
 
-            background: #1e293b;
+            background: #0f172a;
 
             border:
                 1px solid
@@ -413,7 +453,7 @@
 
             border-radius: 18px;
 
-            padding: 8px;
+            padding: 7px;
         }
 
 
@@ -439,6 +479,8 @@
             max-height: 140px;
 
             font-family: inherit;
+
+            line-height: 1.4;
         }
 
 
@@ -451,7 +493,7 @@
             width: 45px;
             height: 45px;
 
-            min-width: 45px;
+            flex-shrink: 0;
 
             border: none;
 
@@ -466,7 +508,7 @@
 
             color: white;
 
-            font-size: 18px;
+            font-size: 19px;
 
             display: flex;
 
@@ -495,9 +537,302 @@
 
             color: #64748b;
 
-            font-size: 11px;
+            font-size: 10px;
 
-            margin-top: 8px;
+            margin-top: 7px;
+        }
+
+
+        /* =====================================================
+           PANNEAU HISTORIQUE
+        ===================================================== */
+
+        .history-overlay {
+            position: fixed;
+
+            inset: 0;
+
+            background:
+                rgba(0,0,0,0.65);
+
+            z-index: 100;
+
+            display: none;
+        }
+
+
+        .history-overlay.show {
+            display: block;
+        }
+
+
+        .history-panel {
+            position: absolute;
+
+            top: 0;
+            left: 0;
+
+            width: min(360px, 88vw);
+
+            height: 100%;
+
+            background:
+                #020617;
+
+            border-right:
+                1px solid
+                rgba(255,255,255,0.1);
+
+            box-shadow:
+                10px 0 40px
+                rgba(0,0,0,0.45);
+
+            display: flex;
+
+            flex-direction: column;
+
+            animation:
+                slideIn .22s ease;
+        }
+
+
+        @keyframes slideIn {
+
+            from {
+                transform: translateX(-100%);
+            }
+
+            to {
+                transform: translateX(0);
+            }
+        }
+
+
+        .history-header {
+            padding: 17px;
+
+            border-bottom:
+                1px solid
+                rgba(255,255,255,0.08);
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+        }
+
+
+        .history-header h2 {
+            font-size: 19px;
+        }
+
+
+        .close-history {
+            width: 38px;
+            height: 38px;
+
+            border: none;
+
+            border-radius: 10px;
+
+            background: #111827;
+
+            color: white;
+
+            font-size: 20px;
+
+            cursor: pointer;
+        }
+
+
+        .history-new {
+            margin: 14px;
+
+            padding: 12px;
+
+            border: none;
+
+            border-radius: 12px;
+
+            color: white;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #2563eb,
+                    #7c3aed
+                );
+
+            cursor: pointer;
+
+            font-size: 14px;
+
+            font-weight: bold;
+        }
+
+
+        .history-list {
+            flex: 1;
+
+            overflow-y: auto;
+
+            padding: 0 10px 15px;
+        }
+
+
+        .history-empty {
+            text-align: center;
+
+            color: #64748b;
+
+            padding: 35px 20px;
+
+            line-height: 1.6;
+        }
+
+
+        .history-item {
+            display: flex;
+
+            align-items: center;
+
+            gap: 8px;
+
+            padding: 12px;
+
+            margin-bottom: 7px;
+
+            border-radius: 12px;
+
+            cursor: pointer;
+
+            background: #0f172a;
+
+            border:
+                1px solid
+                rgba(255,255,255,0.04);
+        }
+
+
+        .history-item:hover {
+            background: #1e293b;
+        }
+
+
+        .history-item.active {
+            background: #172554;
+
+            border-color:
+                rgba(59,130,246,0.3);
+        }
+
+
+        .history-content {
+            flex: 1;
+
+            min-width: 0;
+        }
+
+
+        .history-title {
+            font-size: 14px;
+
+            color: white;
+
+            white-space: nowrap;
+
+            overflow: hidden;
+
+            text-overflow: ellipsis;
+        }
+
+
+        .history-date {
+            font-size: 10px;
+
+            color: #64748b;
+
+            margin-top: 5px;
+        }
+
+
+        .delete-history {
+            width: 34px;
+            height: 34px;
+
+            flex-shrink: 0;
+
+            border: none;
+
+            border-radius: 9px;
+
+            background: transparent;
+
+            color: #94a3b8;
+
+            cursor: pointer;
+
+            font-size: 16px;
+        }
+
+
+        .delete-history:hover {
+            background: #3f172a;
+
+            color: #f87171;
+        }
+
+
+        /* =====================================================
+           TOAST
+        ===================================================== */
+
+        .toast {
+            position: fixed;
+
+            left: 50%;
+
+            bottom: 95px;
+
+            transform:
+                translate(-50%, 20px);
+
+            background: #1e293b;
+
+            border:
+                1px solid
+                rgba(255,255,255,0.1);
+
+            color: white;
+
+            padding: 11px 16px;
+
+            border-radius: 12px;
+
+            font-size: 13px;
+
+            opacity: 0;
+
+            pointer-events: none;
+
+            transition:
+                opacity .2s,
+                transform .2s;
+
+            z-index: 300;
+
+            max-width: 85%;
+
+            text-align: center;
+        }
+
+
+        .toast.show {
+            opacity: 1;
+
+            transform:
+                translate(-50%, 0);
         }
 
 
@@ -507,76 +842,120 @@
 
         @media (max-width: 600px) {
 
-            body {
-                padding: 0;
-            }
-
-
-            .app {
-                width: 100%;
-
-                height: 100vh;
-
-                max-height: none;
-
-                border-radius: 0;
-            }
-
-
             .header {
-                padding: 13px;
+                height: 68px;
+
+                padding:
+                    10px 12px;
             }
 
 
             .logo-icon {
-                width: 42px;
-                height: 42px;
+                width: 40px;
+                height: 40px;
 
-                min-width: 42px;
+                font-size: 19px;
             }
 
 
             .logo-text h1 {
-                font-size: 18px;
+                font-size: 17px;
             }
 
 
             .logo-text p {
-                font-size: 11px;
+                font-size: 10px;
+            }
+
+
+            .header-buttons {
+                gap: 5px;
             }
 
 
             .header-button {
-                padding: 8px;
+                width: 40px;
+                height: 40px;
 
-                font-size: 11px;
+                padding: 0;
+
+                font-size: 0;
+            }
+
+
+            .header-button span {
+                font-size: 18px;
             }
 
 
             .chat {
-                padding: 18px 13px;
+                padding:
+                    18px 12px 15px;
             }
 
 
             .welcome {
-                padding-top: 55px;
+                padding:
+                    45px 12px 30px;
             }
 
 
             .welcome h2 {
-                font-size: 24px;
+                font-size: 23px;
+            }
+
+
+            .welcome p {
+                font-size: 14px;
             }
 
 
             .bubble {
-                max-width: 90%;
+                max-width: 91%;
 
                 font-size: 15px;
+
+                padding:
+                    13px 14px;
             }
 
 
             .input-area {
-                padding: 10px;
+                padding:
+                    9px 10px 10px;
+            }
+
+
+            .info {
+                font-size: 9px;
+            }
+
+        }
+
+
+        /* =====================================================
+           PETITS ÉCRANS
+        ===================================================== */
+
+        @media (max-height: 650px) {
+
+            .welcome {
+                padding-top: 25px;
+            }
+
+
+            .welcome-icon {
+                width: 60px;
+                height: 60px;
+
+                font-size: 27px;
+
+                margin-bottom: 12px;
+            }
+
+
+            .welcome h2 {
+                font-size: 21px;
             }
 
         }
@@ -598,13 +977,11 @@
 
     <header class="header">
 
-
         <div class="logo">
 
             <div class="logo-icon">
                 M
             </div>
-
 
             <div class="logo-text">
 
@@ -623,25 +1000,42 @@
 
         <div class="header-buttons">
 
+            <!-- HISTORIQUE -->
+
             <button
                 class="header-button"
-                id="newChatButton"
+                id="historyButton"
                 type="button"
+                title="Historique"
             >
-                + Nouveau
+
+                <span>📚</span>
+
+                <span>
+                    Historique
+                </span>
+
             </button>
 
 
+            <!-- NOUVELLE CONVERSATION -->
+
             <button
-                class="header-button"
-                id="clearButton"
+                class="header-button new"
+                id="newConversationButton"
                 type="button"
+                title="Nouvelle conversation"
             >
-                🗑️
+
+                <span>＋</span>
+
+                <span>
+                    Nouveau
+                </span>
+
             </button>
 
         </div>
-
 
     </header>
 
@@ -655,26 +1049,6 @@
         id="chat"
     >
 
-        <div
-            class="welcome"
-            id="welcome"
-        >
-
-            <div class="welcome-icon">
-                M
-            </div>
-
-            <h2>
-                Bonjour 👋
-            </h2>
-
-            <p>
-                Je suis Messie IA.<br>
-                Pose-moi une question pour commencer.
-            </p>
-
-        </div>
-
     </main>
 
 
@@ -682,11 +1056,9 @@
          INPUT
     ====================================================== -->
 
-    <div class="input-area">
-
+    <section class="input-area">
 
         <div class="input-box">
-
 
             <textarea
                 id="messageInput"
@@ -699,11 +1071,10 @@
             <button
                 id="sendButton"
                 type="button"
-                aria-label="Envoyer"
+                title="Envoyer"
             >
                 ➤
             </button>
-
 
         </div>
 
@@ -712,10 +1083,72 @@
             Messie IA peut parfois faire des erreurs.
         </div>
 
+    </section>
 
-    </div>
+
+</div>
 
 
+<!-- =========================================================
+     PANNEAU HISTORIQUE
+========================================================= -->
+
+<div
+    class="history-overlay"
+    id="historyOverlay"
+>
+
+    <aside class="history-panel">
+
+
+        <div class="history-header">
+
+            <h2>
+                📚 Historique
+            </h2>
+
+
+            <button
+                class="close-history"
+                id="closeHistory"
+                type="button"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <button
+            class="history-new"
+            id="historyNewButton"
+            type="button"
+        >
+            ＋ Nouvelle conversation
+        </button>
+
+
+        <div
+            class="history-list"
+            id="historyList"
+        >
+
+        </div>
+
+
+    </aside>
+
+</div>
+
+
+<!-- =========================================================
+     TOAST
+========================================================= -->
+
+<div
+    class="toast"
+    id="toast"
+>
 </div>
 
 
@@ -725,16 +1158,16 @@
        CONFIGURATION
     ======================================================== */
 
-    const STORAGE_KEY = "messie_ia_conversation";
+    const STORAGE_KEY =
+        "messie_ia_conversations_v1";
 
 
     /* ========================================================
        ÉLÉMENTS HTML
     ======================================================== */
 
-    const chat = document.getElementById("chat");
-
-    const welcome = document.getElementById("welcome");
+    const chat =
+        document.getElementById("chat");
 
     const messageInput =
         document.getElementById("messageInput");
@@ -742,35 +1175,60 @@
     const sendButton =
         document.getElementById("sendButton");
 
-    const clearButton =
-        document.getElementById("clearButton");
+    const historyButton =
+        document.getElementById("historyButton");
 
-    const newChatButton =
-        document.getElementById("newChatButton");
+    const historyOverlay =
+        document.getElementById("historyOverlay");
+
+    const closeHistory =
+        document.getElementById("closeHistory");
+
+    const historyList =
+        document.getElementById("historyList");
+
+    const newConversationButton =
+        document.getElementById(
+            "newConversationButton"
+        );
+
+    const historyNewButton =
+        document.getElementById(
+            "historyNewButton"
+        );
+
+    const toast =
+        document.getElementById("toast");
 
 
     /* ========================================================
-       HISTORIQUE
+       VARIABLES
     ======================================================== */
 
-    let conversation = [];
+    let conversations = [];
+
+    let currentConversationId = null;
+
+    let isSending = false;
 
 
     /* ========================================================
-       CHARGER L'HISTORIQUE
+       CHARGER LES CONVERSATIONS
     ======================================================== */
 
-    function loadConversation() {
+    function loadConversations() {
 
         try {
 
             const saved =
-                localStorage.getItem(STORAGE_KEY);
+                localStorage.getItem(
+                    STORAGE_KEY
+                );
 
 
             if (!saved) {
 
-                conversation = [];
+                conversations = [];
 
                 return;
             }
@@ -782,327 +1240,704 @@
 
             if (Array.isArray(parsed)) {
 
-                conversation = parsed.filter(item => {
-
-                    return (
-                        item &&
-                        (
-                            item.role === "user" ||
-                            item.role === "assistant"
-                        ) &&
-                        typeof item.content === "string"
-                    );
-
-                });
+                conversations = parsed;
 
             } else {
 
-                conversation = [];
+                conversations = [];
 
             }
 
         } catch (error) {
 
             console.error(
-                "Erreur lors du chargement de l'historique :",
+                "Erreur chargement historique:",
                 error
             );
 
-            conversation = [];
+            conversations = [];
         }
-
     }
 
 
     /* ========================================================
-       SAUVEGARDER L'HISTORIQUE
+       SAUVEGARDER LES CONVERSATIONS
     ======================================================== */
 
-    function saveConversation() {
+    function saveConversations() {
 
         try {
 
             localStorage.setItem(
                 STORAGE_KEY,
-                JSON.stringify(conversation)
+                JSON.stringify(
+                    conversations
+                )
             );
 
         } catch (error) {
 
             console.error(
-                "Impossible de sauvegarder la conversation :",
+                "Erreur sauvegarde historique:",
                 error
             );
 
+            showToast(
+                "Impossible de sauvegarder l'historique."
+            );
         }
+    }
+
+
+    /* ========================================================
+       ID UNIQUE
+    ======================================================== */
+
+    function createId() {
+
+        return (
+            Date.now().toString(36)
+            +
+            Math.random()
+                .toString(36)
+                .substring(2, 9)
+        );
+    }
+
+
+    /* ========================================================
+       CRÉER UNE CONVERSATION
+    ======================================================== */
+
+    function createConversation() {
+
+        const conversation = {
+
+            id: createId(),
+
+            title: "Nouvelle conversation",
+
+            createdAt:
+                new Date().toISOString(),
+
+            updatedAt:
+                new Date().toISOString(),
+
+            messages: []
+
+        };
+
+
+        conversations.unshift(
+            conversation
+        );
+
+
+        currentConversationId =
+            conversation.id;
+
+
+        saveConversations();
+
+        renderChat();
+
+        renderHistory();
+
+        closeHistoryPanel();
+
+        messageInput.focus();
+    }
+
+
+    /* ========================================================
+       CONVERSATION ACTUELLE
+    ======================================================== */
+
+    function getCurrentConversation() {
+
+        return conversations.find(
+            conversation =>
+                conversation.id ===
+                currentConversationId
+        );
 
     }
 
 
     /* ========================================================
-       SUPPRIMER LES MENTIONS SAFETY
+       TITRE AUTOMATIQUE
     ======================================================== */
 
-    function cleanAIResponse(text) {
+    function createTitle(text) {
 
         if (!text) {
-            return "";
+
+            return "Nouvelle conversation";
         }
 
 
-        let cleaned = String(text);
+        let title =
+            text
+                .replace(/\s+/g, " ")
+                .trim();
 
 
-        /*
-         * Supprimer les lignes du genre :
-         *
-         * User Safety: safe
-         * Response Safety: safe
-         */
+        if (title.length > 38) {
 
-        cleaned = cleaned.replace(
-            /user\s*safety\s*:\s*safe/gi,
-            ""
-        );
+            title =
+                title.substring(0, 38)
+                + "...";
+        }
 
 
-        cleaned = cleaned.replace(
-            /response\s*safety\s*:\s*safe/gi,
-            ""
-        );
-
-
-        cleaned = cleaned.replace(
-            /user\s*safety\s*:/gi,
-            ""
-        );
-
-
-        cleaned = cleaned.replace(
-            /response\s*safety\s*:/gi,
-            ""
-        );
-
-
-        /*
-         * Supprimer également certaines variantes.
-         */
-
-        cleaned = cleaned.replace(
-            /^\s*safe\s*$/gim,
-            ""
-        );
-
-
-        /*
-         * Nettoyer les lignes vides répétées.
-         */
-
-        cleaned = cleaned.replace(
-            /\n{3,}/g,
-            "\n\n"
-        );
-
-
-        return cleaned.trim();
-
+        return title;
     }
 
 
     /* ========================================================
-       ÉCHAPPER LE HTML
+       FORMAT DATE
     ======================================================== */
 
-    function escapeHTML(text) {
+    function formatDate(dateString) {
 
-        const div =
-            document.createElement("div");
+        try {
 
-        div.textContent = text;
-
-        return div.innerHTML;
-
-    }
+            const date =
+                new Date(dateString);
 
 
-    /* ========================================================
-       AFFICHER UN MESSAGE
-    ======================================================== */
-
-    function addMessage(role, content) {
-
-        if (!content) {
-            return;
-        }
-
-
-        if (welcome) {
-
-            welcome.style.display = "none";
-        }
-
-
-        const message =
-            document.createElement("div");
-
-
-        message.className =
-            role === "user"
-                ? "message user"
-                : "message ai";
-
-
-        const bubble =
-            document.createElement("div");
-
-
-        bubble.className = "bubble";
-
-
-        bubble.innerHTML =
-            escapeHTML(content);
-
-
-        message.appendChild(bubble);
-
-
-        chat.appendChild(message);
-
-
-        scrollToBottom();
-
-    }
-
-
-    /* ========================================================
-       AFFICHER TOUT L'HISTORIQUE
-    ======================================================== */
-
-    function renderConversation() {
-
-        /*
-         * Supprimer tous les messages actuels
-         * sans supprimer le welcome.
-         */
-
-        const messages =
-            chat.querySelectorAll(".message");
-
-
-        messages.forEach(message => {
-
-            message.remove();
-
-        });
-
-
-        if (conversation.length === 0) {
-
-            if (welcome) {
-
-                welcome.style.display = "block";
-
-            }
-
-            return;
-        }
-
-
-        if (welcome) {
-
-            welcome.style.display = "none";
-
-        }
-
-
-        conversation.forEach(item => {
-
-            addMessage(
-                item.role,
-                item.content
+            return date.toLocaleString(
+                "fr-FR",
+                {
+                    day: "2-digit",
+                    month: "2-digit",
+                    year: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit"
+                }
             );
 
-        });
+        } catch {
 
-
-        scrollToBottom();
-
+            return "";
+        }
     }
 
 
     /* ========================================================
-       SCROLL VERS LE BAS
+       AFFICHER L'HISTORIQUE
     ======================================================== */
 
-    function scrollToBottom() {
+    function renderHistory() {
 
-        setTimeout(() => {
-
-            chat.scrollTop =
-                chat.scrollHeight;
-
-        }, 50);
-
-    }
+        historyList.innerHTML = "";
 
 
-    /* ========================================================
-       AFFICHER LE CHARGEMENT
-    ======================================================== */
+        if (!conversations.length) {
 
-    function showLoading() {
-
-        removeLoading();
-
-
-        const loadingMessage =
-            document.createElement("div");
+            const empty =
+                document.createElement(
+                    "div"
+                );
 
 
-        loadingMessage.id =
-            "loadingMessage";
+            empty.className =
+                "history-empty";
 
 
-        loadingMessage.className =
-            "loading-message";
-
-
-        loadingMessage.innerHTML = `
-
-            <div class="loading-bubble">
-
-                <div class="loading">
-
-                    <span class="loading-text">
-                        Messie IA réfléchit
-                    </span>
-
-                    <span></span>
-                    <span></span>
-                    <span></span>
-
+            empty.innerHTML =
+                `
+                <div style="font-size:32px;margin-bottom:10px;">
+                    📭
                 </div>
 
+                <div>
+                    Aucune conversation enregistrée.
+                </div>
+
+                <div style="margin-top:7px;">
+                    Commence une conversation pour
+                    créer ton premier historique.
+                </div>
+                `;
+
+
+            historyList.appendChild(
+                empty
+            );
+
+
+            return;
+        }
+
+
+        conversations.forEach(
+            conversation => {
+
+                const item =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                item.className =
+                    "history-item";
+
+
+                if (
+                    conversation.id ===
+                    currentConversationId
+                ) {
+
+                    item.classList.add(
+                        "active"
+                    );
+                }
+
+
+                const content =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                content.className =
+                    "history-content";
+
+
+                const title =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                title.className =
+                    "history-title";
+
+
+                title.textContent =
+                    conversation.title ||
+                    "Nouvelle conversation";
+
+
+                const date =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                date.className =
+                    "history-date";
+
+
+                date.textContent =
+                    formatDate(
+                        conversation.updatedAt ||
+                        conversation.createdAt
+                    );
+
+
+                content.appendChild(title);
+
+                content.appendChild(date);
+
+
+                /* Ouvrir la conversation */
+
+                content.addEventListener(
+                    "click",
+                    () => {
+
+                        openConversation(
+                            conversation.id
+                        );
+
+                    }
+                );
+
+
+                /* Supprimer */
+
+                const deleteButton =
+                    document.createElement(
+                        "button"
+                    );
+
+
+                deleteButton.className =
+                    "delete-history";
+
+
+                deleteButton.type =
+                    "button";
+
+
+                deleteButton.title =
+                    "Supprimer";
+
+
+                deleteButton.textContent =
+                    "🗑️";
+
+
+                deleteButton.addEventListener(
+                    "click",
+                    event => {
+
+                        event.stopPropagation();
+
+                        deleteConversation(
+                            conversation.id
+                        );
+
+                    }
+                );
+
+
+                item.appendChild(content);
+
+                item.appendChild(
+                    deleteButton
+                );
+
+
+                historyList.appendChild(
+                    item
+                );
+
+            }
+        );
+    }
+
+
+    /* ========================================================
+       OUVRIR UNE CONVERSATION
+    ======================================================== */
+
+    function openConversation(id) {
+
+        const conversation =
+            conversations.find(
+                item =>
+                    item.id === id
+            );
+
+
+        if (!conversation) {
+
+            return;
+        }
+
+
+        currentConversationId =
+            id;
+
+
+        renderChat();
+
+        renderHistory();
+
+        closeHistoryPanel();
+
+        setTimeout(
+            () => {
+                scrollChatToBottom();
+            },
+            50
+        );
+    }
+
+
+    /* ========================================================
+       SUPPRIMER UNE CONVERSATION
+    ======================================================== */
+
+    function deleteConversation(id) {
+
+        const conversation =
+            conversations.find(
+                item =>
+                    item.id === id
+            );
+
+
+        if (!conversation) {
+
+            return;
+        }
+
+
+        const confirmed =
+            confirm(
+                "Supprimer cette conversation ?"
+            );
+
+
+        if (!confirmed) {
+
+            return;
+        }
+
+
+        conversations =
+            conversations.filter(
+                item =>
+                    item.id !== id
+            );
+
+
+        if (
+            currentConversationId === id
+        ) {
+
+            if (conversations.length) {
+
+                currentConversationId =
+                    conversations[0].id;
+
+            } else {
+
+                currentConversationId =
+                    null;
+            }
+        }
+
+
+        saveConversations();
+
+        renderHistory();
+
+        renderChat();
+
+
+        showToast(
+            "Conversation supprimée."
+        );
+    }
+
+
+    /* ========================================================
+       NOUVELLE CONVERSATION
+    ======================================================== */
+
+    function startNewConversation() {
+
+        createConversation();
+
+        showToast(
+            "Nouvelle conversation créée."
+        );
+    }
+
+
+    /* ========================================================
+       RENDRE LE CHAT
+    ======================================================== */
+
+    function renderChat() {
+
+        chat.innerHTML = "";
+
+
+        const conversation =
+            getCurrentConversation();
+
+
+        if (
+            !conversation ||
+            !conversation.messages ||
+            !conversation.messages.length
+        ) {
+
+            renderWelcome();
+
+            return;
+        }
+
+
+        conversation.messages.forEach(
+            message => {
+
+                if (
+                    message.role !== "user" &&
+                    message.role !== "assistant"
+                ) {
+
+                    return;
+                }
+
+
+                addMessageToScreen(
+                    message.role,
+                    message.content
+                );
+
+            }
+        );
+
+
+        scrollChatToBottom();
+    }
+
+
+    /* ========================================================
+       MESSAGE D'ACCUEIL
+    ======================================================== */
+
+    function renderWelcome() {
+
+        const welcome =
+            document.createElement(
+                "div"
+            );
+
+
+        welcome.className =
+            "welcome";
+
+
+        welcome.innerHTML =
+            `
+            <div class="welcome-icon">
+                M
             </div>
 
-        `;
+            <h2>
+                Bonjour 👋
+            </h2>
+
+            <p>
+                Je suis Messie IA.
+                Pose-moi une question, demande-moi
+                de l'aide ou parle-moi simplement.
+            </p>
+            `;
 
 
         chat.appendChild(
-            loadingMessage
+            welcome
         );
-
-
-        scrollToBottom();
-
     }
 
 
     /* ========================================================
-       SUPPRIMER LE CHARGEMENT
+       AJOUTER UN MESSAGE À L'ÉCRAN
     ======================================================== */
 
-    function removeLoading() {
+    function addMessageToScreen(
+        role,
+        content
+    ) {
+
+        const message =
+            document.createElement(
+                "div"
+            );
+
+
+        message.className =
+            "message " +
+            (
+                role === "user"
+                    ? "user"
+                    : "ai"
+            );
+
+
+        const bubble =
+            document.createElement(
+                "div"
+            );
+
+
+        bubble.className =
+            "bubble";
+
+
+        /*
+         * IMPORTANT :
+         * textContent est utilisé ici et non innerHTML.
+         * Cela évite qu'une réponse de l'IA puisse
+         * injecter du HTML ou du JavaScript.
+         */
+
+        bubble.textContent =
+            content;
+
+
+        message.appendChild(
+            bubble
+        );
+
+
+        chat.appendChild(
+            message
+        );
+
+
+        return message;
+    }
+
+
+    /* ========================================================
+       INDICATEUR DE CHARGEMENT
+    ======================================================== */
+
+    function addLoadingMessage() {
+
+        const message =
+            document.createElement(
+                "div"
+            );
+
+
+        message.className =
+            "message ai";
+
+
+        message.id =
+            "loadingMessage";
+
+
+        const bubble =
+            document.createElement(
+                "div"
+            );
+
+
+        bubble.className =
+            "bubble";
+
+
+        bubble.innerHTML =
+            `
+            <div class="loading">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            `;
+
+
+        message.appendChild(
+            bubble
+        );
+
+
+        chat.appendChild(
+            message
+        );
+
+
+        scrollChatToBottom();
+    }
+
+
+    /* ========================================================
+       RETIRER LE CHARGEMENT
+    ======================================================== */
+
+    function removeLoadingMessage() {
 
         const loading =
             document.getElementById(
@@ -1113,98 +1948,168 @@
         if (loading) {
 
             loading.remove();
-
         }
-
     }
 
 
     /* ========================================================
-       ENVOYER LE MESSAGE
+       SCROLL
+    ======================================================== */
+
+    function scrollChatToBottom() {
+
+        setTimeout(
+            () => {
+
+                chat.scrollTop =
+                    chat.scrollHeight;
+
+            },
+            50
+        );
+    }
+
+
+    /* ========================================================
+       ENVOYER UN MESSAGE
     ======================================================== */
 
     async function sendMessage() {
+
+        if (isSending) {
+
+            return;
+        }
+
 
         const message =
             messageInput.value.trim();
 
 
         if (!message) {
+
             return;
         }
 
 
         /*
-         * Empêcher plusieurs requêtes simultanées.
+         * Si aucune conversation n'existe,
+         * on en crée automatiquement une.
          */
 
-        sendButton.disabled = true;
+        if (!currentConversationId) {
 
-        messageInput.disabled = true;
+            createConversation();
+        }
+
+
+        let conversation =
+            getCurrentConversation();
+
+
+        if (!conversation) {
+
+            createConversation();
+
+            conversation =
+                getCurrentConversation();
+        }
 
 
         /*
-         * Afficher le message utilisateur.
+         * Ajouter le message utilisateur
          */
 
-        addMessage(
-            "user",
-            message
-        );
-
-
-        /*
-         * Ajouter le message à l'historique.
-         */
-
-        conversation.push({
+        conversation.messages.push({
 
             role: "user",
 
-            content: message
+            content: message,
+
+            createdAt:
+                new Date().toISOString()
 
         });
 
 
-        saveConversation();
+        /*
+         * Premier message = titre
+         */
+
+        if (
+            conversation.messages.length === 1
+        ) {
+
+            conversation.title =
+                createTitle(message);
+        }
+
+
+        conversation.updatedAt =
+            new Date().toISOString();
+
+
+        saveConversations();
+
+        renderHistory();
 
 
         /*
-         * Vider le champ.
+         * Afficher le message
+         */
+
+        renderChat();
+
+
+        /*
+         * Vider la zone de texte
          */
 
         messageInput.value = "";
 
-        autoResize();
+        resizeTextarea();
 
 
         /*
-         * Afficher le chargement.
+         * Désactiver le bouton
          */
 
-        showLoading();
+        isSending = true;
+
+        sendButton.disabled = true;
+
+
+        /*
+         * Afficher chargement
+         */
+
+        addLoadingMessage();
 
 
         try {
 
             /*
-             * Envoyer l'historique complet
-             * au backend Python.
+             * Préparer l'historique pour Python.
              *
-             * On envoie conversation.slice(0, -1)
-             * car le backend ajoute lui-même
-             * le nouveau message.
+             * On envoie les messages déjà présents.
              */
 
             const history =
-                conversation.slice(0, -1);
+                conversation.messages
+                    .map(item => ({
+                        role: item.role,
+                        content: item.content
+                    }));
 
+
+            /*
+             * Appel à ton serveur Flask.
+             */
 
             const response =
                 await fetch(
                     "/api/chat",
                     {
-
                         method: "POST",
 
                         headers: {
@@ -1214,32 +2119,42 @@
 
                         body: JSON.stringify({
 
-                            message: message,
+                            message:
+                                message,
 
-                            history: history
+                            history:
+                                history.slice(
+                                    0,
+                                    -1
+                                )
 
                         })
-
                     }
                 );
 
 
-            let data;
+            /*
+             * Lire la réponse
+             */
 
+            let data;
 
             try {
 
                 data =
                     await response.json();
 
-            } catch (error) {
+            } catch {
 
                 throw new Error(
                     "Le serveur a renvoyé une réponse invalide."
                 );
-
             }
 
+
+            /*
+             * Vérifier erreur HTTP
+             */
 
             if (!response.ok) {
 
@@ -1247,184 +2162,269 @@
                     data.error ||
                     "Une erreur est survenue."
                 );
-
             }
 
 
             /*
-             * Récupérer la réponse.
+             * IMPORTANT :
+             *
+             * On récupère UNIQUEMENT data.response.
+             *
+             * Cela empêche d'afficher des informations
+             * comme :
+             *
+             * User Safety: safe
+             * Response Safety: safe
+             *
+             * dans la conversation.
              */
 
             let answer =
-                data.response || "";
+                data.response;
 
 
             /*
-             * IMPORTANT :
-             * retirer User Safety / Response Safety.
+             * Vérification de sécurité supplémentaire.
              */
+
+            if (
+                typeof answer !== "string"
+            ) {
+
+                answer =
+                    String(answer || "");
+            }
+
 
             answer =
                 cleanAIResponse(answer);
 
 
-            if (!answer) {
+            if (!answer.trim()) {
 
-                answer =
-                    "Je n'ai pas reçu de réponse valide.";
+                throw new Error(
+                    "Messie IA n'a pas renvoyé de réponse."
+                );
             }
 
 
             /*
-             * Ajouter la réponse de Messie IA.
+             * Supprimer le chargement
              */
 
-            conversation.push({
+            removeLoadingMessage();
+
+
+            /*
+             * Sauvegarder la réponse IA
+             */
+
+            conversation.messages.push({
 
                 role: "assistant",
 
-                content: answer
+                content: answer,
+
+                createdAt:
+                    new Date().toISOString()
 
             });
 
 
-            saveConversation();
+            conversation.updatedAt =
+                new Date().toISOString();
 
 
-            removeLoading();
+            saveConversations();
 
 
-            addMessage(
-                "assistant",
-                answer
-            );
+            /*
+             * Afficher
+             */
+
+            renderChat();
+
+            renderHistory();
+
+            scrollChatToBottom();
 
 
         } catch (error) {
 
             console.error(
-                "Erreur :",
+                "Erreur:",
                 error
             );
 
 
-            removeLoading();
-
-
-            const errorMessage =
-                "Désolé, une erreur est survenue. " +
-                error.message;
-
-
-            addMessage(
-                "assistant",
-                errorMessage
-            );
+            removeLoadingMessage();
 
 
             /*
-             * On ne conserve pas le message d'erreur
-             * comme une réponse normale de l'IA.
+             * Message d'erreur visible
              */
+
+            addMessageToScreen(
+                "assistant",
+                "Désolé, une erreur est survenue :\n" +
+                error.message
+            );
 
         } finally {
 
+            isSending = false;
+
             sendButton.disabled = false;
 
-            messageInput.disabled = false;
-
             messageInput.focus();
-
         }
-
     }
 
 
     /* ========================================================
-       NOUVELLE CONVERSATION
+       NETTOYAGE RÉPONSE IA
     ======================================================== */
 
-    function newConversation() {
+    function cleanAIResponse(text) {
 
-        const confirmed =
-            confirm(
-                "Commencer une nouvelle conversation ?"
+        if (!text) {
+
+            return "";
+        }
+
+
+        let result =
+            String(text);
+
+
+        /*
+         * Supprimer des blocs de sécurité qui pourraient
+         * accidentellement arriver dans la réponse.
+         */
+
+        result =
+            result.replace(
+                /User Safety\s*:\s*safe/gi,
+                ""
             );
 
 
-        if (!confirmed) {
-            return;
-        }
-
-
-        conversation = [];
-
-
-        saveConversation();
-
-
-        renderConversation();
-
-
-        messageInput.focus();
-
-    }
-
-
-    /* ========================================================
-       EFFACER L'HISTORIQUE
-    ======================================================== */
-
-    function clearHistory() {
-
-        const confirmed =
-            confirm(
-                "Voulez-vous supprimer définitivement " +
-                "l'historique de cette conversation ?"
+        result =
+            result.replace(
+                /Response Safety\s*:\s*safe/gi,
+                ""
             );
 
 
-        if (!confirmed) {
-            return;
-        }
+        result =
+            result.replace(
+                /User Safety\s*:\s*unsafe/gi,
+                ""
+            );
 
 
-        conversation = [];
+        result =
+            result.replace(
+                /Response Safety\s*:\s*unsafe/gi,
+                ""
+            );
 
 
-        localStorage.removeItem(
-            STORAGE_KEY
-        );
+        /*
+         * Nettoyer les espaces inutiles laissés
+         * par la suppression.
+         */
+
+        result =
+            result.replace(
+                /\n\s*\n\s*\n+/g,
+                "\n\n"
+            );
 
 
-        renderConversation();
-
-
-        messageInput.focus();
-
+        return result.trim();
     }
 
 
     /* ========================================================
-       AGRANDIR AUTOMATIQUEMENT TEXTAREA
+       TEXTAREA AUTO-RESIZE
     ======================================================== */
 
-    function autoResize() {
+    function resizeTextarea() {
 
         messageInput.style.height =
             "auto";
 
 
-        const newHeight =
+        messageInput.style.height =
             Math.min(
                 messageInput.scrollHeight,
                 140
+            )
+            + "px";
+    }
+
+
+    /* ========================================================
+       OUVRIR HISTORIQUE
+    ======================================================== */
+
+    function openHistoryPanel() {
+
+        renderHistory();
+
+        historyOverlay.classList.add(
+            "show"
+        );
+    }
+
+
+    /* ========================================================
+       FERMER HISTORIQUE
+    ======================================================== */
+
+    function closeHistoryPanel() {
+
+        historyOverlay.classList.remove(
+            "show"
+        );
+    }
+
+
+    /* ========================================================
+       TOAST
+    ======================================================== */
+
+    let toastTimer = null;
+
+
+    function showToast(message) {
+
+        toast.textContent =
+            message;
+
+
+        toast.classList.add(
+            "show"
+        );
+
+
+        clearTimeout(
+            toastTimer
+        );
+
+
+        toastTimer =
+            setTimeout(
+                () => {
+
+                    toast.classList.remove(
+                        "show"
+                    );
+
+                },
+                2500
             );
-
-
-        messageInput.style.height =
-            newHeight + "px";
-
     }
 
 
@@ -1432,39 +2432,26 @@
        ÉVÉNEMENTS
     ======================================================== */
 
+
+    /*
+     * Envoyer
+     */
+
     sendButton.addEventListener(
         "click",
         sendMessage
     );
 
 
-    clearButton.addEventListener(
-        "click",
-        clearHistory
-    );
-
-
-    newChatButton.addEventListener(
-        "click",
-        newConversation
-    );
-
-
-    messageInput.addEventListener(
-        "input",
-        autoResize
-    );
-
-
     /*
-     * Envoyer avec Entrée.
+     * Entrée = envoyer
      *
-     * Shift + Entrée = nouvelle ligne.
+     * Shift + Entrée = nouvelle ligne
      */
 
     messageInput.addEventListener(
         "keydown",
-        function(event) {
+        event => {
 
             if (
                 event.key === "Enter" &&
@@ -1474,10 +2461,79 @@
                 event.preventDefault();
 
                 sendMessage();
-
             }
 
         }
+    );
+
+
+    /*
+     * Agrandir textarea
+     */
+
+    messageInput.addEventListener(
+        "input",
+        resizeTextarea
+    );
+
+
+    /*
+     * Ouvrir historique
+     */
+
+    historyButton.addEventListener(
+        "click",
+        openHistoryPanel
+    );
+
+
+    /*
+     * Fermer historique
+     */
+
+    closeHistory.addEventListener(
+        "click",
+        closeHistoryPanel
+    );
+
+
+    /*
+     * Cliquer en dehors du panneau
+     */
+
+    historyOverlay.addEventListener(
+        "click",
+        event => {
+
+            if (
+                event.target ===
+                historyOverlay
+            ) {
+
+                closeHistoryPanel();
+            }
+
+        }
+    );
+
+
+    /*
+     * Nouvelle conversation
+     */
+
+    newConversationButton.addEventListener(
+        "click",
+        startNewConversation
+    );
+
+
+    /*
+     * Nouvelle conversation depuis historique
+     */
+
+    historyNewButton.addEventListener(
+        "click",
+        startNewConversation
     );
 
 
@@ -1485,12 +2541,47 @@
        INITIALISATION
     ======================================================== */
 
-    loadConversation();
+    function initialize() {
 
-    renderConversation();
+        loadConversations();
 
-    autoResize();
 
+        /*
+         * S'il existe déjà des conversations,
+         * ouvrir la dernière.
+         */
+
+        if (conversations.length > 0) {
+
+            currentConversationId =
+                conversations[0].id;
+
+        } else {
+
+            /*
+             * Première utilisation :
+             * créer automatiquement une conversation.
+             */
+
+            createConversation();
+
+            return;
+        }
+
+
+        renderChat();
+
+        renderHistory();
+
+        messageInput.focus();
+    }
+
+
+    /* ========================================================
+       DÉMARRER
+    ======================================================== */
+
+    initialize();
 
 </script>
 
