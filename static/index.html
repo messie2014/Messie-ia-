@@ -171,6 +171,16 @@
         }
 
 
+        .header-actions {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+        }
+
+
         .status {
 
             display: flex;
@@ -201,8 +211,34 @@
         }
 
 
+        #newChatButton {
+
+            background: #1e293b;
+
+            border:
+                1px solid
+                rgba(255,255,255,0.1);
+
+            color: #cbd5e1;
+
+            padding: 8px 11px;
+
+            border-radius: 10px;
+
+            font-size: 12px;
+
+            cursor: pointer;
+        }
+
+
+        #newChatButton:hover {
+
+            background: #334155;
+        }
+
+
         /* =====================================================
-           ZONE CHAT
+           CHAT
         ===================================================== */
 
         .chat {
@@ -482,8 +518,6 @@
 
             border: none;
 
-            cursor: pointer;
-
             color: white;
         }
 
@@ -513,23 +547,13 @@
 
             align-items: center;
 
-            transition:
-                transform .15s,
-                opacity .15s;
+            cursor: pointer;
         }
 
 
         #sendButton:hover {
 
             opacity: .9;
-
-            transform: scale(1.03);
-        }
-
-
-        #sendButton:active {
-
-            transform: scale(.95);
         }
 
 
@@ -538,8 +562,6 @@
             opacity: .5;
 
             cursor: not-allowed;
-
-            transform: none;
         }
 
 
@@ -587,15 +609,15 @@
 
             .header {
 
-                padding: 14px;
+                padding: 12px;
             }
 
 
             .logo-icon {
 
-                width: 43px;
+                width: 42px;
 
-                height: 43px;
+                height: 42px;
             }
 
 
@@ -605,9 +627,29 @@
             }
 
 
-            .status {
+            .logo-text p {
 
                 font-size: 11px;
+            }
+
+
+            .header-actions {
+
+                gap: 7px;
+            }
+
+
+            .status {
+
+                display: none;
+            }
+
+
+            #newChatButton {
+
+                font-size: 11px;
+
+                padding: 7px 9px;
             }
 
 
@@ -651,18 +693,11 @@
             }
 
 
-            .input-box {
-
-                border-radius: 16px;
-            }
-
-
             textarea {
 
                 font-size: 16px;
             }
         }
-
 
     </style>
 
@@ -703,13 +738,25 @@
         </div>
 
 
-        <div class="status">
+        <div class="header-actions">
 
-            <span class="status-dot"></span>
+            <div class="status">
 
-            <span>
-                En ligne
-            </span>
+                <span class="status-dot"></span>
+
+                <span>
+                    En ligne
+                </span>
+
+            </div>
+
+
+            <button
+                id="newChatButton"
+                type="button"
+            >
+                Nouvelle conversation
+            </button>
 
         </div>
 
@@ -792,9 +839,8 @@
 
 <script>
 
-
     /* =====================================================
-       RÉCUPÉRATION DES ÉLÉMENTS
+       ÉLÉMENTS DE LA PAGE
     ===================================================== */
 
     const chat =
@@ -809,16 +855,198 @@
         document.getElementById("sendButton");
 
 
+    const newChatButton =
+        document.getElementById("newChatButton");
+
+
     const welcome =
         document.getElementById("welcome");
 
 
-
     /* =====================================================
-       AJOUTER UN MESSAGE
+       STOCKAGE LOCAL
     ===================================================== */
 
-    function addMessage(text, type) {
+    const STORAGE_KEY =
+        "messie_ia_conversation_v1";
+
+
+    /*
+       Historique complet conservé sur le téléphone.
+    */
+
+    let conversationHistory = [];
+
+
+    /*
+       Historique envoyé au serveur.
+
+       On limite à 20 messages pour éviter
+       des requêtes trop importantes.
+    */
+
+    const MAX_HISTORY_FOR_AI = 20;
+
+
+    /* =====================================================
+       SAUVEGARDER L'HISTORIQUE
+    ===================================================== */
+
+    function saveConversation() {
+
+        try {
+
+            localStorage.setItem(
+                STORAGE_KEY,
+                JSON.stringify(
+                    conversationHistory
+                )
+            );
+
+        }
+
+        catch (error) {
+
+            console.error(
+                "Erreur de sauvegarde :",
+                error
+            );
+
+        }
+
+    }
+
+
+    /* =====================================================
+       CHARGER L'HISTORIQUE
+    ===================================================== */
+
+    function loadConversation() {
+
+        try {
+
+            const saved =
+                localStorage.getItem(
+                    STORAGE_KEY
+                );
+
+
+            if (!saved) {
+
+                return;
+
+            }
+
+
+            const history =
+                JSON.parse(saved);
+
+
+            if (
+                !Array.isArray(history)
+            ) {
+
+                return;
+
+            }
+
+
+            conversationHistory =
+                history;
+
+
+            /*
+               Afficher les messages sauvegardés.
+            */
+
+            conversationHistory.forEach(
+                function(item) {
+
+                    if (
+                        !item ||
+                        typeof item !== "object"
+                    ) {
+
+                        return;
+
+                    }
+
+
+                    if (
+                        item.role === "user"
+                    ) {
+
+                        addMessage(
+                            item.content,
+                            "user"
+                        );
+
+                    }
+
+
+                    else if (
+                        item.role === "assistant"
+                    ) {
+
+                        addMessage(
+                            item.content,
+                            "ai"
+                        );
+
+                    }
+
+                }
+            );
+
+
+            /*
+               Supprimer l'accueil
+               s'il y a une conversation.
+            */
+
+            if (
+                conversationHistory.length > 0 &&
+                welcome
+            ) {
+
+                welcome.remove();
+
+            }
+
+        }
+
+        catch (error) {
+
+            console.error(
+                "Erreur de chargement :",
+                error
+            );
+
+            conversationHistory = [];
+
+        }
+
+    }
+
+
+    /* =====================================================
+       AJOUTER UN MESSAGE À L'ÉCRAN
+    ===================================================== */
+
+    function addMessage(
+        text,
+        type
+    ) {
+
+        if (
+            text === null ||
+            text === undefined
+        ) {
+
+            return;
+
+        }
+
 
         const message =
             document.createElement("div");
@@ -837,23 +1065,27 @@
 
 
         bubble.textContent =
-            text;
+            String(text);
 
 
-        message.appendChild(bubble);
+        message.appendChild(
+            bubble
+        );
 
 
-        chat.appendChild(message);
+        chat.appendChild(
+            message
+        );
 
 
         chat.scrollTop =
             chat.scrollHeight;
+
     }
 
 
-
     /* =====================================================
-       INDICATEUR DE CHARGEMENT
+       CHARGEMENT
     ===================================================== */
 
     function addLoading() {
@@ -893,23 +1125,29 @@
         `;
 
 
-        bubble.appendChild(loading);
+        bubble.appendChild(
+            loading
+        );
 
 
-        message.appendChild(bubble);
+        message.appendChild(
+            bubble
+        );
 
 
-        chat.appendChild(message);
+        chat.appendChild(
+            message
+        );
 
 
         chat.scrollTop =
             chat.scrollHeight;
+
     }
 
 
-
     /* =====================================================
-       SUPPRIMER LE CHARGEMENT
+       SUPPRIMER CHARGEMENT
     ===================================================== */
 
     function removeLoading() {
@@ -923,13 +1161,14 @@
         if (loading) {
 
             loading.remove();
+
         }
+
     }
 
 
-
     /* =====================================================
-       ENVOYER LE MESSAGE
+       ENVOYER MESSAGE
     ===================================================== */
 
     async function sendMessage() {
@@ -938,23 +1177,27 @@
             input.value.trim();
 
 
-        /* Message vide */
-
         if (!message) {
 
             return;
+
         }
 
 
-        /* Retirer l'accueil */
+        /*
+           Supprimer l'accueil.
+        */
 
         if (welcome) {
 
             welcome.remove();
+
         }
 
 
-        /* Afficher le message de l'utilisateur */
+        /*
+           Afficher le message.
+        */
 
         addMessage(
             message,
@@ -962,7 +1205,31 @@
         );
 
 
-        /* Nettoyer le champ */
+        /*
+           Ajouter à l'historique.
+        */
+
+        conversationHistory.push({
+
+            role:
+                "user",
+
+            content:
+                message
+
+        });
+
+
+        /*
+           Sauvegarder immédiatement.
+        */
+
+        saveConversation();
+
+
+        /*
+           Nettoyer le champ.
+        */
 
         input.value = "";
 
@@ -970,13 +1237,17 @@
             "45px";
 
 
-        /* Désactiver le bouton */
+        /*
+           Désactiver le bouton.
+        */
 
         sendButton.disabled =
             true;
 
 
-        /* Afficher les trois points */
+        /*
+           Afficher chargement.
+        */
 
         addLoading();
 
@@ -984,72 +1255,104 @@
         try {
 
 
-            /* =================================================
-               APPEL À NOTRE SERVEUR FLASK
-            ================================================= */
+            /*
+               Préparer les derniers messages
+               pour l'IA.
+            */
+
+            const historyForAI =
+                conversationHistory
+                    .slice(
+                        -MAX_HISTORY_FOR_AI
+                    );
+
+
+            /*
+               Envoyer au serveur.
+            */
 
             const response =
                 await fetch(
                     "/api/chat",
                     {
-                        method: "POST",
+
+                        method:
+                            "POST",
 
                         headers: {
+
                             "Content-Type":
                                 "application/json"
+
                         },
 
                         body:
                             JSON.stringify({
+
                                 message:
-                                    message
+                                    message,
+
+                                history:
+                                    historyForAI
+
                             })
+
                     }
                 );
 
 
-
-            /* =================================================
-               RÉCUPÉRER LA RÉPONSE JSON
-            ================================================= */
+            /*
+               Lire la réponse.
+            */
 
             const data =
                 await response.json();
 
 
-            /* Retirer les trois points */
+            /*
+               Supprimer chargement.
+            */
 
             removeLoading();
 
 
-
-            /* =================================================
-               ERREUR SERVEUR
-            ================================================= */
+            /*
+               Vérifier erreur.
+            */
 
             if (!response.ok) {
 
+                /*
+                   Retirer le message utilisateur
+                   de l'historique s'il y a une erreur.
+                */
+
+                conversationHistory.pop();
+
+                saveConversation();
+
+
                 addMessage(
+
                     "❌ " +
                     (
                         data.error ||
                         "Une erreur est survenue."
                     ),
+
                     "ai"
+
                 );
 
+
                 return;
+
             }
 
 
-
-            /* =================================================
-               RÉPONSE DE MESSIE IA
-               
-               IMPORTANT :
-               app.py renvoie "response"
-               et non "answer".
-            ================================================= */
+            /*
+               Récupérer la réponse.
+            */
 
             const answer =
                 data.response;
@@ -1058,33 +1361,60 @@
             if (!answer) {
 
                 addMessage(
+
                     "❌ Messie IA n'a renvoyé aucune réponse.",
+
                     "ai"
+
                 );
 
                 return;
+
             }
 
 
-            /* Afficher la réponse */
+            /*
+               Afficher la réponse.
+            */
 
             addMessage(
+
                 answer,
+
                 "ai"
+
             );
 
+
+            /*
+               Ajouter la réponse
+               à l'historique.
+            */
+
+            conversationHistory.push({
+
+                role:
+                    "assistant",
+
+                content:
+                    answer
+
+            });
+
+
+            /*
+               Sauvegarder.
+            */
+
+            saveConversation();
 
         }
 
 
-        /* =====================================================
-           ERREUR DE CONNEXION
-        ===================================================== */
-
         catch (error) {
 
             console.error(
-                "Erreur :",
+                "Erreur réseau :",
                 error
             );
 
@@ -1092,28 +1422,129 @@
             removeLoading();
 
 
+            /*
+               Retirer le message
+               qui n'a pas été envoyé.
+            */
+
+            conversationHistory.pop();
+
+            saveConversation();
+
+
             addMessage(
+
                 "❌ Impossible de contacter Messie IA. Vérifie ta connexion ou le serveur.",
+
                 "ai"
+
             );
+
         }
 
-
-        /* =====================================================
-           FIN
-        ===================================================== */
 
         finally {
 
             sendButton.disabled =
                 false;
 
-
             input.focus();
+
         }
 
     }
 
+
+    /* =====================================================
+       NOUVELLE CONVERSATION
+    ===================================================== */
+
+    function newConversation() {
+
+        const confirmation =
+            confirm(
+                "Voulez-vous vraiment commencer une nouvelle conversation ?"
+            );
+
+
+        if (!confirmation) {
+
+            return;
+
+        }
+
+
+        /*
+           Supprimer l'historique.
+        */
+
+        conversationHistory = [];
+
+
+        localStorage.removeItem(
+            STORAGE_KEY
+        );
+
+
+        /*
+           Nettoyer les messages.
+        */
+
+        chat.innerHTML = `
+            <div
+                class="welcome"
+                id="welcome"
+            >
+
+                <div class="welcome-icon">
+                    🤖
+                </div>
+
+                <h2>
+                    Bonjour 👋
+                </h2>
+
+                <p>
+                    Je suis Messie IA.<br>
+                    Pose-moi une question et je vais essayer
+                    de t'aider.
+                </p>
+
+            </div>
+        `;
+
+
+        /*
+           Récupérer le nouvel élément welcome.
+        */
+
+        window.welcome =
+            document.getElementById(
+                "welcome"
+            );
+
+
+        input.value = "";
+
+        input.style.height =
+            "45px";
+
+        input.focus();
+
+    }
+
+
+    /* =====================================================
+       BOUTON NOUVELLE CONVERSATION
+    ===================================================== */
+
+    newChatButton.addEventListener(
+
+        "click",
+
+        newConversation
+
+    );
 
 
     /* =====================================================
@@ -1121,10 +1552,12 @@
     ===================================================== */
 
     sendButton.addEventListener(
-        "click",
-        sendMessage
-    );
 
+        "click",
+
+        sendMessage
+
+    );
 
 
     /* =====================================================
@@ -1132,11 +1565,10 @@
     ===================================================== */
 
     input.addEventListener(
+
         "keydown",
+
         function(event) {
-
-
-            /* Entrée seule = envoyer */
 
             if (
                 event.key === "Enter" &&
@@ -1145,23 +1577,24 @@
 
                 event.preventDefault();
 
-
                 sendMessage();
+
             }
 
         }
+
     );
 
 
-
     /* =====================================================
-       AGRANDISSEMENT AUTOMATIQUE DU TEXTAREA
+       AGRANDISSEMENT TEXTAREA
     ===================================================== */
 
     input.addEventListener(
-        "input",
-        function() {
 
+        "input",
+
+        function() {
 
             this.style.height =
                 "45px";
@@ -1174,23 +1607,32 @@
                 ) + "px";
 
         }
+
     );
 
 
+    /* =====================================================
+       CHARGER L'HISTORIQUE AU DÉMARRAGE
+    ===================================================== */
+
+    loadConversation();
+
 
     /* =====================================================
-       FOCUS AUTOMATIQUE
+       FOCUS
     ===================================================== */
 
     window.addEventListener(
+
         "load",
+
         function() {
 
             input.focus();
 
         }
-    );
 
+    );
 
 </script>
 
