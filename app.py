@@ -3,12 +3,17 @@ import requests
 
 from flask import Flask, request, jsonify, send_from_directory
 
+
+# ============================================================
+# CONFIGURATION
+# ============================================================
+
 app = Flask(__name__, static_folder="static")
 
 
-# =========================================================
+# ============================================================
 # PAGE PRINCIPALE
-# =========================================================
+# ============================================================
 
 @app.route("/")
 def home():
@@ -18,47 +23,59 @@ def home():
     )
 
 
-# =========================================================
+# ============================================================
 # API CHAT - OPENROUTER
-# =========================================================
+# ============================================================
 
 @app.route("/api/chat", methods=["POST"])
 def chat():
 
-    # Récupérer la clé OpenRouter depuis Render
+    # --------------------------------------------------------
+    # Récupérer la clé OpenRouter
+    # --------------------------------------------------------
+
     api_key = os.environ.get("OPENROUTER_API_KEY")
 
-    # Vérifier que la clé existe
     if not api_key:
         return jsonify({
-            "error": "La clé OPENROUTER_API_KEY n'est pas configurée sur Render."
+            "error": "La clé OPENROUTER_API_KEY n'est pas configurée."
         }), 500
 
+    # --------------------------------------------------------
     # Récupérer le message envoyé par le site
-    data = request.get_json() or {}
+    # --------------------------------------------------------
+
+    data = request.get_json(silent=True) or {}
 
     message = data.get("message", "").strip()
 
-    # Vérifier que le message existe
     if not message:
         return jsonify({
             "error": "Message vide."
         }), 400
 
-    # =====================================================
-    # REQUÊTE OPENROUTER
-    # =====================================================
+    # --------------------------------------------------------
+    # URL OpenRouter
+    # --------------------------------------------------------
 
     url = "https://openrouter.ai/api/v1/chat/completions"
+
+    # --------------------------------------------------------
+    # En-têtes
+    # --------------------------------------------------------
 
     headers = {
         "Authorization": f"Bearer {api_key}",
         "Content-Type": "application/json",
 
-        # Informations facultatives pour OpenRouter
-        "HTTP-Referer": "https://messie-ia.onrender.com",
+        # Informations facultatives
+        "HTTP-Referer": "https://messie-ia.com",
         "X-Title": "Messie IA"
     }
+
+    # --------------------------------------------------------
+    # Requête envoyée à l'IA
+    # --------------------------------------------------------
 
     payload = {
         "model": "openrouter/free",
@@ -68,8 +85,11 @@ def chat():
                 "role": "system",
                 "content": (
                     "Tu es Messie IA, un assistant intelligent, "
-                    "utile, respectueux et facile à comprendre. "
-                    "Tu réponds principalement en français."
+                    "utile, respectueux et précis. "
+                    "Tu réponds principalement en français. "
+                    "Réponds de manière claire et naturelle. "
+                    "Si l'utilisateur écrit dans une autre langue, "
+                    "tu peux répondre dans cette langue."
                 )
             },
             {
@@ -82,6 +102,10 @@ def chat():
         "max_tokens": 1000
     }
 
+    # --------------------------------------------------------
+    # Contacter OpenRouter
+    # --------------------------------------------------------
+
     try:
 
         response = requests.post(
@@ -91,29 +115,42 @@ def chat():
             timeout=60
         )
 
+        # ----------------------------------------------------
         # Transformer la réponse OpenRouter en JSON
-        result = response.json()
+        # ----------------------------------------------------
 
-        # =================================================
-        # SI OPENROUTER RENVOIE UNE ERREUR
-        # =================================================
+        try:
+            result = response.json()
+
+        except ValueError:
+            return jsonify({
+                "error": "OpenRouter a renvoyé une réponse invalide."
+            }), 502
+
+        # ----------------------------------------------------
+        # Si OpenRouter renvoie une erreur
+        # ----------------------------------------------------
 
         if response.status_code != 200:
 
             print("Erreur OpenRouter :", result)
 
             error_message = (
-                result.get("error", {})
-                .get("message", "Erreur OpenRouter inconnue.")
+                result
+                .get("error", {})
+                .get(
+                    "message",
+                    "Une erreur est survenue avec OpenRouter."
+                )
             )
 
             return jsonify({
                 "error": error_message
             }), response.status_code
 
-        # =================================================
-        # RÉCUPÉRER LA RÉPONSE DE L'IA
-        # =================================================
+        # ----------------------------------------------------
+        # Récupérer la réponse de l'IA
+        # ----------------------------------------------------
 
         choices = result.get("choices", [])
 
@@ -131,19 +168,27 @@ def chat():
                 "error": "La réponse de l'IA est vide."
             }), 500
 
-        # =================================================
-        # RENVOYER LA RÉPONSE AU SITE
-        # =================================================
+        # ----------------------------------------------------
+        # Renvoyer la réponse au site
+        # ----------------------------------------------------
 
         return jsonify({
             "response": answer
         })
 
+    # --------------------------------------------------------
+    # Gestion du délai d'attente
+    # --------------------------------------------------------
+
     except requests.exceptions.Timeout:
 
         return jsonify({
-            "error": "OpenRouter met trop de temps à répondre. Réessaie."
+            "error": "OpenRouter met trop de temps à répondre."
         }), 504
+
+    # --------------------------------------------------------
+    # Gestion des erreurs réseau
+    # --------------------------------------------------------
 
     except requests.exceptions.RequestException as e:
 
@@ -152,6 +197,10 @@ def chat():
         return jsonify({
             "error": "Impossible de contacter OpenRouter."
         }), 500
+
+    # --------------------------------------------------------
+    # Gestion des autres erreurs
+    # --------------------------------------------------------
 
     except Exception as e:
 
@@ -162,9 +211,9 @@ def chat():
         }), 500
 
 
-# =========================================================
+# ============================================================
 # TEST DE L'API
-# =========================================================
+# ============================================================
 
 @app.route("/health")
 def health():
@@ -175,13 +224,15 @@ def health():
     })
 
 
-# =========================================================
+# ============================================================
 # DÉMARRAGE DU SERVEUR
-# =========================================================
+# ============================================================
 
 if __name__ == "__main__":
 
-    port = int(os.environ.get("PORT", 10000))
+    port = int(
+        os.environ.get("PORT", 10000)
+    )
 
     app.run(
         host="0.0.0.0",
