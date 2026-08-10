@@ -2,7 +2,6 @@
 <html lang="fr">
 
 <head>
-
     <meta charset="UTF-8">
 
     <meta
@@ -18,12 +17,6 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-        }
-
-        html,
-        body {
-            width: 100%;
-            height: 100%;
         }
 
         body {
@@ -45,47 +38,32 @@
             min-height: 100vh;
 
             display: flex;
-
             justify-content: center;
-
             align-items: center;
 
             padding: 15px;
         }
 
-
-        /* =====================================================
-           APPLICATION
-        ===================================================== */
-
         .app {
-
             width: 100%;
-
             max-width: 850px;
 
             height: 90vh;
-
             max-height: 850px;
 
-            background:
-                rgba(15, 23, 42, 0.96);
+            background: rgba(15, 23, 42, 0.97);
 
-            border:
-                1px solid
-                rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.1);
 
             border-radius: 25px;
 
             overflow: hidden;
 
             display: flex;
-
             flex-direction: column;
 
             box-shadow:
-                0 25px 80px
-                rgba(0,0,0,0.5);
+                0 25px 80px rgba(0,0,0,0.5);
         }
 
 
@@ -94,50 +72,46 @@
         ===================================================== */
 
         .header {
-
-            flex-shrink: 0;
-
-            padding: 18px 20px;
+            padding: 15px 18px;
 
             background:
-                rgba(2, 6, 23, 0.95);
+                rgba(2, 6, 23, 0.98);
 
             border-bottom:
-                1px solid
-                rgba(255,255,255,0.08);
+                1px solid rgba(255,255,255,0.08);
 
             display: flex;
 
             align-items: center;
 
             justify-content: space-between;
+
+            gap: 10px;
         }
 
 
         .logo {
-
             display: flex;
 
             align-items: center;
 
-            gap: 12px;
+            gap: 11px;
+
+            min-width: 0;
         }
 
 
         .logo-icon {
-
             width: 45px;
-
             height: 45px;
 
-            flex-shrink: 0;
+            min-width: 45px;
 
             border-radius: 50%;
 
             display: flex;
 
             align-items: center;
-
             justify-content: center;
 
             background:
@@ -153,16 +127,17 @@
         }
 
 
+        .logo-text {
+            min-width: 0;
+        }
+
+
         .logo-text h1 {
-
             font-size: 20px;
-
-            color: white;
         }
 
 
         .logo-text p {
-
             font-size: 12px;
 
             color: #94a3b8;
@@ -171,59 +146,23 @@
         }
 
 
-        .header-actions {
-
+        .header-buttons {
             display: flex;
-
-            align-items: center;
-
-            gap: 12px;
-        }
-
-
-        .status {
-
-            display: flex;
-
-            align-items: center;
 
             gap: 7px;
-
-            color: #94a3b8;
-
-            font-size: 12px;
         }
 
 
-        .status-dot {
-
-            width: 9px;
-
-            height: 9px;
-
-            background: #22c55e;
-
-            border-radius: 50%;
-
-            box-shadow:
-                0 0 8px
-                rgba(34,197,94,0.7);
-        }
-
-
-        #newChatButton {
-
-            background: #1e293b;
-
-            border:
-                1px solid
-                rgba(255,255,255,0.1);
+        .header-button {
+            border: none;
 
             color: #cbd5e1;
 
-            padding: 8px 11px;
+            background: #1e293b;
 
             border-radius: 10px;
+
+            padding: 9px 11px;
 
             font-size: 12px;
 
@@ -231,8 +170,7 @@
         }
 
 
-        #newChatButton:hover {
-
+        .header-button:hover {
             background: #334155;
         }
 
@@ -242,10 +180,7 @@
         ===================================================== */
 
         .chat {
-
             flex: 1;
-
-            min-height: 0;
 
             overflow-y: auto;
 
@@ -255,42 +190,39 @@
         }
 
 
-        .chat::-webkit-scrollbar {
-
-            width: 6px;
-        }
-
-
-        .chat::-webkit-scrollbar-thumb {
-
-            background: #334155;
-
-            border-radius: 10px;
-        }
-
-
-        /* =====================================================
-           MESSAGE D'ACCUEIL
-        ===================================================== */
-
         .welcome {
-
             text-align: center;
 
-            padding: 40px 15px;
+            padding: 45px 15px;
         }
 
 
         .welcome-icon {
+            width: 70px;
+            height: 70px;
 
-            font-size: 55px;
+            margin: 0 auto 18px;
 
-            margin-bottom: 15px;
+            border-radius: 50%;
+
+            display: flex;
+
+            justify-content: center;
+            align-items: center;
+
+            font-size: 32px;
+            font-weight: bold;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #7c3aed,
+                    #2563eb
+                );
         }
 
 
         .welcome h2 {
-
             font-size: 28px;
 
             margin-bottom: 10px;
@@ -298,7 +230,6 @@
 
 
         .welcome p {
-
             color: #94a3b8;
 
             line-height: 1.6;
@@ -310,29 +241,25 @@
         ===================================================== */
 
         .message {
-
             display: flex;
 
-            width: 100%;
-
             margin-bottom: 20px;
+
+            width: 100%;
         }
 
 
         .message.user {
-
             justify-content: flex-end;
         }
 
 
         .message.ai {
-
             justify-content: flex-start;
         }
 
 
         .bubble {
-
             max-width: 85%;
 
             padding: 13px 16px;
@@ -352,7 +279,6 @@
 
 
         .user .bubble {
-
             background:
                 linear-gradient(
                     135deg,
@@ -365,7 +291,6 @@
 
 
         .ai .bubble {
-
             background: #1e293b;
 
             border:
@@ -377,74 +302,91 @@
 
 
         /* =====================================================
-           CHARGEMENT
+           LOADING
         ===================================================== */
 
-        .loading {
-
+        .loading-message {
             display: flex;
 
-            gap: 5px;
+            justify-content: flex-start;
+
+            margin-bottom: 20px;
+        }
+
+
+        .loading-bubble {
+            background: #1e293b;
+
+            border:
+                1px solid
+                rgba(255,255,255,0.06);
+
+            border-radius: 18px;
+
+            border-bottom-left-radius: 5px;
+
+            padding: 15px 18px;
+        }
+
+
+        .loading {
+            display: flex;
 
             align-items: center;
 
-            min-height: 20px;
+            gap: 5px;
+        }
+
+
+        .loading-text {
+            color: #94a3b8;
+
+            font-size: 13px;
+
+            margin-right: 7px;
         }
 
 
         .loading span {
-
             width: 7px;
-
             height: 7px;
 
             background: #94a3b8;
 
             border-radius: 50%;
 
-            animation:
-                bounce 1.2s infinite;
-        }
-
-
-        .loading span:nth-child(2) {
-
-            animation-delay: .15s;
+            animation: bounce 1.2s infinite;
         }
 
 
         .loading span:nth-child(3) {
+            animation-delay: .15s;
+        }
 
+
+        .loading span:nth-child(4) {
             animation-delay: .3s;
         }
 
 
         @keyframes bounce {
 
-            0%,
-            60%,
-            100% {
-
-                transform:
-                    translateY(0);
+            0%, 60%, 100% {
+                transform: translateY(0);
             }
 
             30% {
-
-                transform:
-                    translateY(-6px);
+                transform: translateY(-6px);
             }
+
         }
 
 
         /* =====================================================
-           ZONE DE SAISIE
+           INPUT
         ===================================================== */
 
         .input-area {
-
-            flex-shrink: 0;
-
             padding: 15px;
 
             background:
@@ -457,14 +399,11 @@
 
 
         .input-box {
-
             display: flex;
 
             align-items: flex-end;
 
             gap: 10px;
-
-            width: 100%;
 
             background: #1e293b;
 
@@ -479,10 +418,7 @@
 
 
         textarea {
-
             flex: 1;
-
-            width: 100%;
 
             resize: none;
 
@@ -503,32 +439,21 @@
             max-height: 140px;
 
             font-family: inherit;
-
-            line-height: 1.4;
         }
 
 
         textarea::placeholder {
-
             color: #64748b;
         }
 
 
-        button {
-
-            border: none;
-
-            color: white;
-        }
-
-
         #sendButton {
-
             width: 45px;
-
             height: 45px;
 
             min-width: 45px;
+
+            border: none;
 
             border-radius: 14px;
 
@@ -539,7 +464,9 @@
                     #7c3aed
                 );
 
-            font-size: 20px;
+            color: white;
+
+            font-size: 18px;
 
             display: flex;
 
@@ -552,13 +479,11 @@
 
 
         #sendButton:hover {
-
             opacity: .9;
         }
 
 
         #sendButton:disabled {
-
             opacity: .5;
 
             cursor: not-allowed;
@@ -566,7 +491,6 @@
 
 
         .info {
-
             text-align: center;
 
             color: #64748b;
@@ -584,102 +508,67 @@
         @media (max-width: 600px) {
 
             body {
-
                 padding: 0;
-
-                align-items: stretch;
             }
 
 
             .app {
-
                 width: 100%;
 
                 height: 100vh;
 
-                height: 100dvh;
-
                 max-height: none;
 
                 border-radius: 0;
-
-                border: none;
             }
 
 
             .header {
-
-                padding: 12px;
+                padding: 13px;
             }
 
 
             .logo-icon {
-
                 width: 42px;
-
                 height: 42px;
+
+                min-width: 42px;
             }
 
 
             .logo-text h1 {
-
                 font-size: 18px;
             }
 
 
             .logo-text p {
-
                 font-size: 11px;
             }
 
 
-            .header-actions {
-
-                gap: 7px;
-            }
-
-
-            .status {
-
-                display: none;
-            }
-
-
-            #newChatButton {
+            .header-button {
+                padding: 8px;
 
                 font-size: 11px;
-
-                padding: 7px 9px;
             }
 
 
             .chat {
-
-                padding:
-                    20px 12px;
+                padding: 18px 13px;
             }
 
 
             .welcome {
-
-                padding-top: 60px;
+                padding-top: 55px;
             }
 
 
             .welcome h2 {
-
                 font-size: 24px;
             }
 
 
-            .welcome-icon {
-
-                font-size: 48px;
-            }
-
-
             .bubble {
-
                 max-width: 90%;
 
                 font-size: 15px;
@@ -687,16 +576,9 @@
 
 
             .input-area {
-
-                padding:
-                    10px;
+                padding: 10px;
             }
 
-
-            textarea {
-
-                font-size: 16px;
-            }
         }
 
     </style>
@@ -715,6 +597,7 @@
     ====================================================== -->
 
     <header class="header">
+
 
         <div class="logo">
 
@@ -738,27 +621,27 @@
         </div>
 
 
-        <div class="header-actions">
-
-            <div class="status">
-
-                <span class="status-dot"></span>
-
-                <span>
-                    En ligne
-                </span>
-
-            </div>
-
+        <div class="header-buttons">
 
             <button
+                class="header-button"
                 id="newChatButton"
                 type="button"
             >
-                Nouvelle conversation
+                + Nouveau
+            </button>
+
+
+            <button
+                class="header-button"
+                id="clearButton"
+                type="button"
+            >
+                🗑️
             </button>
 
         </div>
+
 
     </header>
 
@@ -778,7 +661,7 @@
         >
 
             <div class="welcome-icon">
-                🤖
+                M
             </div>
 
             <h2>
@@ -787,8 +670,7 @@
 
             <p>
                 Je suis Messie IA.<br>
-                Pose-moi une question et je vais essayer
-                de t'aider.
+                Pose-moi une question pour commencer.
             </p>
 
         </div>
@@ -797,12 +679,14 @@
 
 
     <!-- =====================================================
-         ZONE DE MESSAGE
+         INPUT
     ====================================================== -->
 
     <div class="input-area">
 
+
         <div class="input-box">
+
 
             <textarea
                 id="messageInput"
@@ -815,20 +699,19 @@
             <button
                 id="sendButton"
                 type="button"
-                title="Envoyer"
-                aria-label="Envoyer le message"
+                aria-label="Envoyer"
             >
                 ➤
             </button>
+
 
         </div>
 
 
         <div class="info">
-
             Messie IA peut parfois faire des erreurs.
-
         </div>
+
 
     </div>
 
@@ -836,61 +719,104 @@
 </div>
 
 
-
 <script>
 
-    /* =====================================================
-       ÉLÉMENTS DE LA PAGE
-    ===================================================== */
+    /* ========================================================
+       CONFIGURATION
+    ======================================================== */
 
-    const chat =
-        document.getElementById("chat");
+    const STORAGE_KEY = "messie_ia_conversation";
 
 
-    const input =
+    /* ========================================================
+       ÉLÉMENTS HTML
+    ======================================================== */
+
+    const chat = document.getElementById("chat");
+
+    const welcome = document.getElementById("welcome");
+
+    const messageInput =
         document.getElementById("messageInput");
-
 
     const sendButton =
         document.getElementById("sendButton");
 
+    const clearButton =
+        document.getElementById("clearButton");
 
     const newChatButton =
         document.getElementById("newChatButton");
 
 
-    const welcome =
-        document.getElementById("welcome");
+    /* ========================================================
+       HISTORIQUE
+    ======================================================== */
+
+    let conversation = [];
 
 
-    /* =====================================================
-       STOCKAGE LOCAL
-    ===================================================== */
+    /* ========================================================
+       CHARGER L'HISTORIQUE
+    ======================================================== */
 
-    const STORAGE_KEY =
-        "messie_ia_conversation_v1";
+    function loadConversation() {
 
+        try {
 
-    /*
-       Historique complet conservé sur le téléphone.
-    */
-
-    let conversationHistory = [];
+            const saved =
+                localStorage.getItem(STORAGE_KEY);
 
 
-    /*
-       Historique envoyé au serveur.
+            if (!saved) {
 
-       On limite à 20 messages pour éviter
-       des requêtes trop importantes.
-    */
+                conversation = [];
 
-    const MAX_HISTORY_FOR_AI = 20;
+                return;
+            }
 
 
-    /* =====================================================
+            const parsed =
+                JSON.parse(saved);
+
+
+            if (Array.isArray(parsed)) {
+
+                conversation = parsed.filter(item => {
+
+                    return (
+                        item &&
+                        (
+                            item.role === "user" ||
+                            item.role === "assistant"
+                        ) &&
+                        typeof item.content === "string"
+                    );
+
+                });
+
+            } else {
+
+                conversation = [];
+
+            }
+
+        } catch (error) {
+
+            console.error(
+                "Erreur lors du chargement de l'historique :",
+                error
+            );
+
+            conversation = [];
+        }
+
+    }
+
+
+    /* ========================================================
        SAUVEGARDER L'HISTORIQUE
-    ===================================================== */
+    ======================================================== */
 
     function saveConversation() {
 
@@ -898,17 +824,13 @@
 
             localStorage.setItem(
                 STORAGE_KEY,
-                JSON.stringify(
-                    conversationHistory
-                )
+                JSON.stringify(conversation)
             );
 
-        }
-
-        catch (error) {
+        } catch (error) {
 
             console.error(
-                "Erreur de sauvegarde :",
+                "Impossible de sauvegarder la conversation :",
                 error
             );
 
@@ -917,134 +839,106 @@
     }
 
 
-    /* =====================================================
-       CHARGER L'HISTORIQUE
-    ===================================================== */
+    /* ========================================================
+       SUPPRIMER LES MENTIONS SAFETY
+    ======================================================== */
 
-    function loadConversation() {
+    function cleanAIResponse(text) {
 
-        try {
-
-            const saved =
-                localStorage.getItem(
-                    STORAGE_KEY
-                );
-
-
-            if (!saved) {
-
-                return;
-
-            }
-
-
-            const history =
-                JSON.parse(saved);
-
-
-            if (
-                !Array.isArray(history)
-            ) {
-
-                return;
-
-            }
-
-
-            conversationHistory =
-                history;
-
-
-            /*
-               Afficher les messages sauvegardés.
-            */
-
-            conversationHistory.forEach(
-                function(item) {
-
-                    if (
-                        !item ||
-                        typeof item !== "object"
-                    ) {
-
-                        return;
-
-                    }
-
-
-                    if (
-                        item.role === "user"
-                    ) {
-
-                        addMessage(
-                            item.content,
-                            "user"
-                        );
-
-                    }
-
-
-                    else if (
-                        item.role === "assistant"
-                    ) {
-
-                        addMessage(
-                            item.content,
-                            "ai"
-                        );
-
-                    }
-
-                }
-            );
-
-
-            /*
-               Supprimer l'accueil
-               s'il y a une conversation.
-            */
-
-            if (
-                conversationHistory.length > 0 &&
-                welcome
-            ) {
-
-                welcome.remove();
-
-            }
-
+        if (!text) {
+            return "";
         }
 
-        catch (error) {
 
-            console.error(
-                "Erreur de chargement :",
-                error
-            );
+        let cleaned = String(text);
 
-            conversationHistory = [];
 
-        }
+        /*
+         * Supprimer les lignes du genre :
+         *
+         * User Safety: safe
+         * Response Safety: safe
+         */
+
+        cleaned = cleaned.replace(
+            /user\s*safety\s*:\s*safe/gi,
+            ""
+        );
+
+
+        cleaned = cleaned.replace(
+            /response\s*safety\s*:\s*safe/gi,
+            ""
+        );
+
+
+        cleaned = cleaned.replace(
+            /user\s*safety\s*:/gi,
+            ""
+        );
+
+
+        cleaned = cleaned.replace(
+            /response\s*safety\s*:/gi,
+            ""
+        );
+
+
+        /*
+         * Supprimer également certaines variantes.
+         */
+
+        cleaned = cleaned.replace(
+            /^\s*safe\s*$/gim,
+            ""
+        );
+
+
+        /*
+         * Nettoyer les lignes vides répétées.
+         */
+
+        cleaned = cleaned.replace(
+            /\n{3,}/g,
+            "\n\n"
+        );
+
+
+        return cleaned.trim();
 
     }
 
 
-    /* =====================================================
-       AJOUTER UN MESSAGE À L'ÉCRAN
-    ===================================================== */
+    /* ========================================================
+       ÉCHAPPER LE HTML
+    ======================================================== */
 
-    function addMessage(
-        text,
-        type
-    ) {
+    function escapeHTML(text) {
 
-        if (
-            text === null ||
-            text === undefined
-        ) {
+        const div =
+            document.createElement("div");
 
+        div.textContent = text;
+
+        return div.innerHTML;
+
+    }
+
+
+    /* ========================================================
+       AFFICHER UN MESSAGE
+    ======================================================== */
+
+    function addMessage(role, content) {
+
+        if (!content) {
             return;
+        }
 
+
+        if (welcome) {
+
+            welcome.style.display = "none";
         }
 
 
@@ -1053,102 +947,160 @@
 
 
         message.className =
-            "message " + type;
+            role === "user"
+                ? "message user"
+                : "message ai";
 
 
         const bubble =
             document.createElement("div");
 
 
-        bubble.className =
-            "bubble";
+        bubble.className = "bubble";
 
 
-        bubble.textContent =
-            String(text);
+        bubble.innerHTML =
+            escapeHTML(content);
 
 
-        message.appendChild(
-            bubble
-        );
+        message.appendChild(bubble);
 
 
-        chat.appendChild(
-            message
-        );
+        chat.appendChild(message);
 
 
-        chat.scrollTop =
-            chat.scrollHeight;
+        scrollToBottom();
 
     }
 
 
-    /* =====================================================
-       CHARGEMENT
-    ===================================================== */
+    /* ========================================================
+       AFFICHER TOUT L'HISTORIQUE
+    ======================================================== */
 
-    function addLoading() {
+    function renderConversation() {
 
-        const message =
+        /*
+         * Supprimer tous les messages actuels
+         * sans supprimer le welcome.
+         */
+
+        const messages =
+            chat.querySelectorAll(".message");
+
+
+        messages.forEach(message => {
+
+            message.remove();
+
+        });
+
+
+        if (conversation.length === 0) {
+
+            if (welcome) {
+
+                welcome.style.display = "block";
+
+            }
+
+            return;
+        }
+
+
+        if (welcome) {
+
+            welcome.style.display = "none";
+
+        }
+
+
+        conversation.forEach(item => {
+
+            addMessage(
+                item.role,
+                item.content
+            );
+
+        });
+
+
+        scrollToBottom();
+
+    }
+
+
+    /* ========================================================
+       SCROLL VERS LE BAS
+    ======================================================== */
+
+    function scrollToBottom() {
+
+        setTimeout(() => {
+
+            chat.scrollTop =
+                chat.scrollHeight;
+
+        }, 50);
+
+    }
+
+
+    /* ========================================================
+       AFFICHER LE CHARGEMENT
+    ======================================================== */
+
+    function showLoading() {
+
+        removeLoading();
+
+
+        const loadingMessage =
             document.createElement("div");
 
 
-        message.className =
-            "message ai";
-
-
-        message.id =
+        loadingMessage.id =
             "loadingMessage";
 
 
-        const bubble =
-            document.createElement("div");
+        loadingMessage.className =
+            "loading-message";
 
 
-        bubble.className =
-            "bubble";
+        loadingMessage.innerHTML = `
 
+            <div class="loading-bubble">
 
-        const loading =
-            document.createElement("div");
+                <div class="loading">
 
+                    <span class="loading-text">
+                        Messie IA réfléchit
+                    </span>
 
-        loading.className =
-            "loading";
+                    <span></span>
+                    <span></span>
+                    <span></span>
 
+                </div>
 
-        loading.innerHTML = `
-            <span></span>
-            <span></span>
-            <span></span>
+            </div>
+
         `;
 
 
-        bubble.appendChild(
-            loading
-        );
-
-
-        message.appendChild(
-            bubble
-        );
-
-
         chat.appendChild(
-            message
+            loadingMessage
         );
 
 
-        chat.scrollTop =
-            chat.scrollHeight;
+        scrollToBottom();
 
     }
 
 
-    /* =====================================================
-       SUPPRIMER CHARGEMENT
-    ===================================================== */
+    /* ========================================================
+       SUPPRIMER LE CHARGEMENT
+    ======================================================== */
 
     function removeLoading() {
 
@@ -1167,254 +1119,191 @@
     }
 
 
-    /* =====================================================
-       ENVOYER MESSAGE
-    ===================================================== */
+    /* ========================================================
+       ENVOYER LE MESSAGE
+    ======================================================== */
 
     async function sendMessage() {
 
         const message =
-            input.value.trim();
+            messageInput.value.trim();
 
 
         if (!message) {
-
             return;
-
         }
 
 
         /*
-           Supprimer l'accueil.
-        */
+         * Empêcher plusieurs requêtes simultanées.
+         */
 
-        if (welcome) {
+        sendButton.disabled = true;
 
-            welcome.remove();
-
-        }
+        messageInput.disabled = true;
 
 
         /*
-           Afficher le message.
-        */
+         * Afficher le message utilisateur.
+         */
 
         addMessage(
-            message,
-            "user"
+            "user",
+            message
         );
 
 
         /*
-           Ajouter à l'historique.
-        */
+         * Ajouter le message à l'historique.
+         */
 
-        conversationHistory.push({
+        conversation.push({
 
-            role:
-                "user",
+            role: "user",
 
-            content:
-                message
+            content: message
 
         });
 
-
-        /*
-           Sauvegarder immédiatement.
-        */
 
         saveConversation();
 
 
         /*
-           Nettoyer le champ.
-        */
+         * Vider le champ.
+         */
 
-        input.value = "";
+        messageInput.value = "";
 
-        input.style.height =
-            "45px";
-
-
-        /*
-           Désactiver le bouton.
-        */
-
-        sendButton.disabled =
-            true;
+        autoResize();
 
 
         /*
-           Afficher chargement.
-        */
+         * Afficher le chargement.
+         */
 
-        addLoading();
+        showLoading();
 
 
         try {
 
-
             /*
-               Préparer les derniers messages
-               pour l'IA.
-            */
+             * Envoyer l'historique complet
+             * au backend Python.
+             *
+             * On envoie conversation.slice(0, -1)
+             * car le backend ajoute lui-même
+             * le nouveau message.
+             */
 
-            const historyForAI =
-                conversationHistory
-                    .slice(
-                        -MAX_HISTORY_FOR_AI
-                    );
+            const history =
+                conversation.slice(0, -1);
 
-
-            /*
-               Envoyer au serveur.
-            */
 
             const response =
                 await fetch(
                     "/api/chat",
                     {
 
-                        method:
-                            "POST",
+                        method: "POST",
 
                         headers: {
-
                             "Content-Type":
                                 "application/json"
-
                         },
 
-                        body:
-                            JSON.stringify({
+                        body: JSON.stringify({
 
-                                message:
-                                    message,
+                            message: message,
 
-                                history:
-                                    historyForAI
+                            history: history
 
-                            })
+                        })
 
                     }
                 );
 
 
-            /*
-               Lire la réponse.
-            */
-
-            const data =
-                await response.json();
+            let data;
 
 
-            /*
-               Supprimer chargement.
-            */
+            try {
 
-            removeLoading();
+                data =
+                    await response.json();
 
+            } catch (error) {
 
-            /*
-               Vérifier erreur.
-            */
+                throw new Error(
+                    "Le serveur a renvoyé une réponse invalide."
+                );
+
+            }
+
 
             if (!response.ok) {
 
-                /*
-                   Retirer le message utilisateur
-                   de l'historique s'il y a une erreur.
-                */
-
-                conversationHistory.pop();
-
-                saveConversation();
-
-
-                addMessage(
-
-                    "❌ " +
-                    (
-                        data.error ||
-                        "Une erreur est survenue."
-                    ),
-
-                    "ai"
-
+                throw new Error(
+                    data.error ||
+                    "Une erreur est survenue."
                 );
-
-
-                return;
 
             }
 
 
             /*
-               Récupérer la réponse.
-            */
+             * Récupérer la réponse.
+             */
 
-            const answer =
-                data.response;
+            let answer =
+                data.response || "";
+
+
+            /*
+             * IMPORTANT :
+             * retirer User Safety / Response Safety.
+             */
+
+            answer =
+                cleanAIResponse(answer);
 
 
             if (!answer) {
 
-                addMessage(
-
-                    "❌ Messie IA n'a renvoyé aucune réponse.",
-
-                    "ai"
-
-                );
-
-                return;
-
+                answer =
+                    "Je n'ai pas reçu de réponse valide.";
             }
 
 
             /*
-               Afficher la réponse.
-            */
+             * Ajouter la réponse de Messie IA.
+             */
 
-            addMessage(
+            conversation.push({
 
-                answer,
+                role: "assistant",
 
-                "ai"
-
-            );
-
-
-            /*
-               Ajouter la réponse
-               à l'historique.
-            */
-
-            conversationHistory.push({
-
-                role:
-                    "assistant",
-
-                content:
-                    answer
+                content: answer
 
             });
 
 
-            /*
-               Sauvegarder.
-            */
-
             saveConversation();
 
-        }
+
+            removeLoading();
 
 
-        catch (error) {
+            addMessage(
+                "assistant",
+                answer
+            );
+
+
+        } catch (error) {
 
             console.error(
-                "Erreur réseau :",
+                "Erreur :",
                 error
             );
 
@@ -1422,63 +1311,85 @@
             removeLoading();
 
 
-            /*
-               Retirer le message
-               qui n'a pas été envoyé.
-            */
-
-            conversationHistory.pop();
-
-            saveConversation();
+            const errorMessage =
+                "Désolé, une erreur est survenue. " +
+                error.message;
 
 
             addMessage(
-
-                "❌ Impossible de contacter Messie IA. Vérifie ta connexion ou le serveur.",
-
-                "ai"
-
+                "assistant",
+                errorMessage
             );
 
-        }
 
+            /*
+             * On ne conserve pas le message d'erreur
+             * comme une réponse normale de l'IA.
+             */
 
-        finally {
+        } finally {
 
-            sendButton.disabled =
-                false;
+            sendButton.disabled = false;
 
-            input.focus();
+            messageInput.disabled = false;
+
+            messageInput.focus();
 
         }
 
     }
 
 
-    /* =====================================================
+    /* ========================================================
        NOUVELLE CONVERSATION
-    ===================================================== */
+    ======================================================== */
 
     function newConversation() {
 
-        const confirmation =
+        const confirmed =
             confirm(
-                "Voulez-vous vraiment commencer une nouvelle conversation ?"
+                "Commencer une nouvelle conversation ?"
             );
 
 
-        if (!confirmation) {
-
+        if (!confirmed) {
             return;
-
         }
 
 
-        /*
-           Supprimer l'historique.
-        */
+        conversation = [];
 
-        conversationHistory = [];
+
+        saveConversation();
+
+
+        renderConversation();
+
+
+        messageInput.focus();
+
+    }
+
+
+    /* ========================================================
+       EFFACER L'HISTORIQUE
+    ======================================================== */
+
+    function clearHistory() {
+
+        const confirmed =
+            confirm(
+                "Voulez-vous supprimer définitivement " +
+                "l'historique de cette conversation ?"
+            );
+
+
+        if (!confirmed) {
+            return;
+        }
+
+
+        conversation = [];
 
 
         localStorage.removeItem(
@@ -1486,88 +1397,73 @@
         );
 
 
-        /*
-           Nettoyer les messages.
-        */
-
-        chat.innerHTML = `
-            <div
-                class="welcome"
-                id="welcome"
-            >
-
-                <div class="welcome-icon">
-                    🤖
-                </div>
-
-                <h2>
-                    Bonjour 👋
-                </h2>
-
-                <p>
-                    Je suis Messie IA.<br>
-                    Pose-moi une question et je vais essayer
-                    de t'aider.
-                </p>
-
-            </div>
-        `;
+        renderConversation();
 
 
-        /*
-           Récupérer le nouvel élément welcome.
-        */
-
-        window.welcome =
-            document.getElementById(
-                "welcome"
-            );
-
-
-        input.value = "";
-
-        input.style.height =
-            "45px";
-
-        input.focus();
+        messageInput.focus();
 
     }
 
 
-    /* =====================================================
-       BOUTON NOUVELLE CONVERSATION
-    ===================================================== */
+    /* ========================================================
+       AGRANDIR AUTOMATIQUEMENT TEXTAREA
+    ======================================================== */
 
-    newChatButton.addEventListener(
+    function autoResize() {
 
-        "click",
-
-        newConversation
-
-    );
+        messageInput.style.height =
+            "auto";
 
 
-    /* =====================================================
-       BOUTON ENVOYER
-    ===================================================== */
+        const newHeight =
+            Math.min(
+                messageInput.scrollHeight,
+                140
+            );
+
+
+        messageInput.style.height =
+            newHeight + "px";
+
+    }
+
+
+    /* ========================================================
+       ÉVÉNEMENTS
+    ======================================================== */
 
     sendButton.addEventListener(
-
         "click",
-
         sendMessage
-
     );
 
 
-    /* =====================================================
-       TOUCHE ENTRÉE
-    ===================================================== */
+    clearButton.addEventListener(
+        "click",
+        clearHistory
+    );
 
-    input.addEventListener(
 
+    newChatButton.addEventListener(
+        "click",
+        newConversation
+    );
+
+
+    messageInput.addEventListener(
+        "input",
+        autoResize
+    );
+
+
+    /*
+     * Envoyer avec Entrée.
+     *
+     * Shift + Entrée = nouvelle ligne.
+     */
+
+    messageInput.addEventListener(
         "keydown",
-
         function(event) {
 
             if (
@@ -1582,61 +1478,23 @@
             }
 
         }
-
     );
 
 
-    /* =====================================================
-       AGRANDISSEMENT TEXTAREA
-    ===================================================== */
-
-    input.addEventListener(
-
-        "input",
-
-        function() {
-
-            this.style.height =
-                "45px";
-
-
-            this.style.height =
-                Math.min(
-                    this.scrollHeight,
-                    140
-                ) + "px";
-
-        }
-
-    );
-
-
-    /* =====================================================
-       CHARGER L'HISTORIQUE AU DÉMARRAGE
-    ===================================================== */
+    /* ========================================================
+       INITIALISATION
+    ======================================================== */
 
     loadConversation();
 
+    renderConversation();
 
-    /* =====================================================
-       FOCUS
-    ===================================================== */
+    autoResize();
 
-    window.addEventListener(
-
-        "load",
-
-        function() {
-
-            input.focus();
-
-        }
-
-    );
 
 </script>
 
 
 </body>
 
-</html>
+    </html>
