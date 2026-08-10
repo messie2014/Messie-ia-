@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Messie IA</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #0f0f12;
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+        }
+
+        .app {
+            width: 100%;
+            max-width: 700px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid #29292f;
+            background: #15151a;
+        }
+
+        header h1 {
+            margin: 0;
+            color: #d946ef;
+            font-size: 28px;
+        }
+
+        header p {
+            margin: 8px 0 0;
+            color: #aaa;
+        }
+
+        #messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .message {
+            margin-bottom: 15px;
+            padding: 14px 16px;
+            border-radius: 14px;
+            line-height: 1.5;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .user {
+            background: #25252c;
+            margin-left: 30px;
+        }
+
+        .ai {
+            background: #1d1724;
+            border: 1px solid #49244f;
+            margin-right: 30px;
+        }
+
+        .error {
+            background: #3a1717;
+            border: 1px solid #7f1d1d;
+        }
+
+        .input-area {
+            padding: 15px;
+            border-top: 1px solid #29292f;
+            background: #15151a;
+            display: flex;
+            gap: 10px;
+        }
+
+        #messageInput {
+            flex: 1;
+            padding: 14px;
+            border: 1px solid #3a3a43;
+            border-radius: 12px;
+            background: #222229;
+            color: white;
+            outline: none;
+            font-size: 16px;
+        }
+
+        #messageInput:focus {
+            border-color: #d946ef;
+        }
+
+        button {
+            border: none;
+            border-radius: 12px;
+            padding: 0 20px;
+            background: #d946ef;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .loading {
+            color: #bbb;
+            font-style: italic;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="app">
+
+    <header>
+        <h1>Messie IA</h1>
+        <p>Ton assistant intelligent</p>
+    </header>
+
+    <main id="messages">
+        <div class="message ai">
+            Bonjour 👋 Je suis Messie IA. Comment puis-je t'aider ?
+        </div>
+    </main>
+
+    <form class="input-area" id="chatForm">
+        <input
+            type="text"
+            id="messageInput"
+            placeholder="Écris ton message..."
+            autocomplete="off"
+            required
+        >
+
+        <button type="submit" id="sendButton">
+            Envoyer
+        </button>
+    </form>
+
+</div>
+
+<script>
+    const form = document.getElementById("chatForm");
+    const input = document.getElementById("messageInput");
+    const messages = document.getElementById("messages");
+    const button = document.getElementById("sendButton");
+
+    function addMessage(text, type) {
+        const div = document.createElement("div");
+        div.className = "message " + type;
+        div.textContent = text;
+
+        messages.appendChild(div);
+        messages.scrollTop = messages.scrollHeight;
+
+        return div;
+    }
+
+    form.addEventListener("submit", async function(event) {
+        event.preventDefault();
+
+        const message = input.value.trim();
+
+        if (!message) {
+            return;
+        }
+
+        addMessage(message, "user");
+
+        input.value = "";
+        input.disabled = true;
+        button.disabled = true;
+
+        const loading = addMessage("Messie IA réfléchit...", "ai loading");
+
+        try {
+            const response = await fetch("/api/chat", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    message: message
+                })
+            });
+
+            const data = await response.json();
+
+            loading.remove();
+
+            if (!response.ok) {
+                addMessage(
+                    data.error || "Une erreur est survenue.",
+                    "error"
+                );
+                return;
+            }
+
+            addMessage(
+                data.answer || "Je n'ai pas reçu de réponse.",
+                "ai"
+            );
+
+        } catch (error) {
+            loading.remove();
+
+            addMessage(
+                "Impossible de contacter le serveur. Vérifie que le service est bien démarré.",
+                "error"
+            );
+
+        } finally {
+            input.disabled = false;
+            button.disabled = false;
+            input.focus();
+        }
+    });
+</script>
+
+</body>
+</html>
