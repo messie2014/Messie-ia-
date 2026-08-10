@@ -25,17 +25,21 @@ def home():
 @app.route("/api/chat", methods=["POST"])
 def chat():
 
-    # Récupérer le message
+    # Récupérer le message envoyé par le site
     data = request.get_json() or {}
     message = data.get("message", "").strip()
 
+    # Vérifier que le message existe
     if not message:
         return jsonify({
             "error": "Message vide."
         }), 400
 
 
-    # Récupérer la clé OpenAI depuis Render
+    # ==========================================
+    # RÉCUPÉRER LA CLÉ OPENAI
+    # ==========================================
+
     api_key = os.environ.get("OPENAI_API_KEY")
 
     if not api_key:
@@ -44,18 +48,22 @@ def chat():
         }), 500
 
 
-    # Adresse de l'API OpenAI
+    # ==========================================
+    # API OPENAI
+    # ==========================================
+
     url = "https://api.openai.com/v1/responses"
 
-
-    # En-têtes
     headers = {
         "Authorization": f"Bearer {api_key}",
         "Content-Type": "application/json"
     }
 
 
-    # Personnalité de Messie IA
+    # ==========================================
+    # INSTRUCTIONS DE MESSIE IA
+    # ==========================================
+
     instructions = """
 Tu es Messie IA, un assistant intelligent.
 
@@ -76,13 +84,20 @@ Si tu ne connais pas une information, dis-le clairement.
 """
 
 
-    # Requête envoyée à OpenAI
+    # ==========================================
+    # DONNÉES ENVOYÉES À OPENAI
+    # ==========================================
+
     payload = {
         "model": "gpt-5",
         "instructions": instructions,
         "input": message
     }
 
+
+    # ==========================================
+    # ENVOYER LA DEMANDE
+    # ==========================================
 
     try:
 
@@ -94,8 +109,10 @@ Si tu ne connais pas une information, dis-le clairement.
         )
 
 
-        # Si OpenAI renvoie une erreur,
-        # afficher le détail exact
+        # ==========================================
+        # GESTION DES ERREURS OPENAI
+        # ==========================================
+
         if not response.ok:
 
             try:
@@ -105,20 +122,40 @@ Si tu ne connais pas une information, dis-le clairement.
                     "message": response.text
                 }
 
+            # IMPORTANT :
+            # On renvoie maintenant le détail complet
+            # de l'erreur au site.
+
             return jsonify({
                 "error": "Erreur OpenAI",
+                "status": response.status_code,
                 "details": error_data
             }), response.status_code
 
 
-        # Convertir la réponse en JSON
-        result = response.json()
+        # ==========================================
+        # RÉCUPÉRER LA RÉPONSE
+        # ==========================================
+
+        try:
+            result = response.json()
+        except Exception as e:
+
+            return jsonify({
+                "error": "OpenAI a envoyé une réponse invalide.",
+                "details": str(e),
+                "raw_response": response.text
+            }), 500
 
 
-        # Récupérer le texte
+        # ==========================================
+        # RÉCUPÉRER LE TEXTE DE MESSIE IA
+        # ==========================================
+
         answer = result.get("output_text")
 
 
+        # Si aucun texte n'est trouvé
         if not answer:
 
             return jsonify({
@@ -127,11 +164,18 @@ Si tu ne connais pas une information, dis-le clairement.
             }), 500
 
 
-        # Envoyer la réponse au site
+        # ==========================================
+        # ENVOYER LA RÉPONSE AU SITE
+        # ==========================================
+
         return jsonify({
             "answer": answer
         })
 
+
+    # ==========================================
+    # TIMEOUT
+    # ==========================================
 
     except requests.exceptions.Timeout:
 
@@ -140,17 +184,27 @@ Si tu ne connais pas une information, dis-le clairement.
         }), 504
 
 
+    # ==========================================
+    # ERREUR DE CONNEXION
+    # ==========================================
+
     except requests.exceptions.RequestException as e:
 
         return jsonify({
-            "error": f"Erreur de connexion à OpenAI : {str(e)}"
+            "error": "Erreur de connexion à OpenAI.",
+            "details": str(e)
         }), 500
 
+
+    # ==========================================
+    # AUTRE ERREUR SERVEUR
+    # ==========================================
 
     except Exception as e:
 
         return jsonify({
-            "error": f"Erreur serveur : {str(e)}"
+            "error": "Erreur serveur.",
+            "details": str(e)
         }), 500
 
 
@@ -160,7 +214,9 @@ Si tu ne connais pas une information, dis-le clairement.
 
 if __name__ == "__main__":
 
-    port = int(os.environ.get("PORT", 10000))
+    port = int(
+        os.environ.get("PORT", 10000)
+    )
 
     app.run(
         host="0.0.0.0",
