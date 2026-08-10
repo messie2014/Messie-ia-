@@ -819,6 +819,8 @@
 
             word-wrap: break-word;
 
+            overflow-wrap: anywhere;
+
             font-size: 14px;
 
         }
@@ -1582,9 +1584,7 @@
         id="sidebar"
     >
 
-
         <div class="sidebar-header">
-
 
             <div class="brand">
 
@@ -1613,7 +1613,6 @@
                 ＋ Nouvelle conversation
             </button>
 
-
         </div>
 
 
@@ -1630,7 +1629,6 @@
 
         <div class="sidebar-footer">
 
-
             <button
                 class="settings-button"
                 id="settingsButton"
@@ -1643,9 +1641,7 @@
                 Messie IA
             </div>
 
-
         </div>
-
 
     </aside>
 
@@ -1671,9 +1667,7 @@
 
         <header class="header">
 
-
             <div class="header-left">
-
 
                 <button
                     class="mobile-menu"
@@ -1705,9 +1699,7 @@
 
                 </div>
 
-
             </div>
-
 
         </header>
 
@@ -1728,9 +1720,7 @@
 
         <div class="input-area">
 
-
             <div class="input-box">
-
 
                 <textarea
                     id="messageInput"
@@ -1746,7 +1736,6 @@
                     ➤
                 </button>
 
-
             </div>
 
 
@@ -1754,12 +1743,10 @@
                 Messie IA peut parfois faire des erreurs.
             </div>
 
-
         </div>
 
 
     </main>
-
 
 </div>
 
@@ -1773,12 +1760,9 @@
     id="settingsModal"
 >
 
-
     <div class="settings-modal">
 
-
         <div class="settings-header">
-
 
             <h2>
                 ⚙️ Paramètres
@@ -1792,7 +1776,6 @@
                 ×
             </button>
 
-
         </div>
 
 
@@ -1802,7 +1785,6 @@
             <!-- NOM -->
 
             <div class="setting-group">
-
 
                 <label
                     class="setting-label"
@@ -1835,14 +1817,12 @@
                     Enregistrer
                 </button>
 
-
             </div>
 
 
             <!-- APPARENCE -->
 
             <div class="setting-group">
-
 
                 <label
                     class="setting-label"
@@ -1860,7 +1840,6 @@
 
                 <div class="options">
 
-
                     <button
                         class="option"
                         data-theme="dark"
@@ -1876,9 +1855,7 @@
                         ☀️ Claire
                     </button>
 
-
                 </div>
-
 
             </div>
 
@@ -1886,7 +1863,6 @@
             <!-- COULEUR -->
 
             <div class="setting-group">
-
 
                 <label
                     class="setting-label"
@@ -1905,7 +1881,6 @@
                 <div
                     class="color-options"
                 >
-
 
                     <button
                         class="color-option color-blue"
@@ -1941,9 +1916,7 @@
                         title="Rose"
                     ></button>
 
-
                 </div>
-
 
             </div>
 
@@ -1951,7 +1924,6 @@
             <!-- LONGUEUR -->
 
             <div class="setting-group">
-
 
                 <label
                     class="setting-label"
@@ -1969,7 +1941,6 @@
 
 
                 <div class="options">
-
 
                     <button
                         class="option"
@@ -1994,9 +1965,7 @@
                         📚 Détaillée
                     </button>
 
-
                 </div>
-
 
             </div>
 
@@ -2006,7 +1975,6 @@
             <div
                 class="setting-group danger-zone"
             >
-
 
                 <label
                     class="setting-label"
@@ -2031,15 +1999,12 @@
                     🗑️ Effacer tout l'historique
                 </button>
 
-
             </div>
 
 
         </div>
 
-
     </div>
-
 
 </div>
 
@@ -2169,11 +2134,21 @@
 
             if (saved) {
 
-                settings =
-                    {
+                const parsed =
+                    JSON.parse(saved);
+
+
+                if (
+                    parsed &&
+                    typeof parsed === "object"
+                ) {
+
+                    settings = {
                         ...settings,
-                        ...JSON.parse(saved)
+                        ...parsed
                     };
+
+                }
 
             }
 
@@ -2198,13 +2173,24 @@
 
     function saveSettings() {
 
-        localStorage.setItem(
+        try {
 
-            "messieIA_settings",
+            localStorage.setItem(
 
-            JSON.stringify(settings)
+                "messieIA_settings",
 
-        );
+                JSON.stringify(settings)
+
+            );
+
+        } catch (error) {
+
+            console.error(
+                "Impossible de sauvegarder les réglages :",
+                error
+            );
+
+        }
 
     }
 
@@ -2214,9 +2200,6 @@
     ===================================================== */
 
     function applySettings() {
-
-
-        /* MODE */
 
         document.body.classList.remove(
             "light"
@@ -2234,8 +2217,6 @@
 
         }
 
-
-        /* COULEUR */
 
         document.body.classList.remove(
             "theme-purple",
@@ -2258,8 +2239,6 @@
         }
 
 
-        /* NOM */
-
         nameInput.value =
             settings.name || "";
 
@@ -2274,7 +2253,6 @@
     ===================================================== */
 
     function updateSettingsButtons() {
-
 
         document
             .querySelectorAll(
@@ -2338,15 +2316,26 @@
 
     function saveConversations() {
 
-        localStorage.setItem(
+        try {
 
-            "messieIA_conversations",
+            localStorage.setItem(
 
-            JSON.stringify(
-                conversations
-            )
+                "messieIA_conversations",
 
-        );
+                JSON.stringify(
+                    conversations
+                )
+
+            );
+
+        } catch (error) {
+
+            console.error(
+                "Erreur sauvegarde historique :",
+                error
+            );
+
+        }
 
     }
 
@@ -2361,10 +2350,34 @@
                 );
 
 
-            if (saved) {
+            if (!saved) {
+
+                conversations = [];
+
+                return;
+
+            }
+
+
+            const parsed =
+                JSON.parse(saved);
+
+
+            if (Array.isArray(parsed)) {
 
                 conversations =
-                    JSON.parse(saved);
+                    parsed.filter(
+                        conversation =>
+                            conversation &&
+                            typeof conversation === "object" &&
+                            Array.isArray(
+                                conversation.messages
+                            )
+                    );
+
+            } else {
+
+                conversations = [];
 
             }
 
@@ -2411,6 +2424,17 @@
 
         const date =
             new Date(timestamp);
+
+
+        if (
+            Number.isNaN(
+                date.getTime()
+            )
+        ) {
+
+            return "";
+
+        }
 
 
         return date.toLocaleDateString(
@@ -2575,7 +2599,10 @@
 
             role === "user" &&
 
-            conversation.messages.length === 1
+            conversation.messages.filter(
+                message =>
+                    message.role === "user"
+            ).length === 1
 
         ) {
 
@@ -2759,13 +2786,17 @@
 
 
         currentChatTitle.textContent =
-            conversation.title;
+            conversation.title ||
+            "Nouvelle conversation";
 
 
         chat.innerHTML = "";
 
 
         if (
+            !Array.isArray(
+                conversation.messages
+            ) ||
             conversation.messages.length === 0
         ) {
 
@@ -2779,6 +2810,16 @@
         conversation.messages.forEach(
 
             message => {
+
+                if (
+                    !message ||
+                    typeof message.content !== "string"
+                ) {
+
+                    return;
+
+                }
+
 
                 displayMessage(
 
@@ -2832,19 +2873,16 @@
 
 
         conversations
-
             .sort(
 
                 (a,b) =>
-                    b.updatedAt -
-                    a.updatedAt
+                    (b.updatedAt || 0) -
+                    (a.updatedAt || 0)
 
             )
-
             .forEach(
 
                 conversation => {
-
 
                     const item =
                         document.createElement(
@@ -2891,7 +2929,8 @@
 
 
                     title.textContent =
-                        conversation.title;
+                        conversation.title ||
+                        "Nouvelle conversation";
 
 
                     const date =
@@ -3056,6 +3095,19 @@
 
     function openConversation(id) {
 
+        const conversation =
+            conversations.find(
+                item => item.id === id
+            );
+
+
+        if (!conversation) {
+
+            return;
+
+        }
+
+
         currentConversationId =
             id;
 
@@ -3204,6 +3256,9 @@
 
     function addLoading() {
 
+        removeLoading();
+
+
         const message =
             document.createElement(
                 "div"
@@ -3292,14 +3347,13 @@
 
 
     /* =====================================================
-       NETTOYER RÉPONSE
+       NETTOYER RÉPONSE IA
     ===================================================== */
 
     function cleanAIResponse(text) {
 
         if (
-            typeof text !==
-            "string"
+            typeof text !== "string"
         ) {
 
             return "";
@@ -3307,81 +3361,205 @@
         }
 
 
+        let result =
+            text.replace(/\r\n/g, "\n");
+
+
+        /*
+         * Supprime les lignes techniques
+         * comme :
+         *
+         * User Safety: safe
+         * Response Safety: safe
+         *
+         * avec ou sans espaces,
+         * majuscules/minuscules,
+         * Markdown ou préfixes.
+         */
+
         const lines =
-            text.split("\n");
+            result.split("\n");
 
 
         const filtered =
-            lines.filter(
+            lines.filter(line => {
 
-                line => {
-
-                    const lower =
-                        line
-                            .toLowerCase()
-                            .trim();
-
-
-                    if (
-
-                        lower ===
-                        "user safety: safe"
-
-                    ) {
-
-                        return false;
-
-                    }
+                const normalized =
+                    line
+                        .replace(/[*_`#]/g, "")
+                        .replace(/^\s*[-•]\s*/, "")
+                        .trim()
+                        .toLowerCase();
 
 
-                    if (
-
-                        lower ===
-                        "response safety: safe"
-
-                    ) {
-
-                        return false;
-
-                    }
-
-
-                    if (
-
-                        lower.startsWith(
-                            "user safety:"
-                        )
-
-                    ) {
-
-                        return false;
-
-                    }
-
-
-                    if (
-
-                        lower.startsWith(
-                            "response safety:"
-                        )
-
-                    ) {
-
-                        return false;
-
-                    }
-
+                if (!normalized) {
 
                     return true;
 
                 }
 
+
+                if (
+                    /^user\s+safety\s*:\s*/i.test(
+                        normalized
+                    )
+                ) {
+
+                    return false;
+
+                }
+
+
+                if (
+                    /^response\s+safety\s*:\s*/i.test(
+                        normalized
+                    )
+                ) {
+
+                    return false;
+
+                }
+
+
+                if (
+                    /^input\s+safety\s*:\s*/i.test(
+                        normalized
+                    )
+                ) {
+
+                    return false;
+
+                }
+
+
+                if (
+                    /^output\s+safety\s*:\s*/i.test(
+                        normalized
+                    )
+                ) {
+
+                    return false;
+
+                }
+
+
+                return true;
+
+            });
+
+
+        result =
+            filtered.join("\n");
+
+
+        /*
+         * Supprime aussi les éventuelles occurrences
+         * collées au début ou à la fin du texte.
+         */
+
+        result =
+            result.replace(
+
+                /(?:user\s+safety|response\s+safety|input\s+safety|output\s+safety)\s*:\s*(?:safe|unsafe|unknown)\s*/gi,
+
+                ""
+
             );
 
 
-        return filtered
-            .join("\n")
-            .trim();
+        /*
+         * Nettoyage des lignes vides excessives.
+         */
+
+        result =
+            result
+                .replace(/\n{3,}/g, "\n\n")
+                .trim();
+
+
+        return result;
+
+    }
+
+
+    /* =====================================================
+       EXTRAIRE LA RÉPONSE DU SERVEUR
+    ===================================================== */
+
+    function extractAIResponse(data) {
+
+        if (!data) {
+
+            return "";
+
+        }
+
+
+        /*
+         * Format utilisé actuellement par notre Flask :
+         *
+         * {
+         *   "response": "Bonjour..."
+         * }
+         */
+
+        if (
+            typeof data.response === "string"
+        ) {
+
+            return data.response;
+
+        }
+
+
+        /*
+         * Quelques formats possibles si le serveur
+         * renvoie directement la structure OpenRouter.
+         */
+
+        if (
+            data.response &&
+            typeof data.response.content === "string"
+        ) {
+
+            return data.response.content;
+
+        }
+
+
+        if (
+            Array.isArray(data.choices) &&
+            data.choices.length > 0
+        ) {
+
+            const choice =
+                data.choices[0];
+
+
+            if (
+                choice &&
+                choice.message &&
+                typeof choice.message.content === "string"
+            ) {
+
+                return choice.message.content;
+
+            }
+
+
+            if (
+                choice &&
+                typeof choice.text === "string"
+            ) {
+
+                return choice.text;
+
+            }
+
+        }
+
+
+        return "";
 
     }
 
@@ -3503,9 +3681,12 @@
 
         try {
 
-
             /*
-             * Historique sans le dernier message
+             * IMPORTANT :
+             * Le dernier message est déjà enregistré.
+             *
+             * On l'enlève de history parce qu'il sera envoyé
+             * séparément dans "message".
              */
 
             const history =
@@ -3513,32 +3694,47 @@
 
                     .slice(0,-1)
 
+                    .filter(
+                        item =>
+                            item &&
+                            (
+                                item.role === "user" ||
+                                item.role === "assistant"
+                            ) &&
+                            typeof item.content === "string"
+                    )
+
                     .map(
-                        message => ({
+                        item => ({
 
                             role:
-                                message.role,
+                                item.role,
 
                             content:
-                                message.content
+                                item.content
 
                         })
                     );
 
 
             /*
-             * Ajouter une indication
-             * de longueur dans l'historique
-             * envoyé à l'API.
+             * On conserve la préférence de longueur,
+             * mais on l'ajoute proprement au message envoyé.
              */
+
+            const instruction =
+                getResponseInstruction();
+
 
             const finalMessage =
 
                 message +
 
-                "\n\n[Préférence de réponse : " +
+                "\n\n" +
 
-                getResponseInstruction() +
+                "[Instruction interne : " +
+
+                instruction +
 
                 "]";
 
@@ -3577,7 +3773,7 @@
                 );
 
 
-            let data;
+            let data = null;
 
 
             try {
@@ -3585,10 +3781,10 @@
                 data =
                     await response.json();
 
-            } catch {
+            } catch (jsonError) {
 
                 throw new Error(
-                    "Réponse invalide du serveur."
+                    "Le serveur a renvoyé une réponse qui n'est pas du JSON."
                 );
 
             }
@@ -3599,17 +3795,20 @@
 
             if (!response.ok) {
 
+                const serverError =
+
+                    data &&
+                    typeof data.error === "string"
+
+                        ? data.error
+
+                        : "Une erreur est survenue avec le serveur.";
+
+
                 displayMessage(
 
                     "❌ " +
-
-                    (
-
-                        data.error ||
-
-                        "Une erreur est survenue."
-
-                    ),
+                    serverError,
 
                     "ai"
 
@@ -3621,16 +3820,42 @@
             }
 
 
-            let answer =
+            /*
+             * Récupération robuste de la réponse.
+             */
+
+            const rawAnswer =
+                extractAIResponse(data);
+
+
+            /*
+             * Suppression des informations techniques
+             * de sécurité.
+             */
+
+            const answer =
                 cleanAIResponse(
-                    data.response
+                    rawAnswer
                 );
 
 
+            /*
+             * Si OpenRouter/serveur ne renvoie vraiment
+             * aucune réponse exploitable.
+             */
+
             if (!answer) {
 
-                answer =
-                    "Je n'ai pas reçu de réponse.";
+                displayMessage(
+
+                    "⚠️ Messie IA n'a pas pu générer une réponse cette fois-ci. Réessaie dans quelques secondes.",
+
+                    "ai"
+
+                );
+
+
+                return;
 
             }
 
@@ -3643,6 +3868,12 @@
 
             );
 
+
+            /*
+             * IMPORTANT :
+             * On enregistre uniquement la vraie réponse,
+             * jamais les informations "User Safety".
+             */
 
             addMessageToConversation(
 
@@ -3663,7 +3894,7 @@
 
 
             console.error(
-                "Erreur :",
+                "Erreur Messie IA :",
                 error
             );
 
@@ -4094,8 +4325,8 @@
             conversations.sort(
 
                 (a,b) =>
-                    b.updatedAt -
-                    a.updatedAt
+                    (b.updatedAt || 0) -
+                    (a.updatedAt || 0)
 
             );
 
@@ -4129,4 +4360,4 @@
 
 </body>
 
-                     </html>
+                        </html>
