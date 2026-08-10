@@ -3,13 +3,12 @@ import requests
 
 from flask import Flask, request, jsonify, send_from_directory
 
-
 app = Flask(__name__, static_folder="static")
 
 
-# =========================
+# ==========================================
 # PAGE PRINCIPALE
-# =========================
+# ==========================================
 
 @app.route("/")
 def home():
@@ -19,18 +18,17 @@ def home():
     )
 
 
-# =========================
+# ==========================================
 # API CHAT
-# =========================
+# ==========================================
 
 @app.route("/api/chat", methods=["POST"])
 def chat():
 
-    # Récupérer le message envoyé par le site
+    # Récupérer le message
     data = request.get_json() or {}
     message = data.get("message", "").strip()
 
-    # Vérifier que le message existe
     if not message:
         return jsonify({
             "error": "Message vide."
@@ -40,10 +38,9 @@ def chat():
     # Récupérer la clé OpenAI depuis Render
     api_key = os.environ.get("OPENAI_API_KEY")
 
-    # Vérifier que la clé existe
     if not api_key:
         return jsonify({
-            "error": "La clé OpenAI n'est pas configurée."
+            "error": "La clé OPENAI_API_KEY n'est pas configurée sur Render."
         }), 500
 
 
@@ -51,14 +48,14 @@ def chat():
     url = "https://api.openai.com/v1/responses"
 
 
-    # En-têtes de la requête
+    # En-têtes
     headers = {
         "Authorization": f"Bearer {api_key}",
         "Content-Type": "application/json"
     }
 
 
-    # Instructions de Messie IA
+    # Personnalité de Messie IA
     instructions = """
 Tu es Messie IA, un assistant intelligent.
 
@@ -71,15 +68,15 @@ Tu réponds toujours de manière :
 
 Tu réponds en français par défaut.
 
-Si l'utilisateur te parle dans une autre langue,
+Si l'utilisateur parle dans une autre langue,
 tu peux lui répondre dans cette langue.
 
-Ne prétends pas être humain.
-Tu es Messie IA.
+Tu dois être honnête.
+Si tu ne connais pas une information, dis-le clairement.
 """
 
 
-    # Données envoyées à OpenAI
+    # Requête envoyée à OpenAI
     payload = {
         "model": "gpt-5",
         "instructions": instructions,
@@ -89,7 +86,6 @@ Tu es Messie IA.
 
     try:
 
-        # Envoyer la demande à OpenAI
         response = requests.post(
             url,
             headers=headers,
@@ -98,45 +94,43 @@ Tu es Messie IA.
         )
 
 
-        # Vérifier les erreurs HTTP
-        response.raise_for_status()
+        # Si OpenAI renvoie une erreur,
+        # afficher le détail exact
+        if not response.ok:
+
+            try:
+                error_data = response.json()
+            except Exception:
+                error_data = {
+                    "message": response.text
+                }
+
+            return jsonify({
+                "error": "Erreur OpenAI",
+                "details": error_data
+            }), response.status_code
 
 
         # Convertir la réponse en JSON
         result = response.json()
 
 
-        # Récupérer le texte de la réponse
+        # Récupérer le texte
         answer = result.get("output_text")
 
 
-        # Vérification supplémentaire
         if not answer:
+
             return jsonify({
-                "error": "OpenAI n'a pas retourné de réponse."
+                "error": "OpenAI n'a pas retourné de texte.",
+                "details": result
             }), 500
 
 
-        # Envoyer la réponse à ton site
+        # Envoyer la réponse au site
         return jsonify({
             "answer": answer
         })
-
-
-    except requests.exceptions.HTTPError:
-
-        # Afficher l'erreur renvoyée par OpenAI
-        try:
-            error_data = response.json()
-        except Exception:
-            error_data = {
-                "error": response.text
-            }
-
-        return jsonify({
-            "error": "Erreur OpenAI.",
-            "details": error_data
-        }), response.status_code
 
 
     except requests.exceptions.Timeout:
@@ -160,9 +154,9 @@ Tu es Messie IA.
         }), 500
 
 
-# =========================
+# ==========================================
 # DÉMARRAGE DU SERVEUR
-# =========================
+# ==========================================
 
 if __name__ == "__main__":
 
