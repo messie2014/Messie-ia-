@@ -2,7 +2,6 @@
 <html lang="fr">
 
 <head>
-
     <meta charset="UTF-8">
 
     <meta
@@ -67,9 +66,7 @@
                 0 25px 80px rgba(0,0,0,0.5);
         }
 
-        /* =========================
-           HEADER
-        ========================= */
+        /* HEADER */
 
         .header {
             padding: 18px 20px;
@@ -148,9 +145,7 @@
             border-radius: 50%;
         }
 
-        /* =========================
-           CHAT
-        ========================= */
+        /* CHAT */
 
         .chat {
             flex: 1;
@@ -235,9 +230,7 @@
             border-bottom-left-radius: 5px;
         }
 
-        /* =========================
-           LOADING
-        ========================= */
+        /* LOADING */
 
         .loading {
             display: flex;
@@ -277,9 +270,7 @@
             }
         }
 
-        /* =========================
-           INPUT
-        ========================= */
+        /* INPUT */
 
         .input-area {
             padding: 15px;
@@ -388,9 +379,7 @@
             margin-top: 8px;
         }
 
-        /* =========================
-           MOBILE
-        ========================= */
+        /* MOBILE */
 
         @media (max-width: 600px) {
 
@@ -436,9 +425,7 @@
 
 <div class="app">
 
-    <!-- =========================
-         HEADER
-    ========================= -->
+    <!-- HEADER -->
 
     <header class="header">
 
@@ -473,9 +460,7 @@
     </header>
 
 
-    <!-- =========================
-         CHAT
-    ========================= -->
+    <!-- CHAT -->
 
     <main
         class="chat"
@@ -506,9 +491,7 @@
     </main>
 
 
-    <!-- =========================
-         INPUT
-    ========================= -->
+    <!-- INPUT -->
 
     <div class="input-area">
 
@@ -542,7 +525,7 @@
 <script>
 
     // =====================================================
-    // ÉLÉMENTS DE LA PAGE
+    // ÉLÉMENTS
     // =====================================================
 
     const chat =
@@ -559,7 +542,14 @@
 
 
     // =====================================================
-    // AJOUTER UN MESSAGE
+    // MÉMOIRE DE LA CONVERSATION
+    // =====================================================
+
+    let conversationHistory = [];
+
+
+    // =====================================================
+    // AJOUTER UN MESSAGE À L'ÉCRAN
     // =====================================================
 
     function addMessage(text, type) {
@@ -577,8 +567,6 @@
         bubble.className =
             "bubble";
 
-
-        // Protection contre une réponse vide
 
         if (
             text === null ||
@@ -612,7 +600,7 @@
 
 
     // =====================================================
-    // INDICATEUR DE CHARGEMENT
+    // CHARGEMENT
     // =====================================================
 
     function addLoading() {
@@ -669,7 +657,7 @@
 
 
     // =====================================================
-    // SUPPRIMER L'INDICATEUR
+    // SUPPRIMER LE CHARGEMENT
     // =====================================================
 
     function removeLoading() {
@@ -689,7 +677,7 @@
 
 
     // =====================================================
-    // ENVOYER UN MESSAGE
+    // ENVOYER MESSAGE
     // =====================================================
 
     async function sendMessage() {
@@ -698,8 +686,6 @@
             input.value.trim();
 
 
-        // Ne rien faire si le message est vide
-
         if (!message) {
 
             return;
@@ -707,7 +693,7 @@
         }
 
 
-        // Retirer l'écran d'accueil
+        // Retirer l'accueil
 
         if (welcome) {
 
@@ -716,12 +702,28 @@
         }
 
 
-        // Afficher le message de l'utilisateur
+        // Afficher le message utilisateur
 
         addMessage(
             message,
             "user"
         );
+
+
+        // =================================================
+        // AJOUTER LE MESSAGE À LA MÉMOIRE
+        // =================================================
+
+        conversationHistory.push({
+            role: "user",
+            content: message
+        });
+
+
+        // Garder seulement les 20 derniers messages
+
+        conversationHistory =
+            conversationHistory.slice(-20);
 
 
         // Vider le champ
@@ -738,7 +740,7 @@
             true;
 
 
-        // Afficher les trois points
+        // Afficher chargement
 
         addLoading();
 
@@ -746,7 +748,7 @@
         try {
 
             // =================================================
-            // ENVOYER LE MESSAGE À FLASK
+            // ENVOYER MESSAGE + HISTORIQUE AU SERVEUR
             // =================================================
 
             const response =
@@ -762,30 +764,39 @@
 
                         body:
                             JSON.stringify({
-                                message: message
+
+                                message: message,
+
+                                history:
+                                    conversationHistory
+
                             })
                     }
                 );
 
 
             // =================================================
-            // RÉCUPÉRER LE JSON
+            // RÉCUPÉRER LA RÉPONSE
             // =================================================
 
             const data =
                 await response.json();
 
 
-            // Retirer les trois points
-
             removeLoading();
 
 
             // =================================================
-            // SI LE SERVEUR RENVOIE UNE ERREUR
+            // ERREUR
             // =================================================
 
             if (!response.ok) {
+
+                // Retirer le dernier message utilisateur
+                // de l'historique en cas d'erreur
+
+                conversationHistory.pop();
+
 
                 addMessage(
                     "❌ " +
@@ -796,39 +807,59 @@
                     "ai"
                 );
 
+
                 return;
             }
 
 
             // =================================================
             // RÉPONSE DE MESSIE IA
-            //
-            // IMPORTANT :
-            //
-            // app.py renvoie :
-            //
-            // {
-            //     "response": answer
-            // }
-            //
-            // Donc on utilise data.response
             // =================================================
 
+            const answer =
+                data.response;
+
+
             addMessage(
-                data.response,
+                answer,
                 "ai"
             );
+
+
+            // =================================================
+            // AJOUTER LA RÉPONSE À LA MÉMOIRE
+            // =================================================
+
+            conversationHistory.push({
+
+                role: "assistant",
+
+                content: answer
+
+            });
+
+
+            // Garder les 20 derniers messages
+
+            conversationHistory =
+                conversationHistory.slice(-20);
 
         }
 
 
         // =====================================================
-        // ERREUR RÉSEAU / CONNEXION
+        // ERREUR RÉSEAU
         // =====================================================
 
         catch (error) {
 
             removeLoading();
+
+
+            // Retirer le message utilisateur
+            // puisque la requête n'a pas fonctionné
+
+            conversationHistory.pop();
 
 
             console.error(
@@ -846,7 +877,7 @@
 
 
         // =====================================================
-        // FIN DE LA REQUÊTE
+        // FIN
         // =====================================================
 
         finally {
@@ -862,7 +893,7 @@
 
 
     // =====================================================
-    // CLIQUE SUR LE BOUTON ENVOYER
+    // BOUTON ENVOYER
     // =====================================================
 
     sendButton.addEventListener(
@@ -895,7 +926,7 @@
 
 
     // =====================================================
-    // AGRANDIR AUTOMATIQUEMENT LE CHAMP
+    // AGRANDIR LE TEXTAREA
     // =====================================================
 
     input.addEventListener(
@@ -919,4 +950,4 @@
 
 </body>
 
-</html>
+    </html>
