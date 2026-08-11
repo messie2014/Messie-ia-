@@ -2,5 +2,22 @@ services:
   - type: web
     name: messie-ia
     runtime: python
+
     buildCommand: pip install -r requirements.txt
+
     startCommand: gunicorn app:app
+
+    envVars:
+      - key: OPENROUTER_API_KEY
+        sync: false
+
+      - key: OPENROUTER_CHAT_MODEL
+        value: openai/gpt-4o-mini
+
+      - key: OPENROUTER_VISION_MODEL
+        value: google/gemini-2.5-flash
+
+      - key: OPENROUTER_IMAGE_MODEL
+        value: google/gemini-2.5-flash-image
+
+
