@@ -1,2009 +1,4363 @@
-  
-  
-  
+<!DOCTYPE html>
+<html lang="fr">
 
-<meta charset="UTF-8">  
+<head>
 
-<meta  
-    name="viewport"  
-    content="width=device-width, initial-scale=1.0"  
->  
+    <meta charset="UTF-8">
 
-<title>Messie IA</title>  
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-<style>  
+    <title>Messie IA</title>
 
-    * {  
-        box-sizing: border-box;  
-        margin: 0;  
-        padding: 0;  
-    }  
+    <style>
 
-    :root {  
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-        --bg: #020617;  
-        --panel: #0f172a;  
-        --panel2: #111827;  
-        --card: #1e293b;  
+        :root {
 
-        --text: #ffffff;  
-        --text-soft: #cbd5e1;  
-        --muted: #94a3b8;  
+            --bg: #020617;
+            --panel: #0f172a;
+            --panel2: #111827;
+            --card: #1e293b;
 
-        --border: rgba(255,255,255,0.09);  
+            --text: #ffffff;
+            --text-soft: #cbd5e1;
+            --muted: #94a3b8;
 
-        --primary: #2563eb;  
-        --secondary: #7c3aed;  
+            --border: rgba(255,255,255,0.09);
 
-        --danger: #ef4444;  
+            --primary: #2563eb;
+            --secondary: #7c3aed;
 
-    }  
+            --danger: #ef4444;
 
+        }
 
-    /* =====================================================  
-       MODE CLAIR  
-    ===================================================== */  
 
-    body.light {  
+        /* =====================================================
+           MODE CLAIR
+        ===================================================== */
 
-        --bg: #f1f5f9;  
-        --panel: #ffffff;  
-        --panel2: #f8fafc;  
-        --card: #e2e8f0;  
+        body.light {
 
-        --text: #0f172a;  
-        --text-soft: #334155;  
-        --muted: #64748b;  
+            --bg: #f1f5f9;
+            --panel: #ffffff;
+            --panel2: #f8fafc;
+            --card: #e2e8f0;
 
-        --border: rgba(15,23,42,0.12);  
+            --text: #0f172a;
+            --text-soft: #334155;
+            --muted: #64748b;
 
-    }  
+            --border: rgba(15,23,42,0.12);
 
+        }
 
-    /* =====================================================  
-       COULEURS  
-    ===================================================== */  
 
-    body.theme-purple {  
-        --primary: #7c3aed;  
-        --secondary: #2563eb;  
-    }  
+        /* =====================================================
+           COULEURS
+        ===================================================== */
 
-    body.theme-green {  
-        --primary: #16a34a;  
-        --secondary: #0d9488;  
-    }  
+        body.theme-purple {
+            --primary: #7c3aed;
+            --secondary: #2563eb;
+        }
 
-    body.theme-orange {  
-        --primary: #ea580c;  
-        --secondary: #e11d48;  
-    }  
+        body.theme-green {
+            --primary: #16a34a;
+            --secondary: #0d9488;
+        }
 
-    body.theme-pink {  
-        --primary: #db2777;  
-        --secondary: #9333ea;  
-    }  
+        body.theme-orange {
+            --primary: #ea580c;
+            --secondary: #e11d48;
+        }
 
+        body.theme-pink {
+            --primary: #db2777;
+            --secondary: #9333ea;
+        }
 
-    /* =====================================================  
-       BODY  
-    ===================================================== */  
 
-    body {  
+        /* =====================================================
+           BODY
+        ===================================================== */
 
-        font-family:  
-            Arial,  
-            Helvetica,  
-            sans-serif;  
+        body {
 
-        background:  
-            linear-gradient(  
-                135deg,  
-                #0f172a,  
-                #111827,  
-                #020617  
-            );  
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
 
-        color: var(--text);  
+            background:
+                linear-gradient(
+                    135deg,
+                    #0f172a,
+                    #111827,
+                    #020617
+                );
 
-        min-height: 100vh;  
+            color: var(--text);
 
-        overflow: hidden;  
+            min-height: 100vh;
 
-        transition:  
-            background .25s,  
-            color .25s;  
+            overflow: hidden;
 
-    }  
+            transition:
+                background .25s,
+                color .25s;
 
+        }
 
-    body.light {  
 
-        background:  
-            linear-gradient(  
-                135deg,  
-                #e2e8f0,  
-                #f8fafc,  
-                #cbd5e1  
-            );  
+        body.light {
 
-    }  
+            background:
+                linear-gradient(
+                    135deg,
+                    #e2e8f0,
+                    #f8fafc,
+                    #cbd5e1
+                );
 
+        }
 
-    /* =====================================================  
-       APPLICATION  
-    ===================================================== */  
 
-    .app {  
+        /* =====================================================
+           APPLICATION
+        ===================================================== */
 
-        width: 100%;  
+        .app {
 
-        height: 100vh;  
+            width: 100%;
 
-        display: flex;  
+            height: 100vh;
 
-        background: var(--panel);  
+            display: flex;
 
-    }  
+            background: var(--panel);
 
+        }
 
-    /* =====================================================  
-       SIDEBAR  
-    ===================================================== */  
 
-    .sidebar {  
+        /* =====================================================
+           SIDEBAR
+        ===================================================== */
 
-        width: 280px;  
+        .sidebar {
 
-        background:  
-            rgba(2,6,23,.98);  
+            width: 280px;
 
-        border-right:  
-            1px solid var(--border);  
+            background:
+                rgba(2,6,23,.98);
 
-        display: flex;  
+            border-right:
+                1px solid var(--border);
 
-        flex-direction: column;  
+            display: flex;
 
-        flex-shrink: 0;  
+            flex-direction: column;
 
-        z-index: 20;  
+            flex-shrink: 0;
 
-    }  
+            z-index: 20;
 
+        }
 
-    body.light .sidebar {  
 
-        background:  
-            rgba(255,255,255,.98);  
+        body.light .sidebar {
 
-    }  
+            background:
+                rgba(255,255,255,.98);
 
+        }
 
-    .sidebar-header {  
 
-        padding: 18px;  
+        .sidebar-header {
 
-        border-bottom:  
-            1px solid var(--border);  
+            padding: 18px;
 
-    }  
+            border-bottom:
+                1px solid var(--border);
 
+        }
 
-    .brand {  
 
-        display: flex;  
+        .brand {
 
-        align-items: center;  
+            display: flex;
 
-        gap: 10px;  
+            align-items: center;
 
-        margin-bottom: 18px;  
+            gap: 10px;
 
-    }  
+            margin-bottom: 18px;
 
+        }
 
-    .brand-icon {  
 
-        width: 42px;  
+        .brand-icon {
 
-        height: 42px;  
+            width: 42px;
 
-        border-radius: 13px;  
+            height: 42px;
 
-        display: flex;  
+            border-radius: 13px;
 
-        align-items: center;  
+            display: flex;
 
-        justify-content: center;  
+            align-items: center;
 
-        background:  
-            linear-gradient(  
-                135deg,  
-                var(--primary),  
-                var(--secondary)  
-            );  
+            justify-content: center;
 
-        color: white;  
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--primary),
+                    var(--secondary)
+                );
 
-        font-size: 20px;  
+            color: white;
 
-        font-weight: bold;  
+            font-size: 20px;
 
-    }  
+            font-weight: bold;
 
+        }
 
-    .brand-text h1 {  
 
-        font-size: 18px;  
+        .brand-text h1 {
 
-    }  
+            font-size: 18px;
 
+        }
 
-    .brand-text p {  
 
-        color: var(--muted);  
+        .brand-text p {
 
-        font-size: 11px;  
+            color: var(--muted);
 
-        margin-top: 3px;  
+            font-size: 11px;
 
-    }  
+            margin-top: 3px;
 
+        }
 
-    /* =====================================================  
-       NOUVELLE CONVERSATION  
-    ===================================================== */  
 
-    #newChatButton {  
+        /* =====================================================
+           NOUVELLE CONVERSATION
+        ===================================================== */
 
-        width: 100%;  
+        #newChatButton {
 
-        padding: 12px;  
+            width: 100%;
 
-        border: none;  
+            padding: 12px;
 
-        border-radius: 12px;  
+            border: none;
 
-        background:  
-            linear-gradient(  
-                135deg,  
-                var(--primary),  
-                var(--secondary)  
-            );  
+            border-radius: 12px;
 
-        color: white;  
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--primary),
+                    var(--secondary)
+                );
 
-        font-size: 14px;  
+            color: white;
 
-        font-weight: bold;  
+            font-size: 14px;
 
-        cursor: pointer;  
+            font-weight: bold;
 
-    }  
+            cursor: pointer;
 
+        }
 
-    #newChatButton:hover {  
 
-        opacity: .9;  
+        #newChatButton:hover {
 
-    }  
+            opacity: .9;
 
+        }
 
-    /* =====================================================  
-       HISTORIQUE  
-    ===================================================== */  
 
-    .history-title {  
+        /* =====================================================
+           HISTORIQUE
+        ===================================================== */
 
-        padding:  
-            16px 18px 8px;  
+        .history-title {
 
-        color: var(--muted);  
+            padding:
+                16px 18px 8px;
 
-        font-size: 12px;  
+            color: var(--muted);
 
-        font-weight: bold;  
+            font-size: 12px;
 
-        text-transform: uppercase;  
+            font-weight: bold;
 
-    }  
+            text-transform: uppercase;
 
+        }
 
-    .history {  
 
-        flex: 1;  
+        .history {
 
-        overflow-y: auto;  
+            flex: 1;
 
-        padding:  
-            5px 10px 15px;  
+            overflow-y: auto;
 
-    }  
+            padding:
+                5px 10px 15px;
 
+        }
 
-    .history-empty {  
 
-        padding: 20px 10px;  
+        .history-empty {
 
-        text-align: center;  
+            padding: 20px 10px;
 
-        color: var(--muted);  
+            text-align: center;
 
-        font-size: 13px;  
+            color: var(--muted);
 
-        line-height: 1.5;  
+            font-size: 13px;
 
-    }  
+            line-height: 1.5;
 
+        }
 
-    .conversation {  
 
-        display: flex;  
+        .conversation {
 
-        align-items: center;  
+            display: flex;
 
-        gap: 8px;  
+            align-items: center;
 
-        padding: 11px 10px;  
+            gap: 8px;
 
-        margin-bottom: 5px;  
+            padding: 11px 10px;
 
-        border-radius: 10px;  
+            margin-bottom: 5px;
 
-        cursor: pointer;  
+            border-radius: 10px;
 
-        transition:  
-            background .2s;  
+            cursor: pointer;
 
-    }  
+            transition:
+                background .2s;
 
+        }
 
-    .conversation:hover {  
 
-        background:  
-            rgba(255,255,255,.06);  
+        .conversation:hover {
 
-    }  
+            background:
+                rgba(255,255,255,.06);
 
+        }
 
-    body.light .conversation:hover {  
 
-        background:  
-            rgba(15,23,42,.06);  
+        body.light .conversation:hover {
 
-    }  
+            background:
+                rgba(15,23,42,.06);
 
+        }
 
-    .conversation.active {  
 
-        background:  
-            rgba(37,99,235,.18);  
+        .conversation.active {
 
-    }  
+            background:
+                rgba(37,99,235,.18);
 
+        }
 
-    .conversation-main {  
 
-        flex: 1;  
+        .conversation-main {
 
-        min-width: 0;  
+            flex: 1;
 
-    }  
+            min-width: 0;
 
+        }
 
-    .conversation-title {  
 
-        color: var(--text-soft);  
+        .conversation-title {
 
-        font-size: 13px;  
+            color: var(--text-soft);
 
-        white-space: nowrap;  
+            font-size: 13px;
 
-        overflow: hidden;  
+            white-space: nowrap;
 
-        text-overflow: ellipsis;  
+            overflow: hidden;
 
-    }  
+            text-overflow: ellipsis;
 
+        }
 
-    .conversation-date {  
 
-        color: var(--muted);  
+        .conversation-date {
 
-        font-size: 10px;  
+            color: var(--muted);
 
-        margin-top: 4px;  
+            font-size: 10px;
 
-    }  
+            margin-top: 4px;
 
+        }
 
-    .conversation-actions {  
 
-        display: flex;  
+        .conversation-actions {
 
-        gap: 3px;  
+            display: flex;
 
-        opacity: 0;  
+            gap: 3px;
 
-    }  
+            opacity: 0;
 
+        }
 
-    .conversation:hover  
-    .conversation-actions {  
 
-        opacity: 1;  
+        .conversation:hover
+        .conversation-actions {
 
-    }  
+            opacity: 1;
 
+        }
 
-    .history-button {  
 
-        width: 28px;  
+        .history-button {
 
-        height: 28px;  
+            width: 28px;
 
-        border: none;  
+            height: 28px;
 
-        border-radius: 7px;  
+            border: none;
 
-        background: transparent;  
+            border-radius: 7px;
 
-        color: var(--muted);  
+            background: transparent;
 
-        cursor: pointer;  
+            color: var(--muted);
 
-    }  
+            cursor: pointer;
 
+        }
 
-    .history-button:hover {  
 
-        background:  
-            rgba(255,255,255,.08);  
+        .history-button:hover {
 
-        color: var(--text);  
+            background:
+                rgba(255,255,255,.08);
 
-    }  
+            color: var(--text);
 
+        }
 
-    .history-button.delete:hover {  
 
-        color: var(--danger);  
+        .history-button.delete:hover {
 
-    }  
+            color: var(--danger);
 
+        }
 
-    /* =====================================================  
-       SIDEBAR FOOTER  
-    ===================================================== */  
 
-    .sidebar-footer {  
+        /* =====================================================
+           SIDEBAR FOOTER
+        ===================================================== */
 
-        padding: 12px;  
+        .sidebar-footer {
 
-        border-top:  
-            1px solid var(--border);  
+            padding: 12px;
 
-    }  
+            border-top:
+                1px solid var(--border);
 
+        }
 
-    .settings-button {  
 
-        width: 100%;  
+        .settings-button {
 
-        padding: 10px;  
+            width: 100%;
 
-        border: none;  
+            padding: 10px;
 
-        border-radius: 10px;  
+            border: none;
 
-        background:  
-            rgba(255,255,255,.05);  
+            border-radius: 10px;
 
-        color: var(--text-soft);  
+            background:
+                rgba(255,255,255,.05);
 
-        cursor: pointer;  
+            color: var(--text-soft);
 
-        text-align: left;  
+            cursor: pointer;
 
-        font-size: 13px;  
+            text-align: left;
 
-    }  
+            font-size: 13px;
 
+        }
 
-    .settings-button:hover {  
 
-        background:  
-            rgba(255,255,255,.09);  
+        .settings-button:hover {
 
-    }  
+            background:
+                rgba(255,255,255,.09);
 
+        }
 
-    .footer-brand {  
 
-        text-align: center;  
+        .footer-brand {
 
-        color: var(--muted);  
+            text-align: center;
 
-        font-size: 10px;  
+            color: var(--muted);
 
-        margin-top: 10px;  
+            font-size: 10px;
 
-    }  
+            margin-top: 10px;
 
+        }
 
-    /* =====================================================  
-       ZONE PRINCIPALE  
-    ===================================================== */  
 
-    .main {  
+        /* =====================================================
+           ZONE PRINCIPALE
+        ===================================================== */
 
-        flex: 1;  
+        .main {
 
-        min-width: 0;  
+            flex: 1;
 
-        display: flex;  
+            min-width: 0;
 
-        flex-direction: column;  
+            display: flex;
 
-        height: 100vh;  
+            flex-direction: column;
 
-    }  
+            height: 100vh;
 
+        }
 
-    /* =====================================================  
-       HEADER  
-    ===================================================== */  
 
-    .header {  
+        /* =====================================================
+           HEADER
+        ===================================================== */
 
-        height: 72px;  
+        .header {
 
-        padding:  
-            12px 20px;  
+            height: 72px;
 
-        background:  
-            rgba(2,6,23,.95);  
+            padding:
+                12px 20px;
 
-        border-bottom:  
-            1px solid var(--border);  
+            background:
+                rgba(2,6,23,.95);
 
-        display: flex;  
+            border-bottom:
+                1px solid var(--border);
 
-        align-items: center;  
+            display: flex;
 
-        justify-content: space-between;  
+            align-items: center;
 
-        flex-shrink: 0;  
+            justify-content: space-between;
 
-    }  
+            flex-shrink: 0;
 
+        }
 
-    body.light .header {  
 
-        background:  
-            rgba(255,255,255,.96);  
+        body.light .header {
 
-    }  
+            background:
+                rgba(255,255,255,.96);
 
+        }
 
-    .header-left {  
 
-        display: flex;  
+        .header-left {
 
-        align-items: center;  
+            display: flex;
 
-        gap: 12px;  
+            align-items: center;
 
-        min-width: 0;  
+            gap: 12px;
 
-    }  
+            min-width: 0;
 
+        }
 
-    .mobile-menu {  
 
-        display: none;  
+        .mobile-menu {
 
-        width: 40px;  
+            display: none;
 
-        height: 40px;  
+            width: 40px;
 
-        border: none;  
+            height: 40px;
 
-        border-radius: 10px;  
+            border: none;
 
-        background: var(--card);  
+            border-radius: 10px;
 
-        color: var(--text);  
+            background: var(--card);
 
-        font-size: 20px;  
+            color: var(--text);
 
-        cursor: pointer;  
+            font-size: 20px;
 
-    }  
+            cursor: pointer;
 
+        }
 
-    .current-chat {  
 
-        min-width: 0;  
+        .current-chat {
 
-    }  
+            min-width: 0;
 
+        }
 
-    .current-chat h2 {  
 
-        font-size: 17px;  
+        .current-chat h2 {
 
-        white-space: nowrap;  
+            font-size: 17px;
 
-        overflow: hidden;  
+            white-space: nowrap;
 
-        text-overflow: ellipsis;  
+            overflow: hidden;
 
-    }  
+            text-overflow: ellipsis;
 
+        }
 
-    .current-chat p {  
 
-        color: #22c55e;  
+        .current-chat p {
 
-        font-size: 11px;  
+            color: #22c55e;
 
-        margin-top: 3px;  
+            font-size: 11px;
 
-    }  
+            margin-top: 3px;
 
+        }
 
-    .online-dot {  
 
-        display: inline-block;  
+        .online-dot {
 
-        width: 7px;  
+            display: inline-block;
 
-        height: 7px;  
+            width: 7px;
 
-        background: #22c55e;  
+            height: 7px;
 
-        border-radius: 50%;  
+            background: #22c55e;
 
-        margin-right: 4px;  
+            border-radius: 50%;
 
-    }  
+            margin-right: 4px;
 
+        }
 
-    /* =====================================================  
-       CHAT  
-    ===================================================== */  
 
-    .chat {  
+        /* =====================================================
+           CHAT
+        ===================================================== */
 
-        flex: 1;  
+        .chat {
 
-        overflow-y: auto;  
+            flex: 1;
 
-        padding:  
-            25px 18px;  
+            overflow-y: auto;
 
-        scroll-behavior: smooth;  
+            padding:
+                25px 18px;
 
-    }  
+            scroll-behavior: smooth;
 
+        }
 
-    .welcome {  
 
-        text-align: center;  
+        .welcome {
 
-        max-width: 650px;  
+            text-align: center;
 
-        margin: 0 auto;  
+            max-width: 650px;
 
-        padding:  
-            60px 15px;  
+            margin: 0 auto;
 
-    }  
+            padding:
+                60px 15px;
 
+        }
 
-    .welcome-icon {  
 
-        font-size: 55px;  
+        .welcome-icon {
 
-        margin-bottom: 15px;  
+            font-size: 55px;
 
-    }  
+            margin-bottom: 15px;
 
+        }
 
-    .welcome h2 {  
 
-        font-size: 28px;  
+        .welcome h2 {
 
-        margin-bottom: 10px;  
+            font-size: 28px;
 
-    }  
+            margin-bottom: 10px;
 
+        }
 
-    .welcome p {  
 
-        color: var(--muted);  
+        .welcome p {
 
-        line-height: 1.7;  
+            color: var(--muted);
 
-        font-size: 14px;  
+            line-height: 1.7;
 
-    }  
+            font-size: 14px;
 
+        }
 
-    .suggestions {  
 
-        display: flex;  
+        .suggestions {
 
-        flex-wrap: wrap;  
+            display: flex;
 
-        justify-content: center;  
+            flex-wrap: wrap;
 
-        gap: 8px;  
+            justify-content: center;
 
-        margin-top: 25px;  
+            gap: 8px;
 
-    }  
+            margin-top: 25px;
 
+        }
 
-    .suggestion {  
 
-        padding: 9px 13px;  
+        .suggestion {
 
-        border:  
-            1px solid var(--border);  
+            padding: 9px 13px;
 
-        border-radius: 20px;  
+            border:
+                1px solid var(--border);
 
-        background:  
-            rgba(255,255,255,.03);  
+            border-radius: 20px;
 
-        color: var(--text-soft);  
+            background:
+                rgba(255,255,255,.03);
 
-        cursor: pointer;  
+            color: var(--text-soft);
 
-        font-size: 12px;  
+            cursor: pointer;
 
-    }  
+            font-size: 12px;
 
+        }
 
-    .suggestion:hover {  
 
-        background:  
-            rgba(255,255,255,.08);  
+        .suggestion:hover {
 
-    }  
+            background:
+                rgba(255,255,255,.08);
 
+        }
 
-    /* =====================================================  
-       MESSAGES  
-    ===================================================== */  
 
-    .message {  
+        /* =====================================================
+           MESSAGES
+        ===================================================== */
 
-        display: flex;  
+        .message {
 
-        margin-bottom: 20px;  
+            display: flex;
 
-    }  
+            margin-bottom: 20px;
 
+        }
 
-    .message.user {  
 
-        justify-content: flex-end;  
+        .message.user {
 
-    }  
+            justify-content: flex-end;
 
+        }
 
-    .message.ai {  
 
-        justify-content: flex-start;  
+        .message.ai {
 
-    }  
+            justify-content: flex-start;
 
+        }
 
-    .bubble {  
 
-        max-width: 85%;  
+        .bubble {
 
-        padding:  
-            13px 16px;  
+            max-width: 85%;
 
-        border-radius: 18px;  
+            padding:
+                13px 16px;
 
-        line-height: 1.6;  
+            border-radius: 18px;
 
-        white-space: pre-wrap;  
+            line-height: 1.6;
 
-        word-wrap: break-word;  
+            white-space: pre-wrap;
 
-        overflow-wrap: anywhere;  
+            word-wrap: break-word;
 
-        font-size: 14px;  
+            overflow-wrap: anywhere;
 
-    }  
+            font-size: 14px;
 
+        }
 
-    .user .bubble {  
 
-        background:  
-            linear-gradient(  
-                135deg,  
-                var(--primary),  
-                var(--secondary)  
-            );  
+        .user .bubble {
 
-        color: white;  
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--primary),
+                    var(--secondary)
+                );
 
-        border-bottom-right-radius: 5px;  
+            color: white;
 
-    }  
+            border-bottom-right-radius: 5px;
 
+        }
 
-    .ai .bubble {  
 
-        background: var(--card);  
+        .ai .bubble {
 
-        color: var(--text);  
+            background: var(--card);
 
-        border:  
-            1px solid var(--border);  
+            color: var(--text);
 
-        border-bottom-left-radius: 5px;  
+            border:
+                1px solid var(--border);
 
-    }  
+            border-bottom-left-radius: 5px;
 
+        }
 
-    /* =====================================================  
-       LOADING  
-    ===================================================== */  
 
-    .loading {  
+        /* =====================================================
+           LOADING
+        ===================================================== */
 
-        display: flex;  
+        .loading {
 
-        gap: 5px;  
+            display: flex;
 
-        align-items: center;  
+            gap: 5px;
 
-    }  
+            align-items: center;
 
+        }
 
-    .loading span {  
 
-        width: 7px;  
+        .loading span {
 
-        height: 7px;  
+            width: 7px;
 
-        background: var(--muted);  
+            height: 7px;
 
-        border-radius: 50%;  
+            background: var(--muted);
 
-        animation:  
-            bounce 1.2s infinite;  
+            border-radius: 50%;
 
-    }  
+            animation:
+                bounce 1.2s infinite;
 
+        }
 
-    .loading span:nth-child(2) {  
 
-        animation-delay: .15s;  
+        .loading span:nth-child(2) {
 
-    }  
+            animation-delay: .15s;
 
+        }
 
-    .loading span:nth-child(3) {  
 
-        animation-delay: .3s;  
+        .loading span:nth-child(3) {
 
-    }  
+            animation-delay: .3s;
 
+        }
 
-    @keyframes bounce {  
 
-        0%,60%,100% {  
+        @keyframes bounce {
 
-            transform:  
-                translateY(0);  
+            0%,60%,100% {
 
-        }  
+                transform:
+                    translateY(0);
 
-        30% {  
+            }
 
-            transform:  
-                translateY(-6px);  
+            30% {
 
-        }  
+                transform:
+                    translateY(-6px);
 
-    }  
+            }
 
+        }
 
-    /* =====================================================  
-       INPUT  
-    ===================================================== */  
 
-    .input-area {  
+        /* =====================================================
+           INPUT
+        ===================================================== */
 
-        padding: 15px;  
+        .input-area {
 
-        background:  
-            rgba(2,6,23,.98);  
+            padding: 15px;
 
-        border-top:  
-            1px solid var(--border);  
+            background:
+                rgba(2,6,23,.98);
 
-        flex-shrink: 0;  
+            border-top:
+                1px solid var(--border);
 
-    }  
+            flex-shrink: 0;
 
+        }
 
-    body.light .input-area {  
 
-        background:  
-            rgba(255,255,255,.98);  
+        body.light .input-area {
 
-    }  
+            background:
+                rgba(255,255,255,.98);
 
+        }
 
-    .input-box {  
 
-        display: flex;  
+        .input-box {
 
-        align-items: flex-end;  
+            display: flex;
 
-        gap: 10px;  
+            align-items: flex-end;
 
-        background: var(--card);  
+            gap: 10px;
 
-        border:  
-            1px solid var(--border);  
+            background: var(--card);
 
-        border-radius: 18px;  
+            border:
+                1px solid var(--border);
 
-        padding: 8px;  
+            border-radius: 18px;
 
-    }  
+            padding: 8px;
 
+        }
 
-    textarea {  
 
-        flex: 1;  
+        textarea {
 
-        resize: none;  
+            flex: 1;
 
-        border: none;  
+            resize: none;
 
-        outline: none;  
+            border: none;
 
-        background: transparent;  
+            outline: none;
 
-        color: var(--text);  
+            background: transparent;
 
-        font-size: 15px;  
+            color: var(--text);
 
-        padding: 10px;  
+            font-size: 15px;
 
-        min-height: 45px;  
+            padding: 10px;
 
-        max-height: 140px;  
+            min-height: 45px;
 
-        font-family: inherit;  
+            max-height: 140px;
 
-    }  
+            font-family: inherit;
 
+        }
 
-    textarea::placeholder {  
 
-        color: var(--muted);  
+        textarea::placeholder {
 
-    }  
+            color: var(--muted);
 
+        }
 
-    #sendButton {  
 
-        width: 45px;  
+        #sendButton {
 
-        height: 45px;  
+            width: 45px;
 
-        border-radius: 14px;  
+            height: 45px;
 
-        border: none;  
+            border-radius: 14px;
 
-        background:  
-            linear-gradient(  
-                135deg,  
-                var(--primary),  
-                var(--secondary)  
-            );  
+            border: none;
 
-        color: white;  
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--primary),
+                    var(--secondary)
+                );
 
-        font-size: 18px;  
+            color: white;
 
-        display: flex;  
+            font-size: 18px;
 
-        justify-content: center;  
+            display: flex;
 
-        align-items: center;  
+            justify-content: center;
 
-        cursor: pointer;  
+            align-items: center;
 
-    }  
+            cursor: pointer;
 
+        }
 
-    #sendButton:hover {  
 
-        opacity: .9;  
+        #sendButton:hover {
 
-    }  
+            opacity: .9;
 
+        }
 
-    #sendButton:disabled {  
 
-        opacity: .5;  
+        #sendButton:disabled {
 
-        cursor: not-allowed;  
+            opacity: .5;
 
-    }  
+            cursor: not-allowed;
 
+        }
 
-    .info {  
 
-        text-align: center;  
+        .info {
 
-        color: var(--muted);  
+            text-align: center;
 
-        font-size: 10px;  
+            color: var(--muted);
 
-        margin-top: 8px;  
+            font-size: 10px;
 
-    }  
+            margin-top: 8px;
 
+        }
 
-    /* =====================================================  
-       OVERLAY  
-    ===================================================== */  
 
-    .overlay {  
+        /* =====================================================
+           OVERLAY
+        ===================================================== */
 
-        display: none;  
+        .overlay {
 
-        position: fixed;  
+            display: none;
 
-        inset: 0;  
+            position: fixed;
 
-        background:  
-            rgba(0,0,0,.6);  
+            inset: 0;
 
-        z-index: 10;  
+            background:
+                rgba(0,0,0,.6);
 
-    }  
+            z-index: 10;
 
+        }
 
-    /* =====================================================  
-       MODAL PARAMÈTRES  
-    ===================================================== */  
 
-    .modal-overlay {  
+        /* =====================================================
+           MODAL PARAMÈTRES
+        ===================================================== */
 
-        position: fixed;  
+        .modal-overlay {
 
-        inset: 0;  
+            position: fixed;
 
-        background:  
-            rgba(0,0,0,.65);  
+            inset: 0;
 
-        display: none;  
+            background:
+                rgba(0,0,0,.65);
 
-        align-items: center;  
+            display: none;
 
-        justify-content: center;  
+            align-items: center;
 
-        padding: 15px;  
+            justify-content: center;
 
-        z-index: 100;  
+            padding: 15px;
 
-    }  
+            z-index: 100;
 
+        }
 
-    .modal-overlay.open {  
 
-        display: flex;  
+        .modal-overlay.open {
 
-    }  
+            display: flex;
 
+        }
 
-    .settings-modal {  
 
-        width: 100%;  
+        .settings-modal {
 
-        max-width: 480px;  
+            width: 100%;
 
-        max-height: 90vh;  
+            max-width: 480px;
 
-        overflow-y: auto;  
+            max-height: 90vh;
 
-        background: var(--panel);  
+            overflow-y: auto;
 
-        border:  
-            1px solid var(--border);  
+            background: var(--panel);
 
-        border-radius: 20px;  
+            border:
+                1px solid var(--border);
 
-        box-shadow:  
-            0 30px 80px rgba(0,0,0,.5);  
+            border-radius: 20px;
 
-    }  
+            box-shadow:
+                0 30px 80px rgba(0,0,0,.5);
 
+        }
 
-    .settings-header {  
 
-        padding: 18px;  
+        .settings-header {
 
-        border-bottom:  
-            1px solid var(--border);  
+            padding: 18px;
 
-        display: flex;  
+            border-bottom:
+                1px solid var(--border);
 
-        justify-content: space-between;  
+            display: flex;
 
-        align-items: center;  
+            justify-content: space-between;
 
-    }  
+            align-items: center;
 
+        }
 
-    .settings-header h2 {  
 
-        font-size: 18px;  
+        .settings-header h2 {
 
-    }  
+            font-size: 18px;
 
+        }
 
-    .close-settings {  
 
-        width: 35px;  
+        .close-settings {
 
-        height: 35px;  
+            width: 35px;
 
-        border: none;  
+            height: 35px;
 
-        border-radius: 9px;  
+            border: none;
 
-        background: var(--card);  
+            border-radius: 9px;
 
-        color: var(--text);  
+            background: var(--card);
 
-        cursor: pointer;  
+            color: var(--text);
 
-        font-size: 18px;  
+            cursor: pointer;
 
-    }  
+            font-size: 18px;
 
+        }
 
-    .settings-content {  
 
-        padding: 18px;  
+        .settings-content {
 
-    }  
+            padding: 18px;
 
+        }
 
-    .setting-group {  
 
-        margin-bottom: 24px;  
+        .setting-group {
 
-    }  
+            margin-bottom: 24px;
 
+        }
 
-    .setting-group:last-child {  
 
-        margin-bottom: 0;  
+        .setting-group:last-child {
 
-    }  
+            margin-bottom: 0;
 
+        }
 
-    .setting-label {  
 
-        display: block;  
+        .setting-label {
 
-        color: var(--text);  
+            display: block;
 
-        font-size: 14px;  
+            color: var(--text);
 
-        font-weight: bold;  
+            font-size: 14px;
 
-        margin-bottom: 8px;  
+            font-weight: bold;
 
-    }  
+            margin-bottom: 8px;
 
+        }
 
-    .setting-description {  
 
-        color: var(--muted);  
+        .setting-description {
 
-        font-size: 11px;  
+            color: var(--muted);
 
-        line-height: 1.5;  
+            font-size: 11px;
 
-        margin-bottom: 10px;  
+            line-height: 1.5;
 
-    }  
+            margin-bottom: 10px;
 
+        }
 
-    .name-input {  
 
-        width: 100%;  
+        .name-input {
 
-        padding: 11px;  
+            width: 100%;
 
-        border:  
-            1px solid var(--border);  
+            padding: 11px;
 
-        border-radius: 10px;  
+            border:
+                1px solid var(--border);
 
-        outline: none;  
+            border-radius: 10px;
 
-        background: var(--card);  
+            outline: none;
 
-        color: var(--text);  
+            background: var(--card);
 
-        font-size: 14px;  
+            color: var(--text);
 
-    }  
+            font-size: 14px;
 
+        }
 
-    .save-name {  
 
-        margin-top: 8px;  
+        .save-name {
 
-        padding: 9px 14px;  
+            margin-top: 8px;
 
-        border: none;  
+            padding: 9px 14px;
 
-        border-radius: 9px;  
+            border: none;
 
-        background:  
-            linear-gradient(  
-                135deg,  
-                var(--primary),  
-                var(--secondary)  
-            );  
+            border-radius: 9px;
 
-        color: white;  
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--primary),
+                    var(--secondary)
+                );
 
-        cursor: pointer;  
+            color: white;
 
-    }  
+            cursor: pointer;
 
+        }
 
-    /* OPTIONS */  
 
-    .options {  
+        /* OPTIONS */
 
-        display: flex;  
+        .options {
 
-        flex-wrap: wrap;  
+            display: flex;
 
-        gap: 8px;  
+            flex-wrap: wrap;
 
-    }  
+            gap: 8px;
 
+        }
 
-    .option {  
 
-        padding: 9px 13px;  
+        .option {
 
-        border:  
-            1px solid var(--border);  
+            padding: 9px 13px;
 
-        border-radius: 10px;  
+            border:
+                1px solid var(--border);
 
-        background: var(--card);  
+            border-radius: 10px;
 
-        color: var(--text-soft);  
+            background: var(--card);
 
-        cursor: pointer;  
+            color: var(--text-soft);
 
-        font-size: 12px;  
+            cursor: pointer;
 
-    }  
+            font-size: 12px;
 
+        }
 
-    .option.active {  
 
-        border-color:  
-            var(--primary);  
+        .option.active {
 
-        background:  
-            rgba(37,99,235,.18);  
+            border-color:
+                var(--primary);
 
-        color: var(--text);  
+            background:
+                rgba(37,99,235,.18);
 
-    }  
+            color: var(--text);
 
+        }
 
-    /* COULEURS */  
 
-    .color-options {  
+        /* COULEURS */
 
-        display: flex;  
+        .color-options {
 
-        gap: 10px;  
+            display: flex;
 
-    }  
+            gap: 10px;
 
+        }
 
-    .color-option {  
 
-        width: 35px;  
+        .color-option {
 
-        height: 35px;  
+            width: 35px;
 
-        border-radius: 50%;  
+            height: 35px;
 
-        border: 3px solid transparent;  
+            border-radius: 50%;
 
-        cursor: pointer;  
+            border: 3px solid transparent;
 
-    }  
+            cursor: pointer;
 
+        }
 
-    .color-option.active {  
 
-        border-color: white;  
+        .color-option.active {
 
-        box-shadow:  
-            0 0 0 2px #64748b;  
+            border-color: white;
 
-    }  
+            box-shadow:
+                0 0 0 2px #64748b;
 
+        }
 
-    .color-blue {  
 
-        background:  
-            linear-gradient(  
-                135deg,  
-                #2563eb,  
-                #7c3aed  
-            );  
+        .color-blue {
 
-    }  
+            background:
+                linear-gradient(
+                    135deg,
+                    #2563eb,
+                    #7c3aed
+                );
 
+        }
 
-    .color-purple {  
 
-        background:  
-            linear-gradient(  
-                135deg,  
-                #7c3aed,  
-                #2563eb  
-            );  
+        .color-purple {
 
-    }  
+            background:
+                linear-gradient(
+                    135deg,
+                    #7c3aed,
+                    #2563eb
+                );
 
+        }
 
-    .color-green {  
 
-        background:  
-            linear-gradient(  
-                135deg,  
-                #16a34a,  
-                #0d9488  
-            );  
+        .color-green {
 
-    }  
+            background:
+                linear-gradient(
+                    135deg,
+                    #16a34a,
+                    #0d9488
+                );
 
+        }
 
-    .color-orange {  
 
-        background:  
-            linear-gradient(  
-                135deg,  
-                #ea580c,  
-                #e11d48  
-            );  
+        .color-orange {
 
-    }  
+            background:
+                linear-gradient(
+                    135deg,
+                    #ea580c,
+                    #e11d48
+                );
 
+        }
 
-    .color-pink {  
 
-        background:  
-            linear-gradient(  
-                135deg,  
-                #db2777,  
-                #9333ea  
-            );  
+        .color-pink {
 
-    }  
+            background:
+                linear-gradient(
+                    135deg,
+                    #db2777,
+                    #9333ea
+                );
 
+        }
 
-    /* DANGER */  
 
-    .danger-zone {  
+        /* DANGER */
 
-        padding-top: 18px;  
+        .danger-zone {
 
-        border-top:  
-            1px solid var(--border);  
+            padding-top: 18px;
 
-    }  
+            border-top:
+                1px solid var(--border);
 
+        }
 
-    .delete-all {  
 
-        width: 100%;  
+        .delete-all {
 
-        padding: 11px;  
+            width: 100%;
 
-        border:  
-            1px solid rgba(239,68,68,.4);  
+            padding: 11px;
 
-        border-radius: 10px;  
+            border:
+                1px solid rgba(239,68,68,.4);
 
-        background:  
-            rgba(239,68,68,.08);  
+            border-radius: 10px;
 
-        color: #f87171;  
+            background:
+                rgba(239,68,68,.08);
 
-        cursor: pointer;  
+            color: #f87171;
 
-        font-size: 13px;  
+            cursor: pointer;
 
-    }  
+            font-size: 13px;
 
+        }
 
-    .delete-all:hover {  
 
-        background:  
-            rgba(239,68,68,.16);  
+        .delete-all:hover {
 
-    }  
+            background:
+                rgba(239,68,68,.16);
 
+        }
 
-    /* =====================================================  
-       MOBILE  
-    ===================================================== */  
 
-    @media (max-width: 700px) {  
+        /* =====================================================
+           MOBILE
+        ===================================================== */
 
-        .sidebar {  
+        @media (max-width: 700px) {
 
-            position: fixed;  
+            .sidebar {
 
-            left: -290px;  
+                position: fixed;
 
-            top: 0;  
+                left: -290px;
 
-            bottom: 0;  
+                top: 0;
 
-            transition:  
-                left .25s ease;  
+                bottom: 0;
 
-            box-shadow:  
-                10px 0 40px rgba(0,0,0,.4);  
+                transition:
+                    left .25s ease;
 
-        }  
+                box-shadow:
+                    10px 0 40px rgba(0,0,0,.4);
 
+            }
 
-        .sidebar.open {  
 
-            left: 0;  
+            .sidebar.open {
 
-        }  
+                left: 0;
 
+            }
 
-        .overlay.open {  
 
-            display: block;  
+            .overlay.open {
 
-        }  
+                display: block;
 
+            }
 
-        .mobile-menu {  
 
-            display: block;  
+            .mobile-menu {
 
-        }  
+                display: block;
 
+            }
 
-        .header {  
 
-            height: 64px;  
+            .header {
 
-            padding:  
-                10px 12px;  
+                height: 64px;
 
-        }  
+                padding:
+                    10px 12px;
 
+            }
 
-        .chat {  
 
-            padding:  
-                18px 12px;  
+            .chat {
 
-        }  
+                padding:
+                    18px 12px;
 
+            }
 
-        .welcome {  
 
-            padding-top: 50px;  
+            .welcome {
 
-        }  
+                padding-top: 50px;
 
+            }
 
-        .welcome h2 {  
 
-            font-size: 24px;  
+            .welcome h2 {
 
-        }  
+                font-size: 24px;
 
+            }
 
-        .bubble {  
 
-            max-width: 90%;  
+            .bubble {
 
-            font-size: 14px;  
+                max-width: 90%;
 
-        }  
+                font-size: 14px;
 
+            }
 
-        .input-area {  
 
-            padding: 10px;  
+            .input-area {
 
-        }  
+                padding: 10px;
 
+            }
 
-        .conversation-actions {  
 
-            opacity: 1;  
+            .conversation-actions {
 
-        }  
+                opacity: 1;
 
-    }  
+            }
 
-</style>  
+        }
 
+    </style>
 
-  
-  
+</head>
 
-  
 
-<!-- =====================================================  
-     SIDEBAR  
-====================================================== -->  
+<body>
 
-<aside  
-    class="sidebar"  
-    id="sidebar"  
->  
 
-    <div class="sidebar-header">  
+<div class="app">
 
-        <div class="brand">  
 
-            <div class="brand-icon">  
-                M  
-            </div>  
+    <!-- =====================================================
+         SIDEBAR
+    ====================================================== -->
 
-            <div class="brand-text">  
+    <aside
+        class="sidebar"
+        id="sidebar"
+    >
 
-                <h1>  
-                    Messie IA  
-                </h1>  
+        <div class="sidebar-header">
 
-                <p>  
-                    Ton assistant intelligent  
-                </p>  
+            <div class="brand">
 
-            </div>  
+                <div class="brand-icon">
+                    M
+                </div>
 
-        </div>  
+                <div class="brand-text">
 
+                    <h1>
+                        Messie IA
+                    </h1>
 
-        <button  
-            id="newChatButton"  
-        >  
-            ＋ Nouvelle conversation  
-        </button>  
+                    <p>
+                        Ton assistant intelligent
+                    </p>
 
-    </div>  
+                </div>
 
+            </div>
 
-    <div class="history-title">  
-        Historique  
-    </div>  
 
+            <button
+                id="newChatButton"
+            >
+                ＋ Nouvelle conversation
+            </button>
 
-    <div  
-        class="history"  
-        id="history"  
-    ></div>  
+        </div>
 
 
-    <div class="sidebar-footer">  
+        <div class="history-title">
+            Historique
+        </div>
 
-        <button  
-            class="settings-button"  
-            id="settingsButton"  
-        >  
-            ⚙️ Paramètres  
-        </button>  
 
+        <div
+            class="history"
+            id="history"
+        ></div>
 
-        <div class="footer-brand">  
-            Messie IA  
-        </div>  
 
-    </div>  
+        <div class="sidebar-footer">
 
-</aside>  
+            <button
+                class="settings-button"
+                id="settingsButton"
+            >
+                ⚙️ Paramètres
+            </button>
 
 
-<!-- =====================================================  
-     OVERLAY MOBILE  
-====================================================== -->  
+            <div class="footer-brand">
+                Messie IA
+            </div>
 
-<div  
-    class="overlay"  
-    id="overlay"  
-></div>  
+        </div>
 
+    </aside>
 
-<!-- =====================================================  
-     ZONE PRINCIPALE  
-====================================================== -->  
 
-<main class="main">  
+    <!-- =====================================================
+         OVERLAY MOBILE
+    ====================================================== -->
 
+    <div
+        class="overlay"
+        id="overlay"
+    ></div>
 
-    <!-- HEADER -->  
 
-    <header class="header">  
+    <!-- =====================================================
+         ZONE PRINCIPALE
+    ====================================================== -->
 
-        <div class="header-left">  
+    <main class="main">
 
-            <button  
-                class="mobile-menu"  
-                id="mobileMenu"  
-                aria-label="Menu"  
-            >  
-                ☰  
-            </button>  
 
+        <!-- HEADER -->
 
-            <div class="current-chat">  
+        <header class="header">
 
-                <h2  
-                    id="currentChatTitle"  
-                >  
-                    Nouvelle conversation  
-                </h2>  
+            <div class="header-left">
 
+                <button
+                    class="mobile-menu"
+                    id="mobileMenu"
+                    aria-label="Menu"
+                >
+                    ☰
+                </button>
 
-                <p>  
 
-                    <span  
-                        class="online-dot"  
-                    ></span>  
+                <div class="current-chat">
 
-                    En ligne  
+                    <h2
+                        id="currentChatTitle"
+                    >
+                        Nouvelle conversation
+                    </h2>
 
-                </p>  
 
-            </div>  
+                    <p>
 
-        </div>  
+                        <span
+                            class="online-dot"
+                        ></span>
 
-    </header>  
+                        En ligne
 
+                    </p>
 
-    <!-- =================================================  
-         CHAT  
-    ================================================== -->  
+                </div>
 
-    <section  
-        class="chat"  
-        id="chat"  
-    ></section>  
+            </div>
 
+        </header>
 
-    <!-- =================================================  
-         INPUT  
-    ================================================== -->  
 
-    <div class="input-area">  
+        <!-- =================================================
+             CHAT
+        ================================================== -->
 
-        <div class="input-box">  
+        <section
+            class="chat"
+            id="chat"
+        ></section>
 
-            <textarea  
-                id="messageInput"  
-                placeholder="Écris ton message..."  
-                rows="1"  
-            ></textarea>  
 
+        <!-- =================================================
+             INPUT
+        ================================================== -->
 
-            <button  
-                id="sendButton"  
-                title="Envoyer"  
-            >  
-                ➤  
-            </button>  
+        <div class="input-area">
 
-        </div>  
+            <div class="input-box">
 
+                <textarea
+                    id="messageInput"
+                    placeholder="Écris ton message..."
+                    rows="1"
+                ></textarea>
 
-        <div class="info">  
-            Messie IA peut parfois faire des erreurs.  
-        </div>  
 
-    </div>  
+                <button
+                    id="sendButton"
+                    title="Envoyer"
+                >
+                    ➤
+                </button>
 
+            </div>
 
-</main>  
 
+            <div class="info">
+                Messie IA peut parfois faire des erreurs.
+            </div>
 
+        </div>
 
-  
-  
 
-  
+    </main>
 
-<div class="settings-modal">  
+</div>
 
-    <div class="settings-header">  
 
-        <h2>  
-            ⚙️ Paramètres  
-        </h2>  
+<!-- =========================================================
+     MODAL PARAMÈTRES
+========================================================= -->
 
+<div
+    class="modal-overlay"
+    id="settingsModal"
+>
 
-        <button  
-            class="close-settings"  
-            id="closeSettings"  
-        >  
-            ×  
-        </button>  
+    <div class="settings-modal">
 
-    </div>  
+        <div class="settings-header">
 
+            <h2>
+                ⚙️ Paramètres
+            </h2>
 
-    <div class="settings-content">  
 
+            <button
+                class="close-settings"
+                id="closeSettings"
+            >
+                ×
+            </button>
 
-        <!-- NOM -->  
+        </div>
 
-        <div class="setting-group">  
 
-            <label  
-                class="setting-label"  
-            >  
-                👤 Ton nom  
-            </label>  
+        <div class="settings-content">
 
 
-            <div  
-                class="setting-description"  
-            >  
-                Personnalise le nom utilisé  
-                par Messie IA.  
-            </div>  
+            <!-- NOM -->
 
+            <div class="setting-group">
 
-            <input  
-                class="name-input"  
-                id="nameInput"  
-                type="text"  
-                maxlength="40"  
-                placeholder="Ton nom"  
-            >  
+                <label
+                    class="setting-label"
+                >
+                    👤 Ton nom
+                </label>
 
 
-            <button  
-                class="save-name"  
-                id="saveName"  
-            >  
-                Enregistrer  
-            </button>  
+                <div
+                    class="setting-description"
+                >
+                    Personnalise le nom utilisé
+                    par Messie IA.
+                </div>
 
-        </div>  
 
+                <input
+                    class="name-input"
+                    id="nameInput"
+                    type="text"
+                    maxlength="40"
+                    placeholder="Ton nom"
+                >
 
-        <!-- APPARENCE -->  
 
-        <div class="setting-group">  
+                <button
+                    class="save-name"
+                    id="saveName"
+                >
+                    Enregistrer
+                </button>
 
-            <label  
-                class="setting-label"  
-            >  
-                🎨 Apparence  
-            </label>  
+            </div>
 
 
-            <div  
-                class="setting-description"  
-            >  
-                Choisis l'apparence de Messie IA.  
-            </div>  
+            <!-- APPARENCE -->
 
+            <div class="setting-group">
 
-            <div class="options">  
+                <label
+                    class="setting-label"
+                >
+                    🎨 Apparence
+                </label>
 
-                <button  
-                    class="option"  
-                    data-theme="dark"  
-                >  
-                    🌙 Sombre  
-                </button>  
 
+                <div
+                    class="setting-description"
+                >
+                    Choisis l'apparence de Messie IA.
+                </div>
 
-                <button  
-                    class="option"  
-                    data-theme="light"  
-                >  
-                    ☀️ Claire  
-                </button>  
 
-            </div>  
+                <div class="options">
 
-        </div>  
+                    <button
+                        class="option"
+                        data-theme="dark"
+                    >
+                        🌙 Sombre
+                    </button>
 
 
-        <!-- COULEUR -->  
+                    <button
+                        class="option"
+                        data-theme="light"
+                    >
+                        ☀️ Claire
+                    </button>
 
-        <div class="setting-group">  
+                </div>
 
-            <label  
-                class="setting-label"  
-            >  
-                🌈 Couleur principale  
-            </label>  
+            </div>
 
 
-            <div  
-                class="setting-description"  
-            >  
-                Choisis la couleur de Messie IA.  
-            </div>  
+            <!-- COULEUR -->
 
+            <div class="setting-group">
 
-            <div  
-                class="color-options"  
-            >  
+                <label
+                    class="setting-label"
+                >
+                    🌈 Couleur principale
+                </label>
 
-                <button  
-                    class="color-option color-blue"  
-                    data-color="blue"  
-                    title="Bleu"  
-                ></button>  
 
+                <div
+                    class="setting-description"
+                >
+                    Choisis la couleur de Messie IA.
+                </div>
 
-                <button  
-                    class="color-option color-purple"  
-                    data-color="purple"  
-                    title="Violet"  
-                ></button>  
 
+                <div
+                    class="color-options"
+                >
 
-                <button  
-                    class="color-option color-green"  
-                    data-color="green"  
-                    title="Vert"  
-                ></button>  
+                    <button
+                        class="color-option color-blue"
+                        data-color="blue"
+                        title="Bleu"
+                    ></button>
 
 
-                <button  
-                    class="color-option color-orange"  
-                    data-color="orange"  
-                    title="Orange"  
-                ></button>  
+                    <button
+                        class="color-option color-purple"
+                        data-color="purple"
+                        title="Violet"
+                    ></button>
 
 
-                <button  
-                    class="color-option color-pink"  
-                    data-color="pink"  
-                    title="Rose"  
-                ></button>  
+                    <button
+                        class="color-option color-green"
+                        data-color="green"
+                        title="Vert"
+                    ></button>
 
-            </div>  
 
-        </div>  
+                    <button
+                        class="color-option color-orange"
+                        data-color="orange"
+                        title="Orange"
+                    ></button>
 
 
-        <!-- LONGUEUR -->  
+                    <button
+                        class="color-option color-pink"
+                        data-color="pink"
+                        title="Rose"
+                    ></button>
 
-        <div class="setting-group">  
+                </div>
 
-            <label  
-                class="setting-label"  
-            >  
-                🧠 Longueur des réponses  
-            </label>  
+            </div>
 
 
-            <div  
-                class="setting-description"  
-            >  
-                Indique à Messie IA la longueur  
-                de réponse que tu préfères.  
-            </div>  
+            <!-- LONGUEUR -->
 
+            <div class="setting-group">
 
-            <div class="options">  
+                <label
+                    class="setting-label"
+                >
+                    🧠 Longueur des réponses
+                </label>
 
-                <button  
-                    class="option"  
-                    data-length="courte"  
-                >  
-                    ⚡ Courte  
-                </button>  
 
+                <div
+                    class="setting-description"
+                >
+                    Indique à Messie IA la longueur
+                    de réponse que tu préfères.
+                </div>
 
-                <button  
-                    class="option"  
-                    data-length="normale"  
-                >  
-                    💬 Normale  
-                </button>  
 
+                <div class="options">
 
-                <button  
-                    class="option"  
-                    data-length="detaillee"  
-                >  
-                    📚 Détaillée  
-                </button>  
+                    <button
+                        class="option"
+                        data-length="courte"
+                    >
+                        ⚡ Courte
+                    </button>
 
-            </div>  
 
-        </div>  
+                    <button
+                        class="option"
+                        data-length="normale"
+                    >
+                        💬 Normale
+                    </button>
 
 
-        <!-- DANGER -->  
+                    <button
+                        class="option"
+                        data-length="detaillee"
+                    >
+                        📚 Détaillée
+                    </button>
 
-        <div  
-            class="setting-group danger-zone"  
-        >  
+                </div>
 
-            <label  
-                class="setting-label"  
-            >  
-                🗑️ Gestion des données  
-            </label>  
+            </div>
 
 
-            <div  
-                class="setting-description"  
-            >  
-                Cette action supprime toutes les  
-                conversations enregistrées dans  
-                ce navigateur.  
-            </div>  
+            <!-- DANGER -->
 
+            <div
+                class="setting-group danger-zone"
+            >
 
-            <button  
-                class="delete-all"  
-                id="deleteAll"  
-            >  
-                🗑️ Effacer tout l'historique  
-            </button>  
+                <label
+                    class="setting-label"
+                >
+                    🗑️ Gestion des données
+                </label>
 
-        </div>  
 
+                <div
+                    class="setting-description"
+                >
+                    Cette action supprime toutes les
+                    conversations enregistrées dans
+                    ce navigateur.
+                </div>
 
-    </div>  
 
-</div>  
+                <button
+                    class="delete-all"
+                    id="deleteAll"
+                >
+                    🗑️ Effacer tout l'historique
+                </button>
 
+            </div>
 
 
-  
-  
-  
+        </div>
 
-                    </html>  
+    </div>
 
+</div>
 
 
+<script>
+
+    /* =====================================================
+       VARIABLES
+    ===================================================== */
+
+    const chat =
+        document.getElementById("chat");
+
+    const input =
+        document.getElementById(
+            "messageInput"
+        );
+
+    const sendButton =
+        document.getElementById(
+            "sendButton"
+        );
+
+    const historyElement =
+        document.getElementById(
+            "history"
+        );
+
+    const newChatButton =
+        document.getElementById(
+            "newChatButton"
+        );
+
+    const currentChatTitle =
+        document.getElementById(
+            "currentChatTitle"
+        );
+
+    const sidebar =
+        document.getElementById(
+            "sidebar"
+        );
+
+    const overlay =
+        document.getElementById(
+            "overlay"
+        );
+
+    const mobileMenu =
+        document.getElementById(
+            "mobileMenu"
+        );
+
+    const settingsButton =
+        document.getElementById(
+            "settingsButton"
+        );
+
+    const settingsModal =
+        document.getElementById(
+            "settingsModal"
+        );
+
+    const closeSettings =
+        document.getElementById(
+            "closeSettings"
+        );
+
+    const nameInput =
+        document.getElementById(
+            "nameInput"
+        );
+
+    const saveName =
+        document.getElementById(
+            "saveName"
+        );
+
+    const deleteAll =
+        document.getElementById(
+            "deleteAll"
+        );
+
+
+    /* =====================================================
+       DONNÉES
+    ===================================================== */
+
+    let conversations = [];
+
+    let currentConversationId =
+        null;
+
+    let isSending = false;
+
+
+    /* =====================================================
+       RÉGLAGES
+    ===================================================== */
+
+    let settings = {
+
+        name: "",
+
+        theme: "dark",
+
+        color: "blue",
+
+        responseLength: "normale"
+
+    };
+
+
+    /* =====================================================
+       CHARGER LES RÉGLAGES
+    ===================================================== */
+
+    function loadSettings() {
+
+        try {
+
+            const saved =
+                localStorage.getItem(
+                    "messieIA_settings"
+                );
+
+
+            if (saved) {
+
+                const parsed =
+                    JSON.parse(saved);
+
+
+                if (
+                    parsed &&
+                    typeof parsed === "object"
+                ) {
+
+                    settings = {
+                        ...settings,
+                        ...parsed
+                    };
+
+                }
+
+            }
+
+        } catch (error) {
+
+            console.error(
+                "Erreur réglages :",
+                error
+            );
+
+        }
+
+
+        applySettings();
+
+    }
+
+
+    /* =====================================================
+       SAUVEGARDER LES RÉGLAGES
+    ===================================================== */
+
+    function saveSettings() {
+
+        try {
+
+            localStorage.setItem(
+
+                "messieIA_settings",
+
+                JSON.stringify(settings)
+
+            );
+
+        } catch (error) {
+
+            console.error(
+                "Impossible de sauvegarder les réglages :",
+                error
+            );
+
+        }
+
+    }
+
+
+    /* =====================================================
+       APPLIQUER RÉGLAGES
+    ===================================================== */
+
+    function applySettings() {
+
+        document.body.classList.remove(
+            "light"
+        );
+
+
+        if (
+            settings.theme ===
+            "light"
+        ) {
+
+            document.body.classList.add(
+                "light"
+            );
+
+        }
+
+
+        document.body.classList.remove(
+            "theme-purple",
+            "theme-green",
+            "theme-orange",
+            "theme-pink"
+        );
+
+
+        if (
+            settings.color !==
+            "blue"
+        ) {
+
+            document.body.classList.add(
+                "theme-" +
+                settings.color
+            );
+
+        }
+
+
+        nameInput.value =
+            settings.name || "";
+
+
+        updateSettingsButtons();
+
+    }
+
+
+    /* =====================================================
+       BOUTONS RÉGLAGES
+    ===================================================== */
+
+    function updateSettingsButtons() {
+
+        document
+            .querySelectorAll(
+                "[data-theme]"
+            )
+            .forEach(button => {
+
+                button.classList.toggle(
+
+                    "active",
+
+                    button.dataset.theme ===
+                    settings.theme
+
+                );
+
+            });
+
+
+        document
+            .querySelectorAll(
+                "[data-color]"
+            )
+            .forEach(button => {
+
+                button.classList.toggle(
+
+                    "active",
+
+                    button.dataset.color ===
+                    settings.color
+
+                );
+
+            });
+
+
+        document
+            .querySelectorAll(
+                "[data-length]"
+            )
+            .forEach(button => {
+
+                button.classList.toggle(
+
+                    "active",
+
+                    button.dataset.length ===
+                    settings.responseLength
+
+                );
+
+            });
+
+    }
+
+
+    /* =====================================================
+       STOCKAGE CONVERSATIONS
+    ===================================================== */
+
+    function saveConversations() {
+
+        try {
+
+            localStorage.setItem(
+
+                "messieIA_conversations",
+
+                JSON.stringify(
+                    conversations
+                )
+
+            );
+
+        } catch (error) {
+
+            console.error(
+                "Erreur sauvegarde historique :",
+                error
+            );
+
+        }
+
+    }
+
+
+    function loadConversations() {
+
+        try {
+
+            const saved =
+                localStorage.getItem(
+                    "messieIA_conversations"
+                );
+
+
+            if (!saved) {
+
+                conversations = [];
+
+                return;
+
+            }
+
+
+            const parsed =
+                JSON.parse(saved);
+
+
+            if (Array.isArray(parsed)) {
+
+                conversations =
+                    parsed.filter(
+                        conversation =>
+                            conversation &&
+                            typeof conversation === "object" &&
+                            Array.isArray(
+                                conversation.messages
+                            )
+                    );
+
+            } else {
+
+                conversations = [];
+
+            }
+
+        } catch (error) {
+
+            console.error(
+                "Erreur historique :",
+                error
+            );
+
+            conversations = [];
+
+        }
+
+    }
+
+
+    /* =====================================================
+       ID
+    ===================================================== */
+
+    function createId() {
+
+        return (
+
+            Date.now().toString() +
+
+            Math.random()
+                .toString(36)
+                .substring(2, 9)
+
+        );
+
+    }
+
+
+    /* =====================================================
+       DATE
+    ===================================================== */
+
+    function formatDate(
+        timestamp
+    ) {
+
+        const date =
+            new Date(timestamp);
+
+
+        if (
+            Number.isNaN(
+                date.getTime()
+            )
+        ) {
+
+            return "";
+
+        }
+
+
+        return date.toLocaleDateString(
+
+            "fr-FR",
+
+            {
+
+                day: "2-digit",
+
+                month: "2-digit",
+
+                year: "numeric"
+
+            }
+
+        );
+
+    }
+
+
+    /* =====================================================
+       CRÉER CONVERSATION
+    ===================================================== */
+
+    function createConversation() {
+
+        const conversation = {
+
+            id:
+                createId(),
+
+            title:
+                "Nouvelle conversation",
+
+            createdAt:
+                Date.now(),
+
+            updatedAt:
+                Date.now(),
+
+            messages: []
+
+        };
+
+
+        conversations.unshift(
+            conversation
+        );
+
+
+        currentConversationId =
+            conversation.id;
+
+
+        saveConversations();
+
+        renderHistory();
+
+        renderConversation();
+
+        closeMobileMenu();
+
+        input.focus();
+
+    }
+
+
+    /* =====================================================
+       CONVERSATION ACTUELLE
+    ===================================================== */
+
+    function getCurrentConversation() {
+
+        return conversations.find(
+
+            conversation =>
+
+                conversation.id ===
+                currentConversationId
+
+        );
+
+    }
+
+
+    /* =====================================================
+       TITRE
+    ===================================================== */
+
+    function generateTitle(
+        text
+    ) {
+
+        let title =
+            text.trim();
+
+
+        if (!title) {
+
+            return "Nouvelle conversation";
+
+        }
+
+
+        if (title.length > 35) {
+
+            title =
+                title.substring(0,35) +
+                "...";
+
+        }
+
+
+        return title;
+
+    }
+
+
+    /* =====================================================
+       AJOUT MESSAGE
+    ===================================================== */
+
+    function addMessageToConversation(
+
+        role,
+
+        content
+
+    ) {
+
+        const conversation =
+            getCurrentConversation();
+
+
+        if (!conversation) {
+
+            return;
+
+        }
+
+
+        conversation.messages.push({
+
+            role:
+                role,
+
+            content:
+                content,
+
+            timestamp:
+                Date.now()
+
+        });
+
+
+        conversation.updatedAt =
+            Date.now();
+
+
+        if (
+
+            role === "user" &&
+
+            conversation.messages.filter(
+                message =>
+                    message.role === "user"
+            ).length === 1
+
+        ) {
+
+            conversation.title =
+                generateTitle(
+                    content
+                );
+
+        }
+
+
+        saveConversations();
+
+        renderHistory();
+
+    }
+
+
+    /* =====================================================
+       AFFICHER MESSAGE
+    ===================================================== */
+
+    function displayMessage(
+
+        text,
+
+        type
+
+    ) {
+
+        const message =
+            document.createElement(
+                "div"
+            );
+
+
+        message.className =
+            "message " + type;
+
+
+        const bubble =
+            document.createElement(
+                "div"
+            );
+
+
+        bubble.className =
+            "bubble";
+
+
+        bubble.textContent =
+            text;
+
+
+        message.appendChild(
+            bubble
+        );
+
+
+        chat.appendChild(
+            message
+        );
+
+
+        chat.scrollTop =
+            chat.scrollHeight;
+
+    }
+
+
+    /* =====================================================
+       ACCUEIL
+    ===================================================== */
+
+    function showWelcome() {
+
+        const name =
+            settings.name
+                ? " " + settings.name
+                : "";
+
+
+        chat.innerHTML = `
+
+            <div class="welcome">
+
+                <div class="welcome-icon">
+                    🤖
+                </div>
+
+                <h2>
+                    Bonjour${name} 👋
+                </h2>
+
+                <p>
+                    Je suis Messie IA.<br>
+                    Pose-moi une question et
+                    je vais essayer de t'aider.
+                </p>
+
+                <div class="suggestions">
+
+                    <button
+                        class="suggestion"
+                        data-text="Explique-moi quelque chose d'intéressant."
+                    >
+                        💡 Explique-moi quelque chose
+                    </button>
+
+                    <button
+                        class="suggestion"
+                        data-text="Aide-moi à créer une application."
+                    >
+                        💻 Aide-moi à créer une application
+                    </button>
+
+                    <button
+                        class="suggestion"
+                        data-text="Donne-moi une idée de projet."
+                    >
+                        🚀 Donne-moi une idée de projet
+                    </button>
+
+                </div>
+
+            </div>
+
+        `;
+
+
+        document
+            .querySelectorAll(
+                ".suggestion"
+            )
+            .forEach(
+                button => {
+
+                    button.addEventListener(
+
+                        "click",
+
+                        () => {
+
+                            input.value =
+                                button.dataset.text;
+
+                            input.focus();
+
+                            autoResize();
+
+                        }
+
+                    );
+
+                }
+            );
+
+    }
+
+
+    /* =====================================================
+       AFFICHER CONVERSATION
+    ===================================================== */
+
+    function renderConversation() {
+
+        const conversation =
+            getCurrentConversation();
+
+
+        if (!conversation) {
+
+            currentChatTitle.textContent =
+                "Nouvelle conversation";
+
+            showWelcome();
+
+            return;
+
+        }
+
+
+        currentChatTitle.textContent =
+            conversation.title ||
+            "Nouvelle conversation";
+
+
+        chat.innerHTML = "";
+
+
+        if (
+            !Array.isArray(
+                conversation.messages
+            ) ||
+            conversation.messages.length === 0
+        ) {
+
+            showWelcome();
+
+            return;
+
+        }
+
+
+        conversation.messages.forEach(
+
+            message => {
+
+                if (
+                    !message ||
+                    typeof message.content !== "string"
+                ) {
+
+                    return;
+
+                }
+
+
+                displayMessage(
+
+                    message.content,
+
+                    message.role === "user"
+                        ? "user"
+                        : "ai"
+
+                );
+
+            }
+
+        );
+
+
+        chat.scrollTop =
+            chat.scrollHeight;
+
+    }
+
+
+    /* =====================================================
+       HISTORIQUE
+    ===================================================== */
+
+    function renderHistory() {
+
+        historyElement.innerHTML = "";
+
+
+        if (
+            conversations.length === 0
+        ) {
+
+            historyElement.innerHTML = `
+
+                <div class="history-empty">
+
+                    Aucune conversation.<br>
+
+                    Commence une nouvelle discussion.
+
+                </div>
+
+            `;
+
+            return;
+
+        }
+
+
+        conversations
+            .sort(
+
+                (a,b) =>
+                    (b.updatedAt || 0) -
+                    (a.updatedAt || 0)
+
+            )
+            .forEach(
+
+                conversation => {
+
+                    const item =
+                        document.createElement(
+                            "div"
+                        );
+
+
+                    item.className =
+                        "conversation";
+
+
+                    if (
+
+                        conversation.id ===
+                        currentConversationId
+
+                    ) {
+
+                        item.classList.add(
+                            "active"
+                        );
+
+                    }
+
+
+                    const main =
+                        document.createElement(
+                            "div"
+                        );
+
+
+                    main.className =
+                        "conversation-main";
+
+
+                    const title =
+                        document.createElement(
+                            "div"
+                        );
+
+
+                    title.className =
+                        "conversation-title";
+
+
+                    title.textContent =
+                        conversation.title ||
+                        "Nouvelle conversation";
+
+
+                    const date =
+                        document.createElement(
+                            "div"
+                        );
+
+
+                    date.className =
+                        "conversation-date";
+
+
+                    date.textContent =
+                        formatDate(
+                            conversation.updatedAt
+                        );
+
+
+                    main.appendChild(
+                        title
+                    );
+
+
+                    main.appendChild(
+                        date
+                    );
+
+
+                    const actions =
+                        document.createElement(
+                            "div"
+                        );
+
+
+                    actions.className =
+                        "conversation-actions";
+
+
+                    /* RENOMMER */
+
+                    const renameButton =
+                        document.createElement(
+                            "button"
+                        );
+
+
+                    renameButton.className =
+                        "history-button";
+
+
+                    renameButton.title =
+                        "Renommer";
+
+
+                    renameButton.textContent =
+                        "✏️";
+
+
+                    renameButton.addEventListener(
+
+                        "click",
+
+                        event => {
+
+                            event.stopPropagation();
+
+                            renameConversation(
+                                conversation.id
+                            );
+
+                        }
+
+                    );
+
+
+                    /* SUPPRIMER */
+
+                    const deleteButton =
+                        document.createElement(
+                            "button"
+                        );
+
+
+                    deleteButton.className =
+                        "history-button delete";
+
+
+                    deleteButton.title =
+                        "Supprimer";
+
+
+                    deleteButton.textContent =
+                        "🗑️";
+
+
+                    deleteButton.addEventListener(
+
+                        "click",
+
+                        event => {
+
+                            event.stopPropagation();
+
+                            deleteConversation(
+                                conversation.id
+                            );
+
+                        }
+
+                    );
+
+
+                    actions.appendChild(
+                        renameButton
+                    );
+
+
+                    actions.appendChild(
+                        deleteButton
+                    );
+
+
+                    item.appendChild(
+                        main
+                    );
+
+
+                    item.appendChild(
+                        actions
+                    );
+
+
+                    item.addEventListener(
+
+                        "click",
+
+                        () => {
+
+                            openConversation(
+                                conversation.id
+                            );
+
+                        }
+
+                    );
+
+
+                    historyElement.appendChild(
+                        item
+                    );
+
+                }
+
+            );
+
+    }
+
+
+    /* =====================================================
+       OUVRIR CONVERSATION
+    ===================================================== */
+
+    function openConversation(id) {
+
+        const conversation =
+            conversations.find(
+                item => item.id === id
+            );
+
+
+        if (!conversation) {
+
+            return;
+
+        }
+
+
+        currentConversationId =
+            id;
+
+
+        renderHistory();
+
+        renderConversation();
+
+        closeMobileMenu();
+
+        input.focus();
+
+    }
+
+
+    /* =====================================================
+       RENOMMER
+    ===================================================== */
+
+    function renameConversation(id) {
+
+        const conversation =
+            conversations.find(
+
+                item =>
+                    item.id === id
+
+            );
+
+
+        if (!conversation) {
+
+            return;
+
+        }
+
+
+        const newTitle =
+            prompt(
+
+                "Nouveau nom de la conversation :",
+
+                conversation.title
+
+            );
+
+
+        if (newTitle === null) {
+
+            return;
+
+        }
+
+
+        const title =
+            newTitle.trim();
+
+
+        if (!title) {
+
+            return;
+
+        }
+
+
+        conversation.title =
+            title.substring(0,60);
+
+
+        conversation.updatedAt =
+            Date.now();
+
+
+        saveConversations();
+
+        renderHistory();
+
+        renderConversation();
+
+    }
+
+
+    /* =====================================================
+       SUPPRIMER CONVERSATION
+    ===================================================== */
+
+    function deleteConversation(id) {
+
+        const confirmed =
+            confirm(
+                "Supprimer cette conversation ?"
+            );
+
+
+        if (!confirmed) {
+
+            return;
+
+        }
+
+
+        conversations =
+            conversations.filter(
+
+                item =>
+                    item.id !== id
+
+            );
+
+
+        if (
+
+            currentConversationId === id
+
+        ) {
+
+            if (
+                conversations.length > 0
+            ) {
+
+                currentConversationId =
+                    conversations[0].id;
+
+            } else {
+
+                currentConversationId =
+                    null;
+
+            }
+
+        }
+
+
+        saveConversations();
+
+        renderHistory();
+
+        renderConversation();
+
+    }
+
+
+    /* =====================================================
+       LOADING
+    ===================================================== */
+
+    function addLoading() {
+
+        removeLoading();
+
+
+        const message =
+            document.createElement(
+                "div"
+            );
+
+
+        message.className =
+            "message ai";
+
+
+        message.id =
+            "loadingMessage";
+
+
+        const bubble =
+            document.createElement(
+                "div"
+            );
+
+
+        bubble.className =
+            "bubble";
+
+
+        const loading =
+            document.createElement(
+                "div"
+            );
+
+
+        loading.className =
+            "loading";
+
+
+        loading.innerHTML = `
+
+            <span></span>
+
+            <span></span>
+
+            <span></span>
+
+        `;
+
+
+        bubble.appendChild(
+            loading
+        );
+
+
+        message.appendChild(
+            bubble
+        );
+
+
+        chat.appendChild(
+            message
+        );
+
+
+        chat.scrollTop =
+            chat.scrollHeight;
+
+    }
+
+
+    /* =====================================================
+       SUPPRIMER LOADING
+    ===================================================== */
+
+    function removeLoading() {
+
+        const loading =
+            document.getElementById(
+                "loadingMessage"
+            );
+
+
+        if (loading) {
+
+            loading.remove();
+
+        }
+
+    }
+
+
+    /* =====================================================
+       NETTOYER RÉPONSE IA
+    ===================================================== */
+
+    function cleanAIResponse(text) {
+
+        if (
+            typeof text !== "string"
+        ) {
+
+            return "";
+
+        }
+
+
+        let result =
+            text.replace(/\r\n/g, "\n");
+
+
+        /*
+         * Supprime les lignes techniques
+         * comme :
+         *
+         * User Safety: safe
+         * Response Safety: safe
+         *
+         * avec ou sans espaces,
+         * majuscules/minuscules,
+         * Markdown ou préfixes.
+         */
+
+        const lines =
+            result.split("\n");
+
+
+        const filtered =
+            lines.filter(line => {
+
+                const normalized =
+                    line
+                        .replace(/[*_`#]/g, "")
+                        .replace(/^\s*[-•]\s*/, "")
+                        .trim()
+                        .toLowerCase();
+
+
+                if (!normalized) {
+
+                    return true;
+
+                }
+
+
+                if (
+                    /^user\s+safety\s*:\s*/i.test(
+                        normalized
+                    )
+                ) {
+
+                    return false;
+
+                }
+
+
+                if (
+                    /^response\s+safety\s*:\s*/i.test(
+                        normalized
+                    )
+                ) {
+
+                    return false;
+
+                }
+
+
+                if (
+                    /^input\s+safety\s*:\s*/i.test(
+                        normalized
+                    )
+                ) {
+
+                    return false;
+
+                }
+
+
+                if (
+                    /^output\s+safety\s*:\s*/i.test(
+                        normalized
+                    )
+                ) {
+
+                    return false;
+
+                }
+
+
+                return true;
+
+            });
+
+
+        result =
+            filtered.join("\n");
+
+
+        /*
+         * Supprime aussi les éventuelles occurrences
+         * collées au début ou à la fin du texte.
+         */
+
+        result =
+            result.replace(
+
+                /(?:user\s+safety|response\s+safety|input\s+safety|output\s+safety)\s*:\s*(?:safe|unsafe|unknown)\s*/gi,
+
+                ""
+
+            );
+
+
+        /*
+         * Nettoyage des lignes vides excessives.
+         */
+
+        result =
+            result
+                .replace(/\n{3,}/g, "\n\n")
+                .trim();
+
+
+        return result;
+
+    }
+
+
+    /* =====================================================
+       EXTRAIRE LA RÉPONSE DU SERVEUR
+    ===================================================== */
+
+    function extractAIResponse(data) {
+
+        if (!data) {
+
+            return "";
+
+        }
+
+
+        /*
+         * Format utilisé actuellement par notre Flask :
+         *
+         * {
+         *   "response": "Bonjour..."
+         * }
+         */
+
+        if (
+            typeof data.response === "string"
+        ) {
+
+            return data.response;
+
+        }
+
+
+        /*
+         * Quelques formats possibles si le serveur
+         * renvoie directement la structure OpenRouter.
+         */
+
+        if (
+            data.response &&
+            typeof data.response.content === "string"
+        ) {
+
+            return data.response.content;
+
+        }
+
+
+        if (
+            Array.isArray(data.choices) &&
+            data.choices.length > 0
+        ) {
+
+            const choice =
+                data.choices[0];
+
+
+            if (
+                choice &&
+                choice.message &&
+                typeof choice.message.content === "string"
+            ) {
+
+                return choice.message.content;
+
+            }
+
+
+            if (
+                choice &&
+                typeof choice.text === "string"
+            ) {
+
+                return choice.text;
+
+            }
+
+        }
+
+
+        return "";
+
+    }
+
+
+    /* =====================================================
+       INSTRUCTION LONGUEUR
+    ===================================================== */
+
+    function getResponseInstruction() {
+
+        if (
+            settings.responseLength ===
+            "courte"
+        ) {
+
+            return (
+                "Donne des réponses courtes, " +
+                "directes et faciles à comprendre."
+            );
+
+        }
+
+
+        if (
+            settings.responseLength ===
+            "detaillee"
+        ) {
+
+            return (
+                "Donne des réponses détaillées, " +
+                "avec des explications et des exemples " +
+                "lorsque c'est utile."
+            );
+
+        }
+
+
+        return (
+            "Donne des réponses équilibrées, " +
+            "claires et suffisamment détaillées."
+        );
+
+    }
+
+
+    /* =====================================================
+       ENVOYER MESSAGE
+    ===================================================== */
+
+    async function sendMessage() {
+
+        if (isSending) {
+
+            return;
+
+        }
+
+
+        const message =
+            input.value.trim();
+
+
+        if (!message) {
+
+            return;
+
+        }
+
+
+        if (
+            !currentConversationId
+        ) {
+
+            createConversation();
+
+        }
+
+
+        const conversation =
+            getCurrentConversation();
+
+
+        if (!conversation) {
+
+            return;
+
+        }
+
+
+        isSending = true;
+
+        sendButton.disabled =
+            true;
+
+
+        displayMessage(
+            message,
+            "user"
+        );
+
+
+        addMessageToConversation(
+
+            "user",
+
+            message
+
+        );
+
+
+        input.value = "";
+
+        input.style.height =
+            "45px";
+
+
+        addLoading();
+
+
+        try {
+
+            /*
+             * IMPORTANT :
+             * Le dernier message est déjà enregistré.
+             *
+             * On l'enlève de history parce qu'il sera envoyé
+             * séparément dans "message".
+             */
+
+            const history =
+                conversation.messages
+
+                    .slice(0,-1)
+
+                    .filter(
+                        item =>
+                            item &&
+                            (
+                                item.role === "user" ||
+                                item.role === "assistant"
+                            ) &&
+                            typeof item.content === "string"
+                    )
+
+                    .map(
+                        item => ({
+
+                            role:
+                                item.role,
+
+                            content:
+                                item.content
+
+                        })
+                    );
+
+
+            /*
+             * On conserve la préférence de longueur,
+             * mais on l'ajoute proprement au message envoyé.
+             */
+
+            const instruction =
+                getResponseInstruction();
+
+
+            const finalMessage =
+
+                message +
+
+                "\n\n" +
+
+                "[Instruction interne : " +
+
+                instruction +
+
+                "]";
+
+
+            const response =
+                await fetch(
+
+                    "/api/chat",
+
+                    {
+
+                        method:
+                            "POST",
+
+                        headers: {
+
+                            "Content-Type":
+                                "application/json"
+
+                        },
+
+                        body:
+
+                            JSON.stringify({
+
+                                message:
+                                    finalMessage,
+
+                                history:
+                                    history
+
+                            })
+
+                    }
+
+                );
+
+
+            let data = null;
+
+
+            try {
+
+                data =
+                    await response.json();
+
+            } catch (jsonError) {
+
+                throw new Error(
+                    "Le serveur a renvoyé une réponse qui n'est pas du JSON."
+                );
+
+            }
+
+
+            removeLoading();
+
+
+            if (!response.ok) {
+
+                const serverError =
+
+                    data &&
+                    typeof data.error === "string"
+
+                        ? data.error
+
+                        : "Une erreur est survenue avec le serveur.";
+
+
+                displayMessage(
+
+                    "❌ " +
+                    serverError,
+
+                    "ai"
+
+                );
+
+
+                return;
+
+            }
+
+
+            /*
+             * Récupération robuste de la réponse.
+             */
+
+            const rawAnswer =
+                extractAIResponse(data);
+
+
+            /*
+             * Suppression des informations techniques
+             * de sécurité.
+             */
+
+            const answer =
+                cleanAIResponse(
+                    rawAnswer
+                );
+
+
+            /*
+             * Si OpenRouter/serveur ne renvoie vraiment
+             * aucune réponse exploitable.
+             */
+
+            if (!answer) {
+
+                displayMessage(
+
+                    "⚠️ Messie IA n'a pas pu générer une réponse cette fois-ci. Réessaie dans quelques secondes.",
+
+                    "ai"
+
+                );
+
+
+                return;
+
+            }
+
+
+            displayMessage(
+
+                answer,
+
+                "ai"
+
+            );
+
+
+            /*
+             * IMPORTANT :
+             * On enregistre uniquement la vraie réponse,
+             * jamais les informations "User Safety".
+             */
+
+            addMessageToConversation(
+
+                "assistant",
+
+                answer
+
+            );
+
+
+            currentChatTitle.textContent =
+                conversation.title;
+
+
+        } catch (error) {
+
+            removeLoading();
+
+
+            console.error(
+                "Erreur Messie IA :",
+                error
+            );
+
+
+            displayMessage(
+
+                "❌ Impossible de contacter Messie IA. Vérifie ta connexion ou le serveur.",
+
+                "ai"
+
+            );
+
+        } finally {
+
+            isSending = false;
+
+            sendButton.disabled =
+                false;
+
+            input.focus();
+
+        }
+
+    }
+
+
+    /* =====================================================
+       TEXTAREA
+    ===================================================== */
+
+    function autoResize() {
+
+        input.style.height =
+            "45px";
+
+
+        input.style.height =
+
+            Math.min(
+
+                input.scrollHeight,
+
+                140
+
+            ) + "px";
+
+    }
+
+
+    input.addEventListener(
+
+        "input",
+
+        autoResize
+
+    );
+
+
+    /* =====================================================
+       ENVOI BOUTON
+    ===================================================== */
+
+    sendButton.addEventListener(
+
+        "click",
+
+        sendMessage
+
+    );
+
+
+    /* =====================================================
+       ENTRÉE CLAVIER
+    ===================================================== */
+
+    input.addEventListener(
+
+        "keydown",
+
+        function(event) {
+
+            if (
+
+                event.key ===
+                "Enter" &&
+
+                !event.shiftKey
+
+            ) {
+
+                event.preventDefault();
+
+                sendMessage();
+
+            }
+
+        }
+
+    );
+
+
+    /* =====================================================
+       NOUVELLE CONVERSATION
+    ===================================================== */
+
+    newChatButton.addEventListener(
+
+        "click",
+
+        createConversation
+
+    );
+
+
+    /* =====================================================
+       MENU MOBILE
+    ===================================================== */
+
+    function openMobileMenu() {
+
+        sidebar.classList.add(
+            "open"
+        );
+
+        overlay.classList.add(
+            "open"
+        );
+
+    }
+
+
+    function closeMobileMenu() {
+
+        sidebar.classList.remove(
+            "open"
+        );
+
+        overlay.classList.remove(
+            "open"
+        );
+
+    }
+
+
+    mobileMenu.addEventListener(
+
+        "click",
+
+        openMobileMenu
+
+    );
+
+
+    overlay.addEventListener(
+
+        "click",
+
+        closeMobileMenu
+
+    );
+
+
+    /* =====================================================
+       PARAMÈTRES
+    ===================================================== */
+
+    settingsButton.addEventListener(
+
+        "click",
+
+        () => {
+
+            settingsModal.classList.add(
+                "open"
+            );
+
+            closeMobileMenu();
+
+        }
+
+    );
+
+
+    closeSettings.addEventListener(
+
+        "click",
+
+        () => {
+
+            settingsModal.classList.remove(
+                "open"
+            );
+
+        }
+
+    );
+
+
+    settingsModal.addEventListener(
+
+        "click",
+
+        event => {
+
+            if (
+                event.target ===
+                settingsModal
+            ) {
+
+                settingsModal.classList.remove(
+                    "open"
+                );
+
+            }
+
+        }
+
+    );
+
+
+    /* =====================================================
+       MODE
+    ===================================================== */
+
+    document
+        .querySelectorAll(
+            "[data-theme]"
+        )
+        .forEach(
+
+            button => {
+
+                button.addEventListener(
+
+                    "click",
+
+                    () => {
+
+                        settings.theme =
+                            button.dataset.theme;
+
+                        saveSettings();
+
+                        applySettings();
+
+                    }
+
+                );
+
+            }
+
+        );
+
+
+    /* =====================================================
+       COULEUR
+    ===================================================== */
+
+    document
+        .querySelectorAll(
+            "[data-color]"
+        )
+        .forEach(
+
+            button => {
+
+                button.addEventListener(
+
+                    "click",
+
+                    () => {
+
+                        settings.color =
+                            button.dataset.color;
+
+                        saveSettings();
+
+                        applySettings();
+
+                    }
+
+                );
+
+            }
+
+        );
+
+
+    /* =====================================================
+       LONGUEUR
+    ===================================================== */
+
+    document
+        .querySelectorAll(
+            "[data-length]"
+        )
+        .forEach(
+
+            button => {
+
+                button.addEventListener(
+
+                    "click",
+
+                    () => {
+
+                        settings.responseLength =
+                            button.dataset.length;
+
+                        saveSettings();
+
+                        applySettings();
+
+                    }
+
+                );
+
+            }
+
+        );
+
+
+    /* =====================================================
+       NOM
+    ===================================================== */
+
+    saveName.addEventListener(
+
+        "click",
+
+        () => {
+
+            settings.name =
+                nameInput.value.trim();
+
+            saveSettings();
+
+            applySettings();
+
+            renderConversation();
+
+        }
+
+    );
+
+
+    /* =====================================================
+       EFFACER TOUT
+    ===================================================== */
+
+    deleteAll.addEventListener(
+
+        "click",
+
+        () => {
+
+            if (
+                conversations.length === 0
+            ) {
+
+                alert(
+                    "Il n'y a aucune conversation à supprimer."
+                );
+
+                return;
+
+            }
+
+
+            const confirmed =
+                confirm(
+
+                    "⚠️ Attention !\n\n" +
+
+                    "Toutes tes conversations " +
+                    "seront définitivement supprimées " +
+                    "de ce navigateur.\n\n" +
+
+                    "Continuer ?"
+
+                );
+
+
+            if (!confirmed) {
+
+                return;
+
+            }
+
+
+            conversations = [];
+
+            currentConversationId =
+                null;
+
+
+            saveConversations();
+
+            renderHistory();
+
+            renderConversation();
+
+
+            alert(
+                "L'historique a été supprimé."
+            );
+
+        }
+
+    );
+
+
+    /* =====================================================
+       INITIALISATION
+    ===================================================== */
+
+    function initialize() {
+
+        loadSettings();
+
+        loadConversations();
+
+
+        if (
+            conversations.length > 0
+        ) {
+
+            conversations.sort(
+
+                (a,b) =>
+                    (b.updatedAt || 0) -
+                    (a.updatedAt || 0)
+
+            );
+
+
+            currentConversationId =
+                conversations[0].id;
+
+
+            renderHistory();
+
+            renderConversation();
+
+        } else {
+
+            renderHistory();
+
+            showWelcome();
+
+        }
+
+
+        input.focus();
+
+    }
+
+
+    initialize();
+
+</script>
+
+
+</body>
+
+  </html>
