@@ -1,424 +1,2165 @@
+<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8">
 
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
 
+<meta
+    name="theme-color"
+    content="#111827"
+>
 
+<title>Messie IA</title>
 
+<style>
 
+    * {
+        box-sizing: border-box;
+    }
 
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: #f3f4f6;
+        color: #111827;
+    }
 
+    button,
+    input,
+    textarea {
+        font: inherit;
+    }
 
+    button {
+        cursor: pointer;
+    }
 
+    .app {
+        min-height: 100vh;
+        display: flex;
+    }
 
+    /* ==================================================
+       SIDEBAR
+    ================================================== */
 
+    .sidebar {
+        width: 280px;
+        background: #111827;
+        color: white;
+        padding: 18px;
+        display: flex;
+        flex-direction: column;
+    }
 
+    .logo {
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 18px;
+    }
 
+    .new-chat {
+        border: 0;
+        border-radius: 12px;
+        padding: 12px;
+        background: #2563eb;
+        color: white;
+        margin-bottom: 18px;
+    }
 
-<div class="logo">
-    <div class="logo-icon">M</div>
-    <span>Messie IA</span>
-</div>
+    .new-chat:hover {
+        background: #1d4ed8;
+    }
 
-<button class="new-chat" onclick="newConversation()">
-    ＋ Nouvelle conversation
-</button>
+    .conversation-title {
+        font-size: 13px;
+        opacity: .7;
+        margin-bottom: 10px;
+    }
 
-<nav class="nav">
+    #conversationList {
+        overflow-y: auto;
+        flex: 1;
+    }
 
-    <button
-        id="navMessages"
-        class="active"
-        onclick="showView('messages')">
-        💬 Messages
-    </button>
+    .conversation {
+        width: 100%;
+        border: 0;
+        background: transparent;
+        color: white;
+        text-align: left;
+        padding: 10px;
+        border-radius: 9px;
+        margin-bottom: 5px;
+    }
 
-    <button
-        id="navConversations"
-        onclick="showView('conversations')">
-        🕘 Conversations
-    </button>
+    .conversation:hover {
+        background: #1f2937;
+    }
 
-    <button
-        id="navTools"
-        onclick="showView('tools')">
-        🛠️ Outils IA
-    </button>
+    .account-area {
+        border-top: 1px solid #374151;
+        padding-top: 15px;
+        margin-top: 15px;
+    }
 
-    <button
-        id="navProfile"
-        onclick="showView('profile')">
-        👤 Mon compte
-    </button>
+    .account-name {
+        font-weight: bold;
+        margin-bottom: 4px;
+    }
 
-</nav>
+    .account-email {
+        font-size: 12px;
+        opacity: .7;
+        margin-bottom: 10px;
+        word-break: break-word;
+    }
 
-<div class="account-area">
-    <button onclick="showView('profile')">
-        👤 Compte
-    </button>
-</div>
+    .account-button {
+        width: 100%;
+        border: 1px solid #4b5563;
+        background: transparent;
+        color: white;
+        border-radius: 9px;
+        padding: 9px;
+    }
 
+    /* ==================================================
+       MAIN
+    ================================================== */
 
+    .main {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+    }
 
+    .topbar {
+        height: 64px;
+        background: white;
+        border-bottom: 1px solid #e5e7eb;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 18px;
+    }
 
+    .topbar-title {
+        font-weight: bold;
+    }
 
+    .mobile-menu {
+        display: none;
+        border: 0;
+        background: transparent;
+        font-size: 24px;
+    }
 
+    /* ==================================================
+       CHAT
+    ================================================== */
 
-<button
-    class="menu-button"
-    onclick="toggleSidebar()">
-    ☰
-</button>
+    #messages {
+        flex: 1;
+        overflow-y: auto;
+        padding: 25px;
+    }
 
-<div
-    id="topTitle"
-    class="top-title">
-    Messie IA
-</div>
+    .welcome {
+        max-width: 700px;
+        margin: 60px auto;
+        text-align: center;
+    }
 
+    .welcome h1 {
+        font-size: 34px;
+        margin-bottom: 10px;
+    }
 
+    .welcome p {
+        color: #6b7280;
+    }
 
+    .message {
+        max-width: 850px;
+        margin: 0 auto 18px auto;
+        display: flex;
+    }
 
+    .message.user {
+        justify-content: flex-end;
+    }
 
+    .bubble {
+        max-width: 80%;
+        padding: 13px 16px;
+        border-radius: 17px;
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+        line-height: 1.5;
+    }
 
+    .message.user .bubble {
+        background: #2563eb;
+        color: white;
+        border-bottom-right-radius: 5px;
+    }
 
-<div
-    id="messages"
-    class="messages">
+    .message.assistant .bubble {
+        background: white;
+        border: 1px solid #e5e7eb;
+        border-bottom-left-radius: 5px;
+    }
 
-    <div
-        id="welcome"
-        class="welcome">
+    .image-preview {
+        max-width: 280px;
+        max-height: 280px;
+        border-radius: 12px;
+        margin-bottom: 10px;
+    }
 
-        <h1>Bonjour 👋</h1>
+    /* ==================================================
+       INPUT
+    ================================================== */
 
-        <p>
-            Je suis Messie IA.
-            Pose-moi une question pour commencer.
-        </p>
+    .composer {
+        background: white;
+        border-top: 1px solid #e5e7eb;
+        padding: 14px;
+    }
 
+    .composer-inner {
+        max-width: 900px;
+        margin: auto;
+    }
+
+    #prompt {
+        width: 100%;
+        min-height: 52px;
+        max-height: 180px;
+        resize: vertical;
+        border: 1px solid #d1d5db;
+        border-radius: 14px;
+        padding: 14px;
+        outline: none;
+    }
+
+    #prompt:focus {
+        border-color: #2563eb;
+    }
+
+    .toolbar {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 9px;
+    }
+
+    .tool-button {
+        border: 1px solid #d1d5db;
+        background: white;
+        border-radius: 10px;
+        padding: 9px 12px;
+    }
+
+    .tool-button:hover {
+        background: #f3f4f6;
+    }
+
+    .send-button {
+        margin-left: auto;
+        border: 0;
+        border-radius: 10px;
+        background: #2563eb;
+        color: white;
+        padding: 10px 17px;
+    }
+
+    .recording {
+        background: #dc2626 !important;
+        color: white;
+    }
+
+    #fileInput {
+        display: none;
+    }
+
+    .status {
+        font-size: 12px;
+        color: #6b7280;
+        margin-top: 7px;
+    }
+
+    /* ==================================================
+       MODAL
+    ================================================== */
+
+    .modal {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, .55);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        z-index: 100;
+    }
+
+    .modal.show {
+        display: flex;
+    }
+
+    .modal-card {
+        width: 100%;
+        max-width: 430px;
+        background: white;
+        border-radius: 18px;
+        padding: 22px;
+    }
+
+    .modal-card h2 {
+        margin-top: 0;
+    }
+
+    .modal-card input {
+        width: 100%;
+        padding: 12px;
+        margin-bottom: 10px;
+        border: 1px solid #d1d5db;
+        border-radius: 10px;
+    }
+
+    .modal-actions {
+        display: flex;
+        gap: 8px;
+        margin-top: 8px;
+    }
+
+    .modal-actions button {
+        flex: 1;
+        padding: 11px;
+        border-radius: 10px;
+        border: 0;
+    }
+
+    .primary {
+        background: #2563eb;
+        color: white;
+    }
+
+    .secondary {
+        background: #e5e7eb;
+    }
+
+    .modal-error {
+        color: #dc2626;
+        font-size: 13px;
+        margin-bottom: 10px;
+    }
+
+    .hidden {
+        display: none !important;
+    }
+
+    /* ==================================================
+       MOBILE
+    ================================================== */
+
+    @media (max-width: 760px) {
+
+        .sidebar {
+            position: fixed;
+            z-index: 50;
+            left: -290px;
+            top: 0;
+            bottom: 0;
+            transition: left .2s ease;
+        }
+
+        .sidebar.open {
+            left: 0;
+        }
+
+        .mobile-menu {
+            display: block;
+        }
+
+        #messages {
+            padding: 14px;
+        }
+
+        .bubble {
+            max-width: 90%;
+        }
+
+        .welcome {
+            margin: 45px auto;
+        }
+
+        .welcome h1 {
+            font-size: 28px;
+        }
+
+        .toolbar {
+            flex-wrap: wrap;
+        }
+
+        .send-button {
+            margin-left: 0;
+        }
+    }
+
+</style>
+
+</head><body><div class="app"><!-- ====================================================
+     SIDEBAR
+===================================================== -->
+
+<aside
+    id="sidebar"
+    class="sidebar"
+>
+
+    <div class="logo">
+        🤖 Messie IA
     </div>
 
-</div>
-
-
-<div class="composer">
-
-    <div class="composer-inner">
-
-        <button
-            id="voiceButton"
-            class="icon-button"
-            title="Enregistrer vocal"
-            onclick="toggleVoice()">
-            🎤
-        </button>
-
-        <button
-            class="icon-button"
-            title="Outils"
-            onclick="showView('tools')">
-            📎
-        </button>
-
-        <textarea
-            id="messageInput"
-            class="message-input"
-            rows="1"
-            placeholder="Écris ton message..."
-            onkeydown="handleEnter(event)"></textarea>
-
-        <button
-            class="send-button"
-            onclick="sendMessage()">
-            ➤
-        </button>
-
-    </div>
-
-</div>
-
-
-
-
-
-
-
-
-<div class="section-header">
-
-    <div>
-        <h2>Conversations</h2>
-
-        <p>
-            Retrouve tes discussions avec Messie IA.
-        </p>
-    </div>
-
     <button
-        class="primary-button"
-        onclick="showView('messages')">
-        💬 Messages
+        id="newChatButton"
+        class="new-chat"
+    >
+        ＋ Nouvelle conversation
     </button>
 
-</div>
-
-<div
-    id="conversationList"
-    class="conversation-list">
-</div>
-
-
-
-
-
-
-
-
-<div class="section-header">
-
-    <div>
-        <h2>Outils IA</h2>
-
-        <p>
-            Analyse des images et génération d'images.
-        </p>
+    <div class="conversation-title">
+        Mes conversations
     </div>
 
-    <button
-        class="primary-button"
-        onclick="showView('messages')">
-        💬 Retour au chat
-    </button>
+    <div id="conversationList"></div>
 
-</div>
-
-
-<div class="tools-grid">
-
-
-    <!-- ANALYSE IMAGE -->
-
-    <div class="tool-card">
-
-        <h3>🔍 Analyser une image</h3>
-
-        <p>
-            Envoie une image et demande à Messie IA
-            de l'analyser.
-        </p>
-
-        <input
-            id="analysisImage"
-            type="file"
-            accept="image/*">
-
-        <textarea
-            id="analysisPrompt"
-            placeholder="Que veux-tu savoir sur cette image ?"></textarea>
-
-        <br><br>
-
-        <button
-            class="primary-button"
-            onclick="analyzeImage()">
-            Analyser l'image
-        </button>
+    <div class="account-area">
 
         <div
-            id="analysisResult"
-            class="result-box"
-            style="display:none;">
+            id="accountName"
+            class="account-name"
+        >
+            Invité
         </div>
-
-    </div>
-
-
-    <!-- GENERATION IMAGE -->
-
-    <div class="tool-card">
-
-        <h3>🎨 Générer une image</h3>
-
-        <p>
-            Décris l'image que tu veux créer.
-        </p>
-
-        <textarea
-            id="imagePrompt"
-            placeholder="Exemple : une ville futuriste de nuit..."></textarea>
-
-        <label>Format</label>
-
-        <select id="aspectRatio">
-
-            <option value="1:1">
-                Carré 1:1
-            </option>
-
-            <option value="16:9">
-                Paysage 16:9
-            </option>
-
-            <option value="9:16">
-                Portrait 9:16
-            </option>
-
-            <option value="4:3">
-                Paysage 4:3
-            </option>
-
-            <option value="3:4">
-                Portrait 3:4
-            </option>
-
-        </select>
-
-
-        <label>Résolution</label>
-
-        <select id="resolution">
-
-            <option value="1K">
-                1K
-            </option>
-
-            <option value="2K">
-                2K
-            </option>
-
-            <option value="4K">
-                4K
-            </option>
-
-        </select>
-
-
-        <label>Qualité</label>
-
-        <select id="quality">
-
-            <option value="auto">
-                Automatique
-            </option>
-
-            <option value="low">
-                Faible
-            </option>
-
-            <option value="medium">
-                Moyenne
-            </option>
-
-            <option value="high">
-                Haute
-            </option>
-
-        </select>
-
-        <label>
-            Image de référence (facultatif)
-        </label>
-
-        <input
-            id="referenceImage"
-            type="file"
-            accept="image/*">
-
-        <br>
-
-        <button
-            class="primary-button"
-            onclick="generateImage()">
-            🎨 Générer
-        </button>
 
         <div
-            id="generationStatus"
-            class="result-box"
-            style="display:none;">
+            id="accountEmail"
+            class="account-email"
+        >
+            Connecte-toi pour sauvegarder tes conversations.
         </div>
 
-        <div id="generatedImages"></div>
-
-    </div>
-
-</div>
-
-
-
-
-
-
-
-
-<div class="profile-card">
-
-    <h2>👤 Mon compte</h2>
-
-    <p>
-        Tu peux enregistrer ton nom sur cet appareil.
-    </p>
-
-    <label>Nom</label>
-
-    <input
-        id="profileName"
-        type="text"
-        placeholder="Ton nom">
-
-    <button
-        class="primary-button"
-        onclick="saveProfile()">
-        Enregistrer
-    </button>
-
-    <div
-        id="profileStatus"
-        class="status">
-    </div>
-
-
-    <div class="login-box">
-
-        <h3>Connexion</h3>
-
-        <p>
-            Cette partie prépare l'interface du compte.
-            L'authentification réelle nécessite des routes
-            serveur dédiées.
-        </p>
-
-        <input
-            id="email"
-            type="email"
-            placeholder="Adresse e-mail">
-
-        <input
-            id="password"
-            type="password"
-            placeholder="Mot de passe">
-
         <button
-            class="primary-button"
-            onclick="loginInfo()">
+            id="accountButton"
+            class="account-button"
+        >
             Se connecter
         </button>
 
-        <div
-            id="loginStatus"
-            class="status">
+    </div>
+
+</aside>
+
+
+<!-- ====================================================
+     MAIN
+===================================================== -->
+
+<main class="main">
+
+    <header class="topbar">
+
+        <div>
+
+            <button
+                id="mobileMenu"
+                class="mobile-menu"
+            >
+                ☰
+            </button>
+
+            <span class="topbar-title">
+                Messie IA
+            </span>
+
         </div>
+
+        <div id="connectionStatus">
+            🟢
+        </div>
+
+    </header>
+
+
+    <!-- =================================================
+         MESSAGES
+    ================================================== -->
+
+    <section id="messages">
+
+        <div
+            id="welcome"
+            class="welcome"
+        >
+
+            <h1>
+                Bonjour 👋
+            </h1>
+
+            <p>
+                Je suis Messie IA. Pose-moi une question,
+                envoie-moi une image ou utilise ta voix.
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- =================================================
+         COMPOSER
+    ================================================== -->
+
+    <section class="composer">
+
+        <div class="composer-inner">
+
+            <textarea
+                id="prompt"
+                placeholder="Écris ton message..."
+            ></textarea>
+
+
+            <div class="toolbar">
+
+                <label
+                    for="fileInput"
+                    class="tool-button"
+                >
+                    🖼️ Image
+                </label>
+
+                <input
+                    id="fileInput"
+                    type="file"
+                    accept="image/*"
+                >
+
+
+                <button
+                    id="voiceButton"
+                    class="tool-button"
+                    type="button"
+                >
+                    🎙️ Voix
+                </button>
+
+
+                <button
+                    id="generateButton"
+                    class="tool-button"
+                    type="button"
+                >
+                    🎨 Image
+                </button>
+
+
+                <button
+                    id="sendButton"
+                    class="send-button"
+                    type="button"
+                >
+                    Envoyer
+                </button>
+
+            </div>
+
+
+            <div
+                id="status"
+                class="status"
+            ></div>
+
+        </div>
+
+    </section>
+
+</main>
+
+</div><!-- ========================================================
+     AUTH MODAL
+========================================================= --><div
+    id="authModal"
+    class="modal"
+><div class="modal-card">
+
+    <h2 id="authTitle">
+        Connexion
+    </h2>
+
+    <div
+        id="authError"
+        class="modal-error"
+    ></div>
+
+
+    <div
+        id="nameContainer"
+        class="hidden"
+    >
+
+        <input
+            id="nameInput"
+            type="text"
+            placeholder="Ton nom"
+            autocomplete="name"
+        >
 
     </div>
 
+
+    <input
+        id="emailInput"
+        type="email"
+        placeholder="Adresse email"
+        autocomplete="email"
+    >
+
+
+    <input
+        id="passwordInput"
+        type="password"
+        placeholder="Mot de passe"
+        autocomplete="current-password"
+    >
+
+
+    <div class="modal-actions">
+
+        <button
+            id="authSubmit"
+            class="primary"
+        >
+            Se connecter
+        </button>
+
+        <button
+            id="authClose"
+            class="secondary"
+        >
+            Fermer
+        </button>
+
+    </div>
+
+
+    <p
+        id="authSwitch"
+        style="text-align:center;cursor:pointer;color:#2563eb;margin-top:15px;"
+    >
+        Créer un compte
+    </p>
+
 </div>
 
+</div><script>
+
+    // ========================================================
+    // ÉTAT
+    // ========================================================
+
+    let currentConversationId = null;
+
+    let localHistory = [];
+
+    let authMode = "login";
+
+    let selectedImage = null;
 
 
+    // ========================================================
+    // ÉLÉMENTS
+    // ========================================================
+
+    const messagesElement =
+        document.getElementById("messages");
+
+    const welcomeElement =
+        document.getElementById("welcome");
+
+    const promptElement =
+        document.getElementById("prompt");
+
+    const sendButton =
+        document.getElementById("sendButton");
+
+    const statusElement =
+        document.getElementById("status");
+
+    const fileInput =
+        document.getElementById("fileInput");
+
+    const voiceButton =
+        document.getElementById("voiceButton");
+
+    const generateButton =
+        document.getElementById("generateButton");
+
+    const conversationList =
+        document.getElementById("conversationList");
+
+    const accountButton =
+        document.getElementById("accountButton");
+
+    const authModal =
+        document.getElementById("authModal");
+
+    const authTitle =
+        document.getElementById("authTitle");
+
+    const authError =
+        document.getElementById("authError");
+
+    const nameContainer =
+        document.getElementById("nameContainer");
+
+    const nameInput =
+        document.getElementById("nameInput");
+
+    const emailInput =
+        document.getElementById("emailInput");
+
+    const passwordInput =
+        document.getElementById("passwordInput");
+
+    const authSubmit =
+        document.getElementById("authSubmit");
+
+    const authClose =
+        document.getElementById("authClose");
+
+    const authSwitch =
+        document.getElementById("authSwitch");
+
+    const accountName =
+        document.getElementById("accountName");
+
+    const accountEmail =
+        document.getElementById("accountEmail");
+
+    const mobileMenu =
+        document.getElementById("mobileMenu");
+
+    const sidebar =
+        document.getElementById("sidebar");
 
 
+    // ========================================================
+    // OUTILS
+    // ========================================================
+
+    function setStatus(text) {
+
+        statusElement.textContent = text || "";
+
+    }
 
 
+    function escapeHtml(text) {
+
+        const div =
+            document.createElement("div");
+
+        div.textContent =
+            text;
+
+        return div.innerHTML;
+
+    }
 
 
+    // ========================================================
+    // AFFICHER MESSAGE
+    // ========================================================
+
+    function addMessage(
+        role,
+        content,
+        image = null
+    ) {
+
+        if (welcomeElement) {
+
+            welcomeElement.style.display =
+                "none";
+
+        }
 
 
+        const wrapper =
+            document.createElement("div");
+
+        wrapper.className =
+            "message " + role;
+
+
+        const bubble =
+            document.createElement("div");
+
+        bubble.className =
+            "bubble";
+
+
+        if (image) {
+
+            const img =
+                document.createElement("img");
+
+            img.src =
+                image;
+
+            img.className =
+                "image-preview";
+
+            bubble.appendChild(
+                img
+            );
+
+            if (content) {
+
+                const text =
+                    document.createElement("div");
+
+                text.textContent =
+                    content;
+
+                bubble.appendChild(
+                    text
+                );
+
+            }
+
+        } else {
+
+            bubble.textContent =
+                content;
+
+        }
+
+
+        wrapper.appendChild(
+            bubble
+        );
+
+
+        messagesElement.appendChild(
+            wrapper
+        );
+
+
+        messagesElement.scrollTop =
+            messagesElement.scrollHeight;
+
+    }
+
+
+    // ========================================================
+    // NOUVELLE CONVERSATION
+    // ========================================================
+
+    async function newConversation() {
+
+        currentConversationId = null;
+
+        localHistory = [];
+
+        messagesElement.innerHTML = "";
+
+        messagesElement.appendChild(
+            welcomeElement
+        );
+
+        welcomeElement.style.display =
+            "block";
+
+
+        try {
+
+            const response =
+                await fetch(
+                    "/api/conversations",
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type":
+                                "application/json"
+                        },
+                        body: JSON.stringify({
+                            title:
+                                "Nouvelle conversation"
+                        })
+                    }
+                );
+
+
+            const data =
+                await response.json();
+
+
+            if (data.success) {
+
+                currentConversationId =
+                    data.conversation.id;
+
+                await loadConversations();
+
+            }
+
+        } catch (error) {
+
+            console.log(error);
+
+        }
+
+    }
+
+
+    // ========================================================
+    // CHARGER CONVERSATIONS
+    // ========================================================
+
+    async function loadConversations() {
+
+        try {
+
+            const response =
+                await fetch(
+                    "/api/conversations"
+                );
+
+
+            if (response.status === 401) {
+
+                conversationList.innerHTML =
+                    "<div style='opacity:.6;font-size:13px;'>Connecte-toi pour voir tes conversations.</div>";
+
+                return;
+
+            }
+
+
+            const data =
+                await response.json();
+
+
+            conversationList.innerHTML =
+                "";
+
+
+            if (
+                !data.success ||
+                !data.conversations.length
+            ) {
+
+                conversationList.innerHTML =
+                    "<div style='opacity:.6;font-size:13px;'>Aucune conversation.</div>";
+
+                return;
+
+            }
+
+
+            data.conversations.forEach(
+                conversation => {
+
+                    const button =
+                        document.createElement("button");
+
+                    button.className =
+                        "conversation";
+
+                    button.textContent =
+                        "💬 " +
+                        conversation.title;
+
+                    button.onclick =
+                        () => loadConversation(
+                            conversation.id
+                        );
+
+                    conversationList.appendChild(
+                        button
+                    );
+
+                }
+            );
+
+
+        } catch (error) {
+
+            console.log(error);
+
+        }
+
+    }
+
+
+    // ========================================================
+    // CHARGER CONVERSATION
+    // ========================================================
+
+    async function loadConversation(
+        id
+    ) {
+
+        try {
+
+            const response =
+                await fetch(
+                    "/api/conversations/" + id
+                );
+
+
+            const data =
+                await response.json();
+
+
+            if (!data.success) {
+
+                return;
+
+            }
+
+
+            currentConversationId =
+                id;
+
+
+            localHistory = [];
+
+
+            messagesElement.innerHTML = "";
+
+
+            const conversation =
+                data.conversation;
+
+
+            conversation.messages.forEach(
+                message => {
+
+                    addMessage(
+                        message.role,
+                        message.content
+                    );
+
+
+                    localHistory.push({
+
+                        role:
+                            message.role,
+
+                        content:
+                            message.content
+
+                    });
+
+                }
+            );
+
+
+            sidebar.classList.remove(
+                "open"
+            );
+
+
+        } catch (error) {
+
+            console.log(error);
+
+        }
+
+    }
+
+
+    // ========================================================
+    // ENVOYER MESSAGE
+    // ========================================================
+
+    async function sendMessage() {
+
+        const message =
+            promptElement.value.trim();
+
+
+        if (!message) {
+
+            return;
+
+        }
+
+
+        promptElement.value =
+            "";
+
+
+        addMessage(
+            "user",
+            message
+        );
+
+
+        localHistory.push({
+
+            role:
+                "user",
+
+            content:
+                message
+
+        });
+
+
+        sendButton.disabled =
+            true;
+
+        setStatus(
+            "Messie IA réfléchit..."
+        );
+
+
+        try {
+
+            const response =
+                await fetch(
+                    "/api/chat",
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type":
+                                "application/json"
+                        },
+                        body: JSON.stringify({
+
+                            message:
+                                message,
+
+                            history:
+                                localHistory.slice(
+                                    -20
+                                ),
+
+                            conversation_id:
+                                currentConversationId
+
+                        })
+                    }
+                );
+
+
+            const data =
+                await response.json();
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    data.error ||
+                    "Erreur du serveur."
+                );
+
+            }
+
+
+            if (!data.success) {
+
+                throw new Error(
+                    data.error ||
+                    "Messie IA n'a pas pu répondre."
+                );
+
+            }
+
+
+            const answer =
+                data.response;
+
+
+            currentConversationId =
+                data.conversation_id ||
+                currentConversationId;
+
+
+            addMessage(
+                "assistant",
+                answer
+            );
+
+
+            localHistory.push({
+
+                role:
+                    "assistant",
+
+                content:
+                    answer
+
+            });
+
+
+            await loadConversations();
+
+
+            setStatus(
+                ""
+            );
+
+
+        } catch (error) {
+
+            addMessage(
+                "assistant",
+                "❌ " + error.message
+            );
+
+
+            setStatus(
+                ""
+            );
+
+        }
+
+
+        sendButton.disabled =
+            false;
+
+    }
+
+
+    // ========================================================
+    // IMAGE
+    // ========================================================
+
+    fileInput.addEventListener(
+        "change",
+        async function() {
+
+            const file =
+                this.files[0];
+
+
+            if (!file) {
+
+                return;
+
+            }
+
+
+            const reader =
+                new FileReader();
+
+
+            reader.onload =
+                async function(event) {
+
+                    selectedImage =
+                        event.target.result;
+
+
+                    addMessage(
+                        "user",
+                        "Analyse cette image.",
+                        selectedImage
+                    );
+
+
+                    setStatus(
+                        "Analyse de l'image..."
+                    );
+
+
+                    try {
+
+                        const response =
+                            await fetch(
+                                "/api/analyze-image",
+                                {
+                                    method: "POST",
+                                    headers: {
+                                        "Content-Type":
+                                            "application/json"
+                                    },
+                                    body: JSON.stringify({
+
+                                        image:
+                                            selectedImage,
+
+                                        prompt:
+                                            "Analyse cette image et explique ce que tu vois de manière détaillée."
+
+                                    })
+                                }
+                            );
+
+
+                        const data =
+                            await response.json();
+
+
+                        if (!response.ok) {
+
+                            throw new Error(
+                                data.error ||
+                                "Erreur d'analyse."
+                            );
+
+                        }
+
+
+                        addMessage(
+                            "assistant",
+                            data.response
+                        );
+
+
+                    } catch (error) {
+
+                        addMessage(
+                            "assistant",
+                            "❌ " +
+                            error.message
+                        );
+
+                    }
+
+
+                    setStatus(
+                        ""
+                    );
+
+
+                    fileInput.value =
+                        "";
+
+                };
+
+
+            reader.readAsDataURL(
+                file
+            );
+
+        }
+    );
+
+
+    // ========================================================
+    // GÉNÉRATION IMAGE
+    // ========================================================
+
+    generateButton.addEventListener(
+        "click",
+        async function() {
+
+            const prompt =
+                promptElement.value.trim();
+
+
+            if (!prompt) {
+
+                alert(
+                    "Décris l'image que tu veux créer."
+                );
+
+                return;
+
+            }
+
+
+            setStatus(
+                "Génération de l'image..."
+            );
+
+
+            generateButton.disabled =
+                true;
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        "/api/generate-image",
+                        {
+                            method: "POST",
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
+                            body: JSON.stringify({
+
+                                prompt:
+                                    prompt,
+
+                                aspect_ratio:
+                                    "1:1",
+
+                                resolution:
+                                    "1K",
+
+                                quality:
+                                    "auto",
+
+                                output_format:
+                                    "png"
+
+                            })
+                        }
+                    );
+
+
+                const data =
+                    await response.json();
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        data.error ||
+                        "Erreur de génération."
+                    );
+
+                }
+
+
+                if (
+                    !data.success ||
+                    !data.images ||
+                    !data.images.length
+                ) {
+
+                    throw new Error(
+                        data.error ||
+                        "Aucune image générée."
+                    );
+
+                }
+
+
+                data.images.forEach(
+                    image => {
+
+                        addMessage(
+                            "assistant",
+                            "Voici ton image :",
+                            image.data
+                        );
+
+                    }
+                );
+
+
+            } catch (error) {
+
+                addMessage(
+                    "assistant",
+                    "❌ " +
+                    error.message
+                );
+
+            }
+
+
+            generateButton.disabled =
+                false;
+
+
+            setStatus(
+                ""
+            );
+
+        }
+    );
+
+
+    // ========================================================
+    // 🎙️ VOCAL → TEXTE
+    // ========================================================
+
+    let recognition = null;
+
+    let isRecording = false;
+
+    let voiceTextBeforeRecording = "";
+
+
+    function setupVoice() {
+
+        const SpeechRecognition =
+            window.SpeechRecognition ||
+            window.webkitSpeechRecognition;
+
+
+        if (!SpeechRecognition) {
+
+            voiceButton.addEventListener(
+                "click",
+                function() {
+
+                    alert(
+                        "La reconnaissance vocale n'est pas disponible dans ce navigateur. Essaie Google Chrome sur Android."
+                    );
+
+                }
+            );
+
+            return;
+
+        }
+
+
+        recognition =
+            new SpeechRecognition();
+
+
+        recognition.lang =
+            "fr-FR";
+
+
+        recognition.continuous =
+            true;
+
+
+        recognition.interimResults =
+            true;
+
+
+        recognition.onstart =
+            function() {
+
+                isRecording =
+                    true;
+
+
+                voiceTextBeforeRecording =
+                    promptElement.value.trim();
+
+
+                voiceButton.classList.add(
+                    "recording"
+                );
+
+
+                voiceButton.textContent =
+                    "⏹️ Arrêter";
+
+
+                setStatus(
+                    "🎙️ Je t'écoute..."
+                );
+
+            };
+
+
+        recognition.onresult =
+            function(event) {
+
+                let transcript =
+                    "";
+
+
+                for (
+                    let i = event.resultIndex;
+                    i < event.results.length;
+                    i++
+                ) {
+
+                    transcript +=
+                        event.results[i][0].transcript;
+
+                }
+
+
+                transcript =
+                    transcript.trim();
+
+
+                if (!transcript) {
+
+                    return;
+
+                }
+
+
+                if (
+                    voiceTextBeforeRecording
+                ) {
+
+                    promptElement.value =
+                        voiceTextBeforeRecording +
+                        " " +
+                        transcript;
+
+                } else {
+
+                    promptElement.value =
+                        transcript;
+
+                }
+
+
+                promptElement.dispatchEvent(
+                    new Event("input")
+                );
+
+            };
+
+
+        recognition.onerror =
+            function(event) {
+
+                console.log(
+                    "Erreur reconnaissance vocale:",
+                    event.error
+                );
+
+
+                if (
+                    event.error ===
+                    "not-allowed"
+                ) {
+
+                    setStatus(
+                        "❌ Autorise l'accès au microphone dans ton navigateur."
+                    );
+
+                } else if (
+                    event.error ===
+                    "no-speech"
+                ) {
+
+                    setStatus(
+                        "Aucune parole détectée."
+                    );
+
+                } else {
+
+                    setStatus(
+                        "❌ Erreur de reconnaissance vocale."
+                    );
+
+                }
+
+            };
+
+
+        recognition.onend =
+            function() {
+
+                isRecording =
+                    false;
+
+
+                voiceButton.classList.remove(
+                    "recording"
+                );
+
+
+                voiceButton.textContent =
+                    "🎙️ Voix";
+
+
+                setStatus(
+                    ""
+                );
+
+            };
+
+
+        voiceButton.addEventListener(
+            "click",
+            function() {
+
+                if (!recognition) {
+
+                    return;
+
+                }
+
+
+                if (isRecording) {
+
+                    recognition.stop();
+
+                    return;
+
+                }
+
+
+                try {
+
+                    recognition.start();
+
+                } catch (error) {
+
+                    console.log(
+                        "Impossible de démarrer le microphone:",
+                        error
+                    );
+
+                }
+
+            }
+        );
+
+    }
+
+
+    setupVoice();
+
+
+    // ========================================================
+    // AUTHENTIFICATION
+    // ========================================================
+
+    function openLogin() {
+
+        authMode =
+            "login";
+
+
+        authTitle.textContent =
+            "Connexion";
+
+
+        authSubmit.textContent =
+            "Se connecter";
+
+
+        nameContainer.classList.add(
+            "hidden"
+        );
+
+
+        passwordInput.autocomplete =
+            "current-password";
+
+
+        authSwitch.textContent =
+            "Créer un compte";
+
+
+        authError.textContent =
+            "";
+
+
+        authModal.classList.add(
+            "show"
+        );
+
+    }
+
+
+    function openRegister() {
+
+        authMode =
+            "register";
+
+
+        authTitle.textContent =
+            "Créer un compte";
+
+
+        authSubmit.textContent =
+            "Créer mon compte";
+
+
+        nameContainer.classList.remove(
+            "hidden"
+        );
+
+
+        passwordInput.autocomplete =
+            "new-password";
+
+
+        authSwitch.textContent =
+            "J'ai déjà un compte";
+
+
+        authError.textContent =
+            "";
+
+
+        authModal.classList.add(
+            "show"
+        );
+
+    }
+
+
+    authSwitch.addEventListener(
+        "click",
+        function() {
+
+            if (
+                authMode ===
+                "login"
+            ) {
+
+                openRegister();
+
+            } else {
+
+                openLogin();
+
+            }
+
+        }
+    );
+
+
+    authClose.addEventListener(
+        "click",
+        function() {
+
+            authModal.classList.remove(
+                "show"
+            );
+
+        }
+    );
+
+
+    accountButton.addEventListener(
+        "click",
+        async function() {
+
+            const response =
+                await fetch(
+                    "/api/me"
+                );
+
+
+            const data =
+                await response.json();
+
+
+            if (data.logged_in) {
+
+                const shouldLogout =
+                    confirm(
+                        "Voulez-vous vous déconnecter ?"
+                    );
+
+
+                if (shouldLogout) {
+
+                    await fetch(
+                        "/api/logout",
+                        {
+                            method: "POST"
+                        }
+                    );
+
+
+                    location.reload();
+
+                }
+
+            } else {
+
+                openLogin();
+
+            }
+
+        }
+    );
+
+
+    authSubmit.addEventListener(
+        "click",
+        async function() {
+
+            authError.textContent =
+                "";
+
+
+            const email =
+                emailInput.value.trim();
+
+
+            const password =
+                passwordInput.value;
+
+
+            const name =
+                nameInput.value.trim();
+
+
+            if (!email || !password) {
+
+                authError.textContent =
+                    "Remplis tous les champs.";
+
+                return;
+
+            }
+
+
+            if (
+                authMode ===
+                "register"
+                &&
+                !name
+            ) {
+
+                authError.textContent =
+                    "Entre ton nom.";
+
+                return;
+
+            }
+
+
+            authSubmit.disabled =
+                true;
+
+
+            try {
+
+                const endpoint =
+                    authMode === "login"
+                    ? "/api/login"
+                    : "/api/register";
+
+
+                const body =
+                    authMode === "login"
+                    ? {
+
+                        email:
+                            email,
+
+                        password:
+                            password
+
+                    }
+                    : {
+
+                        name:
+                            name,
+
+                        email:
+                            email,
+
+                        password:
+                            password
+
+                    };
+
+
+                const response =
+                    await fetch(
+                        endpoint,
+                        {
+                            method: "POST",
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
+                            body:
+                                JSON.stringify(body)
+                        }
+                    );
+
+
+                const data =
+                    await response.json();
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        data.error ||
+                        "Erreur de connexion."
+                    );
+
+                }
+
+
+                authModal.classList.remove(
+                    "show"
+                );
+
+
+                emailInput.value =
+                    "";
+
+                passwordInput.value =
+                    "";
+
+                nameInput.value =
+                    "";
+
+
+                await updateUserInterface();
+
+                await loadConversations();
+
+
+            } catch (error) {
+
+                authError.textContent =
+                    error.message;
+
+            }
+
+
+            authSubmit.disabled =
+                false;
+
+        }
+    );
+
+
+    // ========================================================
+    // UTILISATEUR
+    // ========================================================
+
+    async function updateUserInterface() {
+
+        try {
+
+            const response =
+                await fetch(
+                    "/api/me"
+                );
+
+
+            const data =
+                await response.json();
+
+
+            if (
+                data.success &&
+                data.logged_in
+            ) {
+
+                accountName.textContent =
+                    data.user.name;
+
+
+                accountEmail.textContent =
+                    data.user.email;
+
+
+                accountButton.textContent =
+                    "Se déconnecter";
+
+
+                return;
+
+            }
+
+
+            accountName.textContent =
+                "Invité";
+
+
+            accountEmail.textContent =
+                "Connecte-toi pour sauvegarder tes conversations.";
+
+
+            accountButton.textContent =
+                "Se connecter";
+
+
+        } catch (error) {
+
+            console.log(error);
+
+        }
+
+    }
+
+
+    // ========================================================
+    // NOUVELLE CONVERSATION
+    // ========================================================
+
+    document
+        .getElementById("newChatButton")
+        .addEventListener(
+            "click",
+            newConversation
+        );
+
+
+    // ========================================================
+    // ENVOI
+    // ========================================================
+
+    sendButton.addEventListener(
+        "click",
+        sendMessage
+    );
+
+
+    promptElement.addEventListener(
+        "keydown",
+        function(event) {
+
+            if (
+                event.key === "Enter"
+                &&
+                !event.shiftKey
+            ) {
+
+                event.preventDefault();
+
+                sendMessage();
+
+            }
+
+        }
+    );
+
+
+    // ========================================================
+    // MENU MOBILE
+    // ========================================================
+
+    mobileMenu.addEventListener(
+        "click",
+        function() {
+
+            sidebar.classList.toggle(
+                "open"
+            );
+
+        }
+    );
+
+
+    // ========================================================
+    // INITIALISATION
+    // ========================================================
+
+    async function initialize() {
+
+        await updateUserInterface();
+
+        await loadConversations();
+
+    }
+
+
+    initialize();
+
+</script></body></html>
