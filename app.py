@@ -1,13 +1,27 @@
 import os
+import sqlite3
 import traceback
+from functools import wraps
+
 import requests
 
-from flask import Flask, render_template, request, jsonify
+from flask import (
+    Flask,
+    render_template,
+    request,
+    jsonify,
+    session,
+    redirect
+)
+
+from werkzeug.security import (
+    generate_password_hash,
+    check_password_hash
+)
 
 
 # ============================================================
 # MESSIE IA
-# Backend Flask + OpenRouter
 # ============================================================
 
 app = Flask(
@@ -15,12 +29,21 @@ app = Flask(
     template_folder="templates"
 )
 
-# Limite raisonnable pour éviter les requêtes énormes.
 app.config["MAX_CONTENT_LENGTH"] = 12 * 1024 * 1024
 
 
 # ============================================================
-# CONFIGURATION
+# SÉCURITÉ / SESSION
+# ============================================================
+
+app.secret_key = os.environ.get(
+    "SECRET_KEY",
+    "messie-ia-change-this-secret-key"
+)
+
+
+# ============================================================
+# OPENROUTER
 # ============================================================
 
 OPENROUTER_API_KEY = os.environ.get(
@@ -30,30 +53,18 @@ OPENROUTER_API_KEY = os.environ.get(
 OPENROUTER_URL = "https://openrouter.ai/api/v1"
 
 
-# ============================================================
-# MODÈLES
-# ============================================================
-
-# Chat gratuit.
 CHAT_MODEL = os.environ.get(
     "OPENROUTER_CHAT_MODEL",
     "openrouter/free"
 )
 
 
-# Analyse d'image.
-#
-# Tu peux remplacer cette valeur dans Render si nécessaire.
 VISION_MODEL = os.environ.get(
     "OPENROUTER_VISION_MODEL",
     "openrouter/free"
 )
 
 
-# Génération d'image.
-#
-# La génération d'image peut nécessiter un modèle compatible
-# et éventuellement des crédits selon le modèle disponible.
 IMAGE_MODEL = os.environ.get(
     "OPENROUTER_IMAGE_MODEL",
     "google/gemini-2.5-flash-image"
@@ -61,7 +72,116 @@ IMAGE_MODEL = os.environ.get(
 
 
 # ============================================================
-# CONFIGURATION CHAT
+# BASE DE DONNÉES
+# ============================================================
+
+BASE_DIR = os.path.dirname(
+    os.path.abspath(__file__)
+)
+
+DATABASE = os.path.join(
+    BASE_DIR,
+    "messie.db"
+)
+
+
+def get_db():
+
+    connection = sqlite3.connect(
+        DATABASE
+    )
+
+    connection.row_factory = sqlite3.Row
+
+    return connection
+
+
+def init_database():
+
+    connection = get_db()
+
+    cursor = connection.cursor()
+
+
+    # --------------------------------------------------------
+    # UTILISATEURS
+    # --------------------------------------------------------
+
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS users (
+
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+
+            name TEXT NOT NULL,
+
+            email TEXT NOT NULL UNIQUE,
+
+            password TEXT NOT NULL,
+
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+    """)
+
+
+    # --------------------------------------------------------
+    # CONVERSATIONS
+    # --------------------------------------------------------
+
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS conversations (
+
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+
+            user_id INTEGER NOT NULL,
+
+            title TEXT NOT NULL DEFAULT 'Nouvelle conversation',
+
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+            FOREIGN KEY(user_id)
+                REFERENCES users(id)
+                ON DELETE CASCADE
+        )
+    """)
+
+
+    # --------------------------------------------------------
+    # MESSAGES
+    # --------------------------------------------------------
+
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS messages (
+
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+
+            conversation_id INTEGER NOT NULL,
+
+            role TEXT NOT NULL,
+
+            content TEXT NOT NULL,
+
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+            FOREIGN KEY(conversation_id)
+                REFERENCES conversations(id)
+                ON DELETE CASCADE
+        )
+    """)
+
+
+    connection.commit()
+
+    connection.close()
+
+
+# Initialisation
+init_database()
+
+
+# ============================================================
+# SYSTÈME MESSIE IA
 # ============================================================
 
 SYSTEM_PROMPT = """
@@ -86,64 +206,89 @@ Tu es l'assistant officiel de l'application Messie IA.
 
 
 # ============================================================
-# HEADERS OPENROUTER
+# OPENROUTER
 # ============================================================
+
+def check_api_key():
+
+    return bool(
+        OPENROUTER_API_KEY
+        and OPENROUTER_API_KEY.strip()
+    )
+
 
 def openrouter_headers():
 
     headers = {
-        "Authorization": "Bearer " + str(
-            OPENROUTER_API_KEY
-        ),
 
-        "Content-Type": "application/json",
+        "Authorization":
+            "Bearer " + OPENROUTER_API_KEY,
 
-        "X-Title": "Messie IA"
+        "Content-Type":
+            "application/json",
+
+        "X-Title":
+            "Messie IA"
     }
 
-    # HTTP-Referer est optionnel.
-    # On l'ajoute seulement si Render fournit l'URL.
+
     render_url = os.environ.get(
         "RENDER_EXTERNAL_URL"
     )
+
 
     if render_url:
 
         headers["HTTP-Referer"] = render_url
 
+
     return headers
 
 
-# ============================================================
-# ERREUR OPENROUTER
-# ============================================================
-
 def get_openrouter_error(data):
 
-    if not isinstance(data, dict):
+    if not isinstance(
+        data,
+        dict
+    ):
 
         return "Erreur OpenRouter."
 
 
-    error = data.get("error")
+    error = data.get(
+        "error"
+    )
 
 
-    if isinstance(error, dict):
+    if isinstance(
+        error,
+        dict
+    ):
 
-        message = error.get("message")
+        message = error.get(
+            "message"
+        )
 
 
         if (
-            isinstance(message, str)
-            and message.strip()
+            isinstance(
+                message,
+                str
+            )
+            and
+            message.strip()
         ):
 
             return message.strip()
 
 
     if (
-        isinstance(error, str)
-        and error.strip()
+        isinstance(
+            error,
+            str
+        )
+        and
+        error.strip()
     ):
 
         return error.strip()
@@ -151,23 +296,6 @@ def get_openrouter_error(data):
 
     return "Erreur OpenRouter."
 
-
-# ============================================================
-# VÉRIFICATION CLÉ
-# ============================================================
-
-def check_api_key():
-
-    return bool(
-        OPENROUTER_API_KEY
-        and
-        OPENROUTER_API_KEY.strip()
-    )
-
-
-# ============================================================
-# EXTRAIRE RÉPONSE CHAT
-# ============================================================
 
 def extract_chat_answer(result):
 
@@ -209,27 +337,26 @@ def extract_chat_answer(result):
         return ""
 
 
-    message_data = first.get(
+    message = first.get(
         "message",
         {}
     )
 
 
     if not isinstance(
-        message_data,
+        message,
         dict
     ):
 
         return ""
 
 
-    content = message_data.get(
+    content = message.get(
         "content",
         ""
     )
 
 
-    # Certains modèles peuvent renvoyer une chaîne.
     if isinstance(
         content,
         str
@@ -238,7 +365,6 @@ def extract_chat_answer(result):
         return content.strip()
 
 
-    # Gestion de certaines réponses structurées.
     if isinstance(
         content,
         list
@@ -279,13 +405,72 @@ def extract_chat_answer(result):
 
 
 # ============================================================
+# AUTHENTIFICATION
+# ============================================================
+
+def current_user():
+
+    user_id = session.get(
+        "user_id"
+    )
+
+
+    if not user_id:
+
+        return None
+
+
+    connection = get_db()
+
+
+    user = connection.execute(
+        """
+        SELECT id, name, email, created_at
+        FROM users
+        WHERE id = ?
+        """,
+        (user_id,)
+    ).fetchone()
+
+
+    connection.close()
+
+
+    return user
+
+
+def login_required(function):
+
+    @wraps(function)
+    def wrapper(*args, **kwargs):
+
+        if not current_user():
+
+            return jsonify({
+
+                "success":
+                    False,
+
+                "error":
+                    "Connexion requise."
+
+            }), 401
+
+
+        return function(
+            *args,
+            **kwargs
+        )
+
+
+    return wrapper
+
+
+# ============================================================
 # PAGE PRINCIPALE
 # ============================================================
 
-@app.route(
-    "/",
-    methods=["GET"]
-)
+@app.route("/")
 def index():
 
     try:
@@ -306,9 +491,11 @@ def index():
             "=================================="
         )
 
+
         return jsonify({
 
-            "success": False,
+            "success":
+                False,
 
             "error":
                 "Impossible de charger index.html.",
@@ -320,77 +507,198 @@ def index():
 
 
 # ============================================================
-# HEALTH CHECK
+# AUTH - INSCRIPTION
 # ============================================================
 
 @app.route(
-    "/health",
-    methods=["GET"]
+    "/api/register",
+    methods=["POST"]
 )
-def health():
-
-    return jsonify({
-
-        "status":
-            "ok",
-
-        "app":
-            "Messie IA",
-
-        "openrouter":
-            check_api_key(),
-
-        "chat_model":
-            CHAT_MODEL,
-
-        "vision_model":
-            VISION_MODEL,
-
-        "image_model":
-            IMAGE_MODEL
-
-    })
-
-
-# ============================================================
-# DIAGNOSTIC DES FICHIERS
-# ============================================================
-
-@app.route(
-    "/debug-files",
-    methods=["GET"]
-)
-def debug_files():
+def register():
 
     try:
 
-        base_directory = os.path.dirname(
-            os.path.abspath(__file__)
+        data = request.get_json(
+            silent=True
         )
 
 
-        templates_directory = os.path.join(
-            base_directory,
-            "templates"
-        )
-
-
-        index_file = os.path.join(
-            templates_directory,
-            "index.html"
-        )
-
-
-        templates_files = []
-
-
-        if os.path.isdir(
-            templates_directory
+        if not isinstance(
+            data,
+            dict
         ):
 
-            templates_files = os.listdir(
-                templates_directory
+            return jsonify({
+
+                "success":
+                    False,
+
+                "error":
+                    "Données invalides."
+
+            }), 400
+
+
+        name = str(
+            data.get(
+                "name",
+                ""
             )
+        ).strip()
+
+
+        email = str(
+            data.get(
+                "email",
+                ""
+            )
+        ).strip().lower()
+
+
+        password = str(
+            data.get(
+                "password",
+                ""
+            )
+        )
+
+
+        # ----------------------------------------------------
+        # VALIDATION
+        # ----------------------------------------------------
+
+        if not name:
+
+            return jsonify({
+
+                "success":
+                    False,
+
+                "error":
+                    "Entre ton nom."
+
+            }), 400
+
+
+        if len(name) > 80:
+
+            return jsonify({
+
+                "success":
+                    False,
+
+                "error":
+                    "Le nom est trop long."
+
+            }), 400
+
+
+        if "@" not in email:
+
+            return jsonify({
+
+                "success":
+                    False,
+
+                "error":
+                    "Adresse email invalide."
+
+            }), 400
+
+
+        if len(email) > 200:
+
+            return jsonify({
+
+                "success":
+                    False,
+
+                "error":
+                    "Adresse email trop longue."
+
+            }), 400
+
+
+        if len(password) < 6:
+
+            return jsonify({
+
+                "success":
+                    False,
+
+                "error":
+                    "Le mot de passe doit contenir au moins 6 caractères."
+
+            }), 400
+
+
+        if len(password) > 200:
+
+            return jsonify({
+
+                "success":
+                    False,
+
+                "error":
+                    "Mot de passe trop long."
+
+            }), 400
+
+
+        # ----------------------------------------------------
+        # CRÉATION
+        # ----------------------------------------------------
+
+        password_hash = generate_password_hash(
+            password
+        )
+
+
+        connection = get_db()
+
+
+        try:
+
+            cursor = connection.execute(
+                """
+                INSERT INTO users
+                (name, email, password)
+                VALUES (?, ?, ?)
+                """,
+                (
+                    name,
+                    email,
+                    password_hash
+                )
+            )
+
+
+            connection.commit()
+
+
+            user_id = cursor.lastrowid
+
+
+        except sqlite3.IntegrityError:
+
+            connection.close()
+
+
+            return jsonify({
+
+                "success":
+                    False,
+
+                "error":
+                    "Un compte avec cet email existe déjà."
+
+            }), 409
+
+
+        connection.close()
+
+
+        session["user_id"] = user_id
 
 
         return jsonify({
@@ -398,34 +706,31 @@ def debug_files():
             "success":
                 True,
 
-            "app":
-                "Messie IA",
+            "message":
+                "Compte créé avec succès.",
 
-            "base_directory":
-                base_directory,
+            "user": {
 
-            "files":
-                os.listdir(
-                    base_directory
-                ),
+                "id":
+                    user_id,
 
-            "templates_exists":
-                os.path.isdir(
-                    templates_directory
-                ),
+                "name":
+                    name,
 
-            "templates_files":
-                templates_files,
+                "email":
+                    email
 
-            "index_exists":
-                os.path.isfile(
-                    index_file
-                )
+            }
 
         })
 
 
     except Exception as error:
+
+        print(
+            "REGISTER error:",
+            error
+        )
 
         traceback.print_exc()
 
@@ -436,9 +741,572 @@ def debug_files():
                 False,
 
             "error":
-                str(error)
+                "Impossible de créer le compte."
 
         }), 500
+
+
+# ============================================================
+# AUTH - CONNEXION
+# ============================================================
+
+@app.route(
+    "/api/login",
+    methods=["POST"]
+)
+def login():
+
+    try:
+
+        data = request.get_json(
+            silent=True
+        )
+
+
+        if not isinstance(
+            data,
+            dict
+        ):
+
+            return jsonify({
+
+                "success":
+                    False,
+
+                "error":
+                    "Données invalides."
+
+            }), 400
+
+
+        email = str(
+            data.get(
+                "email",
+                ""
+            )
+        ).strip().lower()
+
+
+        password = str(
+            data.get(
+                "password",
+                ""
+            )
+        )
+
+
+        connection = get_db()
+
+
+        user = connection.execute(
+            """
+            SELECT *
+            FROM users
+            WHERE email = ?
+            """,
+            (email,)
+        ).fetchone()
+
+
+        connection.close()
+
+
+        if not user:
+
+            return jsonify({
+
+                "success":
+                    False,
+
+                "error":
+                    "Email ou mot de passe incorrect."
+
+            }), 401
+
+
+        if not check_password_hash(
+            user["password"],
+            password
+        ):
+
+            return jsonify({
+
+                "success":
+                    False,
+
+                "error":
+                    "Email ou mot de passe incorrect."
+
+            }), 401
+
+
+        session.clear()
+
+
+        session["user_id"] = user["id"]
+
+
+        return jsonify({
+
+            "success":
+                True,
+
+            "message":
+                "Connexion réussie.",
+
+            "user": {
+
+                "id":
+                    user["id"],
+
+                "name":
+                    user["name"],
+
+                "email":
+                    user["email"]
+
+            }
+
+        })
+
+
+    except Exception as error:
+
+        print(
+            "LOGIN error:",
+            error
+        )
+
+        traceback.print_exc()
+
+
+        return jsonify({
+
+            "success":
+                False,
+
+            "error":
+                "Impossible de se connecter."
+
+        }), 500
+
+
+# ============================================================
+# AUTH - DÉCONNEXION
+# ============================================================
+
+@app.route(
+    "/api/logout",
+    methods=["POST"]
+)
+def logout():
+
+    session.clear()
+
+
+    return jsonify({
+
+        "success":
+            True,
+
+        "message":
+            "Déconnexion réussie."
+
+    })
+
+
+# ============================================================
+# AUTH - UTILISATEUR ACTUEL
+# ============================================================
+
+@app.route(
+    "/api/me",
+    methods=["GET"]
+)
+def me():
+
+    user = current_user()
+
+
+    if not user:
+
+        return jsonify({
+
+            "success":
+                True,
+
+            "logged_in":
+                False
+
+        })
+
+
+    return jsonify({
+
+        "success":
+            True,
+
+        "logged_in":
+            True,
+
+        "user": {
+
+            "id":
+                user["id"],
+
+            "name":
+                user["name"],
+
+            "email":
+                user["email"],
+
+            "created_at":
+                user["created_at"]
+
+        }
+
+    })
+
+
+# ============================================================
+# CONVERSATIONS
+# ============================================================
+
+@app.route(
+    "/api/conversations",
+    methods=["GET"]
+)
+@login_required
+def conversations():
+
+    user = current_user()
+
+
+    connection = get_db()
+
+
+    rows = connection.execute(
+        """
+        SELECT id, title, created_at, updated_at
+        FROM conversations
+        WHERE user_id = ?
+        ORDER BY updated_at DESC
+        """,
+        (user["id"],)
+    ).fetchall()
+
+
+    connection.close()
+
+
+    result = []
+
+
+    for row in rows:
+
+        result.append({
+
+            "id":
+                row["id"],
+
+            "title":
+                row["title"],
+
+            "created_at":
+                row["created_at"],
+
+            "updated_at":
+                row["updated_at"]
+
+        })
+
+
+    return jsonify({
+
+        "success":
+            True,
+
+        "conversations":
+            result
+
+    })
+
+
+# ============================================================
+# CRÉER CONVERSATION
+# ============================================================
+
+@app.route(
+    "/api/conversations",
+    methods=["POST"]
+)
+@login_required
+def create_conversation():
+
+    user = current_user()
+
+
+    data = request.get_json(
+        silent=True
+    )
+
+
+    title = "Nouvelle conversation"
+
+
+    if isinstance(
+        data,
+        dict
+    ):
+
+        supplied_title = data.get(
+            "title"
+        )
+
+
+        if isinstance(
+            supplied_title,
+            str
+        ):
+
+            supplied_title = (
+                supplied_title.strip()
+            )
+
+
+            if supplied_title:
+
+                title = supplied_title[:100]
+
+
+    connection = get_db()
+
+
+    cursor = connection.execute(
+        """
+        INSERT INTO conversations
+        (user_id, title)
+        VALUES (?, ?)
+        """,
+        (
+            user["id"],
+            title
+        )
+    )
+
+
+    connection.commit()
+
+
+    conversation_id = cursor.lastrowid
+
+
+    connection.close()
+
+
+    return jsonify({
+
+        "success":
+            True,
+
+        "conversation": {
+
+            "id":
+                conversation_id,
+
+            "title":
+                title
+
+        }
+
+    })
+
+
+# ============================================================
+# CHARGER UNE CONVERSATION
+# ============================================================
+
+@app.route(
+    "/api/conversations/<int:conversation_id>",
+    methods=["GET"]
+)
+@login_required
+def get_conversation(
+    conversation_id
+):
+
+    user = current_user()
+
+
+    connection = get_db()
+
+
+    conversation = connection.execute(
+        """
+        SELECT *
+        FROM conversations
+        WHERE id = ?
+        AND user_id = ?
+        """,
+        (
+            conversation_id,
+            user["id"]
+        )
+    ).fetchone()
+
+
+    if not conversation:
+
+        connection.close()
+
+
+        return jsonify({
+
+            "success":
+                False,
+
+            "error":
+                "Conversation introuvable."
+
+        }), 404
+
+
+    messages = connection.execute(
+        """
+        SELECT id, role, content, created_at
+        FROM messages
+        WHERE conversation_id = ?
+        ORDER BY id ASC
+        """,
+        (conversation_id,)
+    ).fetchall()
+
+
+    connection.close()
+
+
+    return jsonify({
+
+        "success":
+            True,
+
+        "conversation": {
+
+            "id":
+                conversation["id"],
+
+            "title":
+                conversation["title"],
+
+            "messages": [
+
+                {
+
+                    "id":
+                        row["id"],
+
+                    "role":
+                        row["role"],
+
+                    "content":
+                        row["content"],
+
+                    "created_at":
+                        row["created_at"]
+
+                }
+
+                for row in messages
+
+            ]
+
+        }
+
+    })
+
+
+# ============================================================
+# SUPPRIMER CONVERSATION
+# ============================================================
+
+@app.route(
+    "/api/conversations/<int:conversation_id>",
+    methods=["DELETE"]
+)
+@login_required
+def delete_conversation(
+    conversation_id
+):
+
+    user = current_user()
+
+
+    connection = get_db()
+
+
+    conversation = connection.execute(
+        """
+        SELECT id
+        FROM conversations
+        WHERE id = ?
+        AND user_id = ?
+        """,
+        (
+            conversation_id,
+            user["id"]
+        )
+    ).fetchone()
+
+
+    if not conversation:
+
+        connection.close()
+
+
+        return jsonify({
+
+            "success":
+                False,
+
+            "error":
+                "Conversation introuvable."
+
+        }), 404
+
+
+    connection.execute(
+        """
+        DELETE FROM messages
+        WHERE conversation_id = ?
+        """,
+        (conversation_id,)
+    )
+
+
+    connection.execute(
+        """
+        DELETE FROM conversations
+        WHERE id = ?
+        AND user_id = ?
+        """,
+        (
+            conversation_id,
+            user["id"]
+        )
+    )
+
+
+    connection.commit()
+
+    connection.close()
+
+
+    return jsonify({
+
+        "success":
+            True
+
+    })
 
 
 # ============================================================
@@ -453,10 +1321,6 @@ def chat():
 
     try:
 
-        # ----------------------------------------------------
-        # CLÉ API
-        # ----------------------------------------------------
-
         if not check_api_key():
 
             return jsonify({
@@ -465,17 +1329,10 @@ def chat():
                     False,
 
                 "error":
-                    (
-                        "OPENROUTER_API_KEY "
-                        "n'est pas configurée dans Render."
-                    )
+                    "OPENROUTER_API_KEY n'est pas configurée dans Render."
 
             }), 500
 
-
-        # ----------------------------------------------------
-        # DONNÉES
-        # ----------------------------------------------------
 
         data = request.get_json(
             silent=True
@@ -504,15 +1361,16 @@ def chat():
         )
 
 
+        conversation_id = data.get(
+            "conversation_id"
+        )
+
+
         history = data.get(
             "history",
             []
         )
 
-
-        # ----------------------------------------------------
-        # VALIDATION MESSAGE
-        # ----------------------------------------------------
 
         if not isinstance(
             message,
@@ -546,7 +1404,6 @@ def chat():
             }), 400
 
 
-        # Protection contre les messages énormes.
         if len(message) > 20000:
 
             return jsonify({
@@ -561,7 +1418,7 @@ def chat():
 
 
         # ----------------------------------------------------
-        # MESSAGES
+        # HISTORIQUE
         # ----------------------------------------------------
 
         messages = [
@@ -579,78 +1436,151 @@ def chat():
         ]
 
 
-        # ----------------------------------------------------
-        # HISTORIQUE
-        # ----------------------------------------------------
+        # Si un utilisateur est connecté et qu'une conversation
+        # existe, on récupère son historique depuis SQLite.
 
-        if isinstance(
-            history,
-            list
+        user = current_user()
+
+
+        if (
+            user
+            and
+            conversation_id
         ):
 
-            # On garde seulement les 20 derniers messages.
-            history = history[-20:]
+            try:
 
-
-            for item in history:
-
-                if not isinstance(
-                    item,
-                    dict
-                ):
-
-                    continue
-
-
-                role = item.get(
-                    "role"
+                conversation_id = int(
+                    conversation_id
                 )
 
 
-                content = item.get(
-                    "content"
-                )
+                connection = get_db()
 
 
-                if role not in (
-                    "user",
-                    "assistant"
-                ):
-
-                    continue
-
-
-                if not isinstance(
-                    content,
-                    str
-                ):
-
-                    continue
+                conversation = connection.execute(
+                    """
+                    SELECT id
+                    FROM conversations
+                    WHERE id = ?
+                    AND user_id = ?
+                    """,
+                    (
+                        conversation_id,
+                        user["id"]
+                    )
+                ).fetchone()
 
 
-                content = content.strip()
+                if conversation:
+
+                    database_messages = connection.execute(
+                        """
+                        SELECT role, content
+                        FROM messages
+                        WHERE conversation_id = ?
+                        ORDER BY id DESC
+                        LIMIT 20
+                        """,
+                        (conversation_id,)
+                    ).fetchall()
 
 
-                if not content:
-
-                    continue
-
-
-                # Protection contre un historique énorme.
-                if len(content) > 20000:
-
-                    content = content[:20000]
+                    database_messages = list(
+                        reversed(
+                            database_messages
+                        )
+                    )
 
 
-                messages.append({
+                    for item in database_messages:
 
-                    "role":
-                        role,
+                        messages.append({
 
-                    "content":
-                        content
+                            "role":
+                                item["role"],
 
-                })
+                            "content":
+                                item["content"]
+
+                        })
+
+
+                connection.close()
+
+
+            except Exception:
+
+                traceback.print_exc()
+
+
+        # ----------------------------------------------------
+        # HISTORIQUE ENVOYÉ PAR L'INTERFACE
+        # ----------------------------------------------------
+
+        if len(messages) == 1:
+
+            if isinstance(
+                history,
+                list
+            ):
+
+                history = history[-20:]
+
+
+                for item in history:
+
+                    if not isinstance(
+                        item,
+                        dict
+                    ):
+
+                        continue
+
+
+                    role = item.get(
+                        "role"
+                    )
+
+
+                    content = item.get(
+                        "content"
+                    )
+
+
+                    if role not in (
+                        "user",
+                        "assistant"
+                    ):
+
+                        continue
+
+
+                    if not isinstance(
+                        content,
+                        str
+                    ):
+
+                        continue
+
+
+                    content = content.strip()
+
+
+                    if not content:
+
+                        continue
+
+
+                    messages.append({
+
+                        "role":
+                            role,
+
+                        "content":
+                            content[:20000]
+
+                    })
 
 
         # ----------------------------------------------------
@@ -669,7 +1599,7 @@ def chat():
 
 
         # ----------------------------------------------------
-        # PAYLOAD
+        # OPENROUTER
         # ----------------------------------------------------
 
         payload = {
@@ -692,10 +1622,6 @@ def chat():
         )
 
 
-        # ----------------------------------------------------
-        # APPEL OPENROUTER
-        # ----------------------------------------------------
-
         response = requests.post(
 
             OPENROUTER_URL +
@@ -713,20 +1639,11 @@ def chat():
         )
 
 
-        # ----------------------------------------------------
-        # RÉPONSE JSON
-        # ----------------------------------------------------
-
         try:
 
             result = response.json()
 
         except Exception:
-
-            print(
-                "Réponse OpenRouter non JSON."
-            )
-
 
             return jsonify({
 
@@ -738,10 +1655,6 @@ def chat():
 
             }), 502
 
-
-        # ----------------------------------------------------
-        # ERREUR OPENROUTER
-        # ----------------------------------------------------
 
         if not response.ok:
 
@@ -769,10 +1682,6 @@ def chat():
             }), response.status_code
 
 
-        # ----------------------------------------------------
-        # EXTRACTION
-        # ----------------------------------------------------
-
         answer = extract_chat_answer(
             result
         )
@@ -785,10 +1694,115 @@ def chat():
             )
 
 
-        used_model = result.get(
-            "model",
-            CHAT_MODEL
-        )
+        # ----------------------------------------------------
+        # SAUVEGARDE HISTORIQUE
+        # ----------------------------------------------------
+
+        if user:
+
+            try:
+
+                connection = get_db()
+
+
+                # Si aucune conversation n'existe,
+                # on en crée une automatiquement.
+
+                if not conversation_id:
+
+                    title = message[:60]
+
+
+                    cursor = connection.execute(
+                        """
+                        INSERT INTO conversations
+                        (user_id, title)
+                        VALUES (?, ?)
+                        """,
+                        (
+                            user["id"],
+                            title
+                        )
+                    )
+
+
+                    conversation_id = cursor.lastrowid
+
+
+                else:
+
+                    conversation = connection.execute(
+                        """
+                        SELECT id
+                        FROM conversations
+                        WHERE id = ?
+                        AND user_id = ?
+                        """,
+                        (
+                            int(conversation_id),
+                            user["id"]
+                        )
+                    ).fetchone()
+
+
+                    if not conversation:
+
+                        conversation_id = None
+
+
+                if conversation_id:
+
+                    connection.execute(
+                        """
+                        INSERT INTO messages
+                        (conversation_id, role, content)
+                        VALUES (?, ?, ?)
+                        """,
+                        (
+                            conversation_id,
+                            "user",
+                            message
+                        )
+                    )
+
+
+                    connection.execute(
+                        """
+                        INSERT INTO messages
+                        (conversation_id, role, content)
+                        VALUES (?, ?, ?)
+                        """,
+                        (
+                            conversation_id,
+                            "assistant",
+                            answer
+                        )
+                    )
+
+
+                    connection.execute(
+                        """
+                        UPDATE conversations
+                        SET updated_at = CURRENT_TIMESTAMP
+                        WHERE id = ?
+                        """,
+                        (conversation_id,)
+                    )
+
+
+                    connection.commit()
+
+
+                connection.close()
+
+
+            except Exception:
+
+                print(
+                    "Erreur sauvegarde historique"
+                )
+
+                traceback.print_exc()
 
 
         return jsonify({
@@ -800,7 +1814,13 @@ def chat():
                 answer,
 
             "model":
-                used_model
+                result.get(
+                    "model",
+                    CHAT_MODEL
+                ),
+
+            "conversation_id":
+                conversation_id
 
         })
 
@@ -813,10 +1833,7 @@ def chat():
                 False,
 
             "error":
-                (
-                    "Le délai de réponse "
-                    "d'OpenRouter est dépassé."
-                )
+                "Le délai de réponse d'OpenRouter est dépassé."
 
         }), 504
 
@@ -824,7 +1841,7 @@ def chat():
     except requests.RequestException as error:
 
         print(
-            "OpenRouter CHAT request error:",
+            "CHAT request error:",
             error
         )
 
@@ -921,10 +1938,6 @@ def analyze_image():
         )
 
 
-        # ----------------------------------------------------
-        # VALIDATION IMAGE
-        # ----------------------------------------------------
-
         if not isinstance(
             image_data,
             str
@@ -956,20 +1969,6 @@ def analyze_image():
             }), 400
 
 
-        # Protection supplémentaire.
-        if len(image_data) > 10 * 1024 * 1024:
-
-            return jsonify({
-
-                "success":
-                    False,
-
-                "error":
-                    "L'image est trop volumineuse."
-
-            }), 400
-
-
         if not isinstance(
             prompt,
             str
@@ -979,20 +1978,6 @@ def analyze_image():
                 "Décris cette image en détail."
             )
 
-
-        prompt = prompt.strip()
-
-
-        if not prompt:
-
-            prompt = (
-                "Décris cette image en détail."
-            )
-
-
-        # ----------------------------------------------------
-        # PAYLOAD
-        # ----------------------------------------------------
 
         payload = {
 
@@ -1041,12 +2026,6 @@ def analyze_image():
         }
 
 
-        print(
-            "Messie IA VISION - modèle:",
-            VISION_MODEL
-        )
-
-
         response = requests.post(
 
             OPENROUTER_URL +
@@ -1083,26 +2062,15 @@ def analyze_image():
 
         if not response.ok:
 
-            error_message = (
-                get_openrouter_error(
-                    result
-                )
-            )
-
-
-            print(
-                "OpenRouter VISION error:",
-                error_message
-            )
-
-
             return jsonify({
 
                 "success":
                     False,
 
                 "error":
-                    error_message
+                    get_openrouter_error(
+                        result
+                    )
 
             }), response.status_code
 
@@ -1136,40 +2104,6 @@ def analyze_image():
         })
 
 
-    except requests.Timeout:
-
-        return jsonify({
-
-            "success":
-                False,
-
-            "error":
-                "Le délai d'analyse de l'image est dépassé."
-
-        }), 504
-
-
-    except requests.RequestException as error:
-
-        print(
-            "VISION request error:",
-            error
-        )
-
-        traceback.print_exc()
-
-
-        return jsonify({
-
-            "success":
-                False,
-
-            "error":
-                "Impossible de contacter OpenRouter."
-
-        }), 502
-
-
     except Exception as error:
 
         print(
@@ -1192,7 +2126,7 @@ def analyze_image():
 
 
 # ============================================================
-# GÉNÉRATION D'IMAGE
+# GÉNÉRATION IMAGE
 # ============================================================
 
 @app.route(
@@ -1275,23 +2209,6 @@ def generate_image():
             }), 400
 
 
-        if len(prompt) > 10000:
-
-            return jsonify({
-
-                "success":
-                    False,
-
-                "error":
-                    "La description de l'image est trop longue."
-
-            }), 400
-
-
-        # ----------------------------------------------------
-        # OPTIONS
-        # ----------------------------------------------------
-
         aspect_ratio = data.get(
             "aspect_ratio",
             "1:1"
@@ -1316,73 +2233,45 @@ def generate_image():
         )
 
 
-        # ----------------------------------------------------
-        # VALIDATION
-        # ----------------------------------------------------
-
-        allowed_ratios = {
-
+        if aspect_ratio not in {
             "1:1",
             "16:9",
             "9:16",
             "4:3",
             "3:4"
-
-        }
-
-
-        if aspect_ratio not in allowed_ratios:
+        }:
 
             aspect_ratio = "1:1"
 
 
-        allowed_resolutions = {
-
+        if resolution not in {
             "512",
             "1K",
             "2K",
             "4K"
-
-        }
-
-
-        if resolution not in allowed_resolutions:
+        }:
 
             resolution = "1K"
 
 
-        allowed_quality = {
-
+        if quality not in {
             "auto",
             "low",
             "medium",
             "high"
-
-        }
-
-
-        if quality not in allowed_quality:
+        }:
 
             quality = "auto"
 
 
-        allowed_formats = {
-
+        if output_format not in {
             "png",
             "jpeg",
             "webp"
-
-        }
-
-
-        if output_format not in allowed_formats:
+        }:
 
             output_format = "png"
 
-
-        # ----------------------------------------------------
-        # PAYLOAD
-        # ----------------------------------------------------
 
         payload = {
 
@@ -1407,10 +2296,6 @@ def generate_image():
         }
 
 
-        # ----------------------------------------------------
-        # IMAGE DE RÉFÉRENCE
-        # ----------------------------------------------------
-
         reference_image = data.get(
             "reference_image"
         )
@@ -1427,40 +2312,26 @@ def generate_image():
             )
         ):
 
-            if len(reference_image) <= (
-                10 * 1024 * 1024
-            ):
+            payload[
+                "input_references"
+            ] = [
 
-                payload[
-                    "input_references"
-                ] = [
+                {
 
-                    {
+                    "type":
+                        "image_url",
 
-                        "type":
-                            "image_url",
+                    "image_url": {
 
-                        "image_url": {
-
-                            "url":
-                                reference_image
-
-                        }
+                        "url":
+                            reference_image
 
                     }
 
-                ]
+                }
 
+            ]
 
-        print(
-            "Messie IA IMAGE - modèle:",
-            IMAGE_MODEL
-        )
-
-
-        # ----------------------------------------------------
-        # REQUÊTE
-        # ----------------------------------------------------
 
         response = requests.post(
 
@@ -1498,100 +2369,66 @@ def generate_image():
 
         if not response.ok:
 
-            error_message = (
-                get_openrouter_error(
-                    result
-                )
-            )
-
-
-            print(
-                "OpenRouter IMAGE error:",
-                error_message
-            )
-
-
             return jsonify({
 
                 "success":
                     False,
 
                 "error":
-                    error_message
+                    get_openrouter_error(
+                        result
+                    )
 
             }), response.status_code
 
 
-        # ----------------------------------------------------
-        # EXTRACTION IMAGES
-        # ----------------------------------------------------
-
         images = []
 
 
-        image_list = result.get(
+        for image in result.get(
             "data",
             []
-        )
-
-
-        if isinstance(
-            image_list,
-            list
         ):
 
-            for image in image_list:
+            if not isinstance(
+                image,
+                dict
+            ):
 
-                if not isinstance(
-                    image,
-                    dict
-                ):
-
-                    continue
+                continue
 
 
-                b64 = image.get(
-                    "b64_json"
-                )
+            b64 = image.get(
+                "b64_json"
+            )
 
 
-                if (
-                    not isinstance(
-                        b64,
-                        str
-                    )
-                    or
-                    not b64
-                ):
+            if not b64:
 
-                    continue
+                continue
 
 
-                media_type = image.get(
-                    "media_type",
-                    "image/png"
-                )
+            media_type = image.get(
+                "media_type",
+                "image/png"
+            )
 
 
-                images.append({
+            images.append({
 
-                    "data":
-                        (
-                            "data:"
-                            + media_type
-                            + ";base64,"
-                            + b64
-                        ),
+                "data":
+                    (
+                        "data:"
+                        + media_type
+                        + ";base64,"
+                        + b64
+                    ),
 
-                    "media_type":
-                        media_type
+                "media_type":
+                    media_type
 
-                })
+            })
 
-
-        # ----------------------------------------------------
-        # AUCUNE IMAGE
-        # ----------------------------------------------------
 
         if not images:
 
@@ -1605,10 +2442,6 @@ def generate_image():
 
             }), 502
 
-
-        # ----------------------------------------------------
-        # UTILISATION
-        # ----------------------------------------------------
 
         usage = result.get(
             "usage",
@@ -1661,23 +2494,12 @@ def generate_image():
                 False,
 
             "error":
-                (
-                    "La génération de l'image "
-                    "prend trop de temps. Réessaie."
-                )
+                "La génération de l'image prend trop de temps."
 
         }), 504
 
 
-    except requests.RequestException as error:
-
-        print(
-            "IMAGE request error:",
-            error
-        )
-
-        traceback.print_exc()
-
+    except requests.RequestException:
 
         return jsonify({
 
@@ -1712,13 +2534,88 @@ def generate_image():
 
 
 # ============================================================
-# ERREURS HTTP
+# DIAGNOSTIC
 # ============================================================
 
-@app.errorhandler(
-    413
+@app.route(
+    "/debug-files"
 )
-def request_too_large(error):
+def debug_files():
+
+    try:
+
+        base = os.path.dirname(
+            os.path.abspath(__file__)
+        )
+
+
+        templates = os.path.join(
+            base,
+            "templates"
+        )
+
+
+        index = os.path.join(
+            templates,
+            "index.html"
+        )
+
+
+        return jsonify({
+
+            "success":
+                True,
+
+            "app":
+                "Messie IA",
+
+            "base_directory":
+                base,
+
+            "files":
+                os.listdir(base),
+
+            "templates_exists":
+                os.path.isdir(templates),
+
+            "templates_files":
+                (
+                    os.listdir(templates)
+                    if os.path.isdir(templates)
+                    else []
+                ),
+
+            "index_exists":
+                os.path.isfile(index),
+
+            "database_exists":
+                os.path.isfile(DATABASE)
+
+        })
+
+
+    except Exception as error:
+
+        traceback.print_exc()
+
+
+        return jsonify({
+
+            "success":
+                False,
+
+            "error":
+                str(error)
+
+        }), 500
+
+
+# ============================================================
+# ERREURS
+# ============================================================
+
+@app.errorhandler(413)
+def too_large(error):
 
     return jsonify({
 
@@ -1731,9 +2628,7 @@ def request_too_large(error):
     }), 413
 
 
-@app.errorhandler(
-    404
-)
+@app.errorhandler(404)
 def not_found(error):
 
     return jsonify({
@@ -1747,9 +2642,7 @@ def not_found(error):
     }), 404
 
 
-@app.errorhandler(
-    500
-)
+@app.errorhandler(500)
 def internal_error(error):
 
     print(
@@ -1789,13 +2682,9 @@ if __name__ == "__main__":
 
 
     app.run(
-
         host="0.0.0.0",
-
         port=port,
-
         debug=False
-
     )
 
 
