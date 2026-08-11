@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
+
     <meta charset="UTF-8">
 
     <meta
@@ -8,327 +10,385 @@
         content="width=device-width, initial-scale=1.0"
     >
 
+    <meta
+        name="theme-color"
+        content="#111827"
+    >
+
     <title>Messie IA</title>
 
     <style>
+
         * {
             box-sizing: border-box;
         }
 
-        html,
         body {
             margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            font-family:
-                Arial,
-                Helvetica,
-                sans-serif;
-            background: #f5f7fb;
-            color: #202124;
+            font-family: Arial, sans-serif;
+            background: #f3f4f6;
+            color: #111827;
         }
 
-        body {
-            display: flex;
-            justify-content: center;
+        button,
+        input,
+        textarea {
+            font: inherit;
+        }
+
+        button {
+            cursor: pointer;
         }
 
         .app {
-            width: 100%;
-            max-width: 900px;
-            height: 100vh;
+            min-height: 100vh;
             display: flex;
-            flex-direction: column;
-            background: white;
         }
 
-        /* =========================
-           HEADER
-        ========================= */
+        /* ==================================================
+           SIDEBAR
+        ================================================== */
 
-        header {
-            height: 65px;
-            flex-shrink: 0;
+        .sidebar {
+            width: 280px;
+            background: #111827;
+            color: white;
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 18px;
+        }
+
+        .new-chat {
+            border: 0;
+            border-radius: 12px;
+            padding: 12px;
+            background: #2563eb;
+            color: white;
+            margin-bottom: 18px;
+        }
+
+        .new-chat:hover {
+            background: #1d4ed8;
+        }
+
+        .conversation-title {
+            font-size: 13px;
+            opacity: .7;
+            margin-bottom: 10px;
+        }
+
+        #conversationList {
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .conversation {
+            width: 100%;
+            border: 0;
+            background: transparent;
+            color: white;
+            text-align: left;
+            padding: 10px;
+            border-radius: 9px;
+            margin-bottom: 5px;
+        }
+
+        .conversation:hover {
+            background: #1f2937;
+        }
+
+        .account-area {
+            border-top: 1px solid #374151;
+            padding-top: 15px;
+            margin-top: 15px;
+        }
+
+        .account-name {
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+
+        .account-email {
+            font-size: 12px;
+            opacity: .7;
+            margin-bottom: 10px;
+            word-break: break-word;
+        }
+
+        .account-button {
+            width: 100%;
+            border: 1px solid #4b5563;
+            background: transparent;
+            color: white;
+            border-radius: 9px;
+            padding: 9px;
+        }
+
+        /* ==================================================
+           MAIN
+        ================================================== */
+
+        .main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+        }
+
+        .topbar {
+            height: 64px;
+            background: white;
+            border-bottom: 1px solid #e5e7eb;
             display: flex;
             align-items: center;
             justify-content: space-between;
             padding: 0 18px;
-            border-bottom: 1px solid #e5e7eb;
-            background: white;
         }
 
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .logo {
-            width: 42px;
-            height: 42px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #111827;
-            color: white;
+        .topbar-title {
             font-weight: bold;
-            font-size: 18px;
         }
 
-        .brand-text h1 {
-            margin: 0;
-            font-size: 18px;
-        }
-
-        .brand-text span {
-            font-size: 12px;
-            color: #6b7280;
-        }
-
-        .clear-button {
+        .mobile-menu {
+            display: none;
             border: 0;
-            background: #f3f4f6;
-            color: #374151;
-            padding: 9px 12px;
-            border-radius: 10px;
-            cursor: pointer;
+            background: transparent;
+            font-size: 24px;
         }
 
-        .clear-button:hover {
-            background: #e5e7eb;
-        }
-
-        /* =========================
+        /* ==================================================
            CHAT
-        ========================= */
+        ================================================== */
 
         #messages {
             flex: 1;
             overflow-y: auto;
-            padding: 20px;
+            padding: 25px;
         }
 
         .welcome {
-            max-width: 650px;
-            margin: 70px auto;
+            max-width: 700px;
+            margin: 60px auto;
             text-align: center;
         }
 
-        .welcome-logo {
-            width: 70px;
-            height: 70px;
-            margin: 0 auto 20px;
-            border-radius: 22px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #111827;
-            color: white;
-            font-size: 28px;
-            font-weight: bold;
-        }
-
-        .welcome h2 {
-            margin: 0 0 10px;
-            font-size: 28px;
+        .welcome h1 {
+            font-size: 34px;
+            margin-bottom: 10px;
         }
 
         .welcome p {
-            margin: 0;
             color: #6b7280;
-            line-height: 1.6;
         }
 
         .message {
+            max-width: 850px;
+            margin: 0 auto 18px auto;
             display: flex;
-            margin-bottom: 18px;
         }
 
         .message.user {
             justify-content: flex-end;
         }
 
-        .message.assistant {
-            justify-content: flex-start;
-        }
-
         .bubble {
-            max-width: 78%;
-            padding: 12px 15px;
+            max-width: 80%;
+            padding: 13px 16px;
             border-radius: 17px;
-            line-height: 1.55;
             white-space: pre-wrap;
             overflow-wrap: anywhere;
+            line-height: 1.5;
         }
 
-        .user .bubble {
-            background: #111827;
+        .message.user .bubble {
+            background: #2563eb;
             color: white;
             border-bottom-right-radius: 5px;
         }
 
-        .assistant .bubble {
-            background: #f1f3f5;
-            color: #202124;
+        .message.assistant .bubble {
+            background: white;
+            border: 1px solid #e5e7eb;
             border-bottom-left-radius: 5px;
         }
 
-        .error .bubble {
-            background: #fee2e2;
-            color: #991b1b;
-        }
-
-        .loading {
-            display: inline-flex;
-            gap: 5px;
-            align-items: center;
-        }
-
-        .dot {
-            width: 7px;
-            height: 7px;
-            background: #6b7280;
-            border-radius: 50%;
-            animation: blink 1.2s infinite;
-        }
-
-        .dot:nth-child(2) {
-            animation-delay: .2s;
-        }
-
-        .dot:nth-child(3) {
-            animation-delay: .4s;
-        }
-
-        @keyframes blink {
-            0%, 80%, 100% {
-                opacity: .3;
-            }
-
-            40% {
-                opacity: 1;
-            }
-        }
-
-        /* =========================
-           IMAGE PREVIEW
-        ========================= */
-
-        #imagePreviewContainer {
-            display: none;
-            padding: 10px 16px 0;
-        }
-
-        .preview-box {
-            position: relative;
-            display: inline-block;
-        }
-
-        #imagePreview {
-            max-width: 180px;
-            max-height: 140px;
+        .image-preview {
+            max-width: 280px;
+            max-height: 280px;
             border-radius: 12px;
-            border: 1px solid #ddd;
+            margin-bottom: 10px;
         }
 
-        #removeImage {
-            position: absolute;
-            top: -8px;
-            right: -8px;
-            width: 25px;
-            height: 25px;
-            border: 0;
-            border-radius: 50%;
-            background: #111827;
-            color: white;
-            cursor: pointer;
-        }
-
-        /* =========================
+        /* ==================================================
            INPUT
-        ========================= */
+        ================================================== */
 
         .composer {
-            padding: 12px 15px 15px;
-            border-top: 1px solid #e5e7eb;
             background: white;
+            border-top: 1px solid #e5e7eb;
+            padding: 14px;
         }
 
-        .input-row {
-            display: flex;
-            align-items: flex-end;
-            gap: 8px;
+        .composer-inner {
+            max-width: 900px;
+            margin: auto;
+        }
+
+        #prompt {
+            width: 100%;
+            min-height: 52px;
+            max-height: 180px;
+            resize: vertical;
             border: 1px solid #d1d5db;
-            border-radius: 18px;
-            padding: 7px;
-            background: #fff;
-        }
-
-        textarea {
-            flex: 1;
-            resize: none;
-            border: 0;
+            border-radius: 14px;
+            padding: 14px;
             outline: none;
-            min-height: 42px;
-            max-height: 140px;
-            padding: 10px;
-            font-size: 15px;
-            font-family: inherit;
         }
 
-        .icon-button,
-        .send-button {
-            width: 42px;
-            height: 42px;
-            border: 0;
-            border-radius: 13px;
-            cursor: pointer;
+        #prompt:focus {
+            border-color: #2563eb;
+        }
+
+        .toolbar {
             display: flex;
             align-items: center;
-            justify-content: center;
+            gap: 8px;
+            margin-top: 9px;
         }
 
-        .icon-button {
+        .tool-button {
+            border: 1px solid #d1d5db;
+            background: white;
+            border-radius: 10px;
+            padding: 9px 12px;
+        }
+
+        .tool-button:hover {
             background: #f3f4f6;
-            font-size: 19px;
         }
 
-        .icon-button:hover {
+        .send-button {
+            margin-left: auto;
+            border: 0;
+            border-radius: 10px;
+            background: #2563eb;
+            color: white;
+            padding: 10px 17px;
+        }
+
+        .recording {
+            background: #dc2626 !important;
+            color: white;
+        }
+
+        #fileInput {
+            display: none;
+        }
+
+        .status {
+            font-size: 12px;
+            color: #6b7280;
+            margin-top: 7px;
+        }
+
+        /* ==================================================
+           MODAL
+        ================================================== */
+
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, .55);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            z-index: 100;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-card {
+            width: 100%;
+            max-width: 430px;
+            background: white;
+            border-radius: 18px;
+            padding: 22px;
+        }
+
+        .modal-card h2 {
+            margin-top: 0;
+        }
+
+        .modal-card input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 10px;
+            border: 1px solid #d1d5db;
+            border-radius: 10px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .modal-actions button {
+            flex: 1;
+            padding: 11px;
+            border-radius: 10px;
+            border: 0;
+        }
+
+        .primary {
+            background: #2563eb;
+            color: white;
+        }
+
+        .secondary {
             background: #e5e7eb;
         }
 
-        .send-button {
-            background: #111827;
-            color: white;
-            font-size: 18px;
+        .modal-error {
+            color: #dc2626;
+            font-size: 13px;
+            margin-bottom: 10px;
         }
 
-        .send-button:hover {
-            background: #000;
+        .hidden {
+            display: none !important;
         }
 
-        .send-button:disabled {
-            opacity: .5;
-            cursor: not-allowed;
-        }
+        /* ==================================================
+           MOBILE
+        ================================================== */
 
-        input[type="file"] {
-            display: none;
-        }
+        @media (max-width: 760px) {
 
-        .hint {
-            text-align: center;
-            margin-top: 8px;
-            font-size: 11px;
-            color: #9ca3af;
-        }
+            .sidebar {
+                position: fixed;
+                z-index: 50;
+                left: -290px;
+                top: 0;
+                bottom: 0;
+                transition: left .2s ease;
+            }
 
-        @media (max-width: 600px) {
+            .sidebar.open {
+                left: 0;
+            }
 
-            header {
-                height: 60px;
+            .mobile-menu {
+                display: block;
             }
 
             #messages {
@@ -336,166 +396,296 @@
             }
 
             .bubble {
-                max-width: 88%;
+                max-width: 90%;
             }
 
             .welcome {
-                margin: 50px auto;
+                margin: 45px auto;
             }
 
-            .welcome h2 {
-                font-size: 24px;
+            .welcome h1 {
+                font-size: 28px;
             }
 
-            .composer {
-                padding: 9px;
+            .toolbar {
+                flex-wrap: wrap;
+            }
+
+            .send-button {
+                margin-left: 0;
             }
         }
+
     </style>
+
 </head>
+
 
 <body>
 
 <div class="app">
 
-    <!-- =========================
-         HEADER
-    ========================== -->
+    <!-- ====================================================
+         SIDEBAR
+    ===================================================== -->
 
-    <header>
+    <aside
+        id="sidebar"
+        class="sidebar"
+    >
 
-        <div class="brand">
+        <div class="logo">
+            🤖 Messie IA
+        </div>
 
-            <div class="logo">
-                M
+        <button
+            id="newChatButton"
+            class="new-chat"
+        >
+            ＋ Nouvelle conversation
+        </button>
+
+        <div class="conversation-title">
+            Mes conversations
+        </div>
+
+        <div id="conversationList"></div>
+
+        <div class="account-area">
+
+            <div
+                id="accountName"
+                class="account-name"
+            >
+                Invité
             </div>
 
-            <div class="brand-text">
+            <div
+                id="accountEmail"
+                class="account-email"
+            >
+                Connecte-toi pour sauvegarder tes conversations.
+            </div>
 
-                <h1>Messie IA</h1>
+            <button
+                id="accountButton"
+                class="account-button"
+            >
+                Se connecter
+            </button>
 
-                <span>
-                    Votre assistant intelligent
+        </div>
+
+    </aside>
+
+
+    <!-- ====================================================
+         MAIN
+    ===================================================== -->
+
+    <main class="main">
+
+        <header class="topbar">
+
+            <div>
+
+                <button
+                    id="mobileMenu"
+                    class="mobile-menu"
+                >
+                    ☰
+                </button>
+
+                <span class="topbar-title">
+                    Messie IA
                 </span>
 
             </div>
 
-        </div>
-
-        <button
-            class="clear-button"
-            id="clearButton"
-            type="button"
-        >
-            Nouvelle discussion
-        </button>
-
-    </header>
-
-
-    <!-- =========================
-         MESSAGES
-    ========================== -->
-
-    <main id="messages">
-
-        <div
-            class="welcome"
-            id="welcome"
-        >
-
-            <div class="welcome-logo">
-                M
+            <div id="connectionStatus">
+                🟢
             </div>
 
-            <h2>
-                Bonjour 👋
-            </h2>
+        </header>
 
-            <p>
-                Je suis Messie IA.
-                Pose-moi une question, demande-moi
-                de t'aider à écrire, apprendre,
-                réfléchir ou analyser une image.
-            </p>
 
-        </div>
+        <!-- =================================================
+             MESSAGES
+        ================================================== -->
+
+        <section id="messages">
+
+            <div
+                id="welcome"
+                class="welcome"
+            >
+
+                <h1>
+                    Bonjour 👋
+                </h1>
+
+                <p>
+                    Je suis Messie IA. Pose-moi une question,
+                    envoie-moi une image ou utilise ta voix.
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             COMPOSER
+        ================================================== -->
+
+        <section class="composer">
+
+            <div class="composer-inner">
+
+                <textarea
+                    id="prompt"
+                    placeholder="Écris ton message..."
+                ></textarea>
+
+
+                <div class="toolbar">
+
+                    <label
+                        for="fileInput"
+                        class="tool-button"
+                    >
+                        🖼️ Image
+                    </label>
+
+                    <input
+                        id="fileInput"
+                        type="file"
+                        accept="image/*"
+                    >
+
+
+                    <button
+                        id="voiceButton"
+                        class="tool-button"
+                        type="button"
+                    >
+                        🎙️ Voix
+                    </button>
+
+
+                    <button
+                        id="generateButton"
+                        class="tool-button"
+                        type="button"
+                    >
+                        🎨 Image
+                    </button>
+
+
+                    <button
+                        id="sendButton"
+                        class="send-button"
+                        type="button"
+                    >
+                        Envoyer
+                    </button>
+
+                </div>
+
+
+                <div
+                    id="status"
+                    class="status"
+                ></div>
+
+            </div>
+
+        </section>
 
     </main>
 
+</div>
 
-    <!-- =========================
-         APERÇU IMAGE
-    ========================== -->
 
-    <div id="imagePreviewContainer">
+<!-- ========================================================
+     AUTH MODAL
+========================================================= -->
 
-        <div class="preview-box">
+<div
+    id="authModal"
+    class="modal"
+>
 
-            <img
-                id="imagePreview"
-                alt="Image sélectionnée"
+    <div class="modal-card">
+
+        <h2 id="authTitle">
+            Connexion
+        </h2>
+
+        <div
+            id="authError"
+            class="modal-error"
+        ></div>
+
+
+        <div
+            id="nameContainer"
+            class="hidden"
+        >
+
+            <input
+                id="nameInput"
+                type="text"
+                placeholder="Ton nom"
+                autocomplete="name"
             >
+
+        </div>
+
+
+        <input
+            id="emailInput"
+            type="email"
+            placeholder="Adresse email"
+            autocomplete="email"
+        >
+
+
+        <input
+            id="passwordInput"
+            type="password"
+            placeholder="Mot de passe"
+            autocomplete="current-password"
+        >
+
+
+        <div class="modal-actions">
 
             <button
-                id="removeImage"
-                type="button"
+                id="authSubmit"
+                class="primary"
             >
-                ×
+                Se connecter
+            </button>
+
+            <button
+                id="authClose"
+                class="secondary"
+            >
+                Fermer
             </button>
 
         </div>
+
+
+        <p
+            id="authSwitch"
+            style="text-align:center;cursor:pointer;color:#2563eb;margin-top:15px;"
+        >
+            Créer un compte
+        </p>
 
     </div>
-
-
-    <!-- =========================
-         COMPOSER
-    ========================== -->
-
-    <section class="composer">
-
-        <div class="input-row">
-
-            <label
-                class="icon-button"
-                title="Ajouter une image"
-            >
-
-                📎
-
-                <input
-                    type="file"
-                    id="imageInput"
-                    accept="image/*"
-                >
-
-            </label>
-
-
-            <textarea
-                id="messageInput"
-                placeholder="Écris ton message..."
-                rows="1"
-            ></textarea>
-
-
-            <button
-                class="send-button"
-                id="sendButton"
-                type="button"
-                title="Envoyer"
-            >
-                ➤
-            </button>
-
-        </div>
-
-        <div class="hint">
-            Messie IA peut parfois faire des erreurs.
-        </div>
-
-    </section>
 
 </div>
 
@@ -503,83 +693,186 @@
 <script>
 
     // ========================================================
-    // VARIABLES
+    // ÉTAT
     // ========================================================
 
-    const messagesContainer =
+    let currentConversationId = null;
+
+    let localHistory = [];
+
+    let authMode = "login";
+
+    let selectedImage = null;
+
+
+    // ========================================================
+    // ÉLÉMENTS
+    // ========================================================
+
+    const messagesElement =
         document.getElementById("messages");
 
-    const welcome =
+    const welcomeElement =
         document.getElementById("welcome");
 
-    const messageInput =
-        document.getElementById("messageInput");
+    const promptElement =
+        document.getElementById("prompt");
 
     const sendButton =
         document.getElementById("sendButton");
 
-    const clearButton =
-        document.getElementById("clearButton");
+    const statusElement =
+        document.getElementById("status");
 
-    const imageInput =
-        document.getElementById("imageInput");
+    const fileInput =
+        document.getElementById("fileInput");
 
-    const imagePreview =
-        document.getElementById("imagePreview");
+    const voiceButton =
+        document.getElementById("voiceButton");
 
-    const imagePreviewContainer =
-        document.getElementById(
-            "imagePreviewContainer"
-        );
+    const generateButton =
+        document.getElementById("generateButton");
 
-    const removeImage =
-        document.getElementById(
-            "removeImage"
-        );
+    const conversationList =
+        document.getElementById("conversationList");
 
+    const accountButton =
+        document.getElementById("accountButton");
 
-    let history = [];
+    const authModal =
+        document.getElementById("authModal");
 
-    let selectedImage = null;
+    const authTitle =
+        document.getElementById("authTitle");
 
-    let loading = false;
+    const authError =
+        document.getElementById("authError");
+
+    const nameContainer =
+        document.getElementById("nameContainer");
+
+    const nameInput =
+        document.getElementById("nameInput");
+
+    const emailInput =
+        document.getElementById("emailInput");
+
+    const passwordInput =
+        document.getElementById("passwordInput");
+
+    const authSubmit =
+        document.getElementById("authSubmit");
+
+    const authClose =
+        document.getElementById("authClose");
+
+    const authSwitch =
+        document.getElementById("authSwitch");
+
+    const accountName =
+        document.getElementById("accountName");
+
+    const accountEmail =
+        document.getElementById("accountEmail");
+
+    const mobileMenu =
+        document.getElementById("mobileMenu");
+
+    const sidebar =
+        document.getElementById("sidebar");
 
 
     // ========================================================
-    // AJOUTER UN MESSAGE
+    // OUTILS
+    // ========================================================
+
+    function setStatus(text) {
+
+        statusElement.textContent = text || "";
+
+    }
+
+
+    function escapeHtml(text) {
+
+        const div =
+            document.createElement("div");
+
+        div.textContent =
+            text;
+
+        return div.innerHTML;
+
+    }
+
+
+    // ========================================================
+    // AFFICHER MESSAGE
     // ========================================================
 
     function addMessage(
         role,
         content,
-        isError = false
+        image = null
     ) {
 
-        if (welcome) {
-            welcome.style.display = "none";
+        if (welcomeElement) {
+
+            welcomeElement.style.display =
+                "none";
+
         }
 
 
         const wrapper =
             document.createElement("div");
 
-
         wrapper.className =
-            "message " +
-            role +
-            (isError ? " error" : "");
+            "message " + role;
 
 
         const bubble =
             document.createElement("div");
 
-
         bubble.className =
             "bubble";
 
 
-        bubble.textContent =
-            content;
+        if (image) {
+
+            const img =
+                document.createElement("img");
+
+            img.src =
+                image;
+
+            img.className =
+                "image-preview";
+
+            bubble.appendChild(
+                img
+            );
+
+            if (content) {
+
+                const text =
+                    document.createElement("div");
+
+                text.textContent =
+                    content;
+
+                bubble.appendChild(
+                    text
+                );
+
+            }
+
+        } else {
+
+            bubble.textContent =
+                content;
+
+        }
 
 
         wrapper.appendChild(
@@ -587,85 +880,231 @@
         );
 
 
-        messagesContainer.appendChild(
+        messagesElement.appendChild(
             wrapper
         );
 
 
-        messagesContainer.scrollTop =
-            messagesContainer.scrollHeight;
+        messagesElement.scrollTop =
+            messagesElement.scrollHeight;
 
-
-        return wrapper;
     }
 
 
     // ========================================================
-    // INDICATEUR DE CHARGEMENT
+    // NOUVELLE CONVERSATION
     // ========================================================
 
-    function addLoading() {
+    async function newConversation() {
 
-        if (welcome) {
-            welcome.style.display = "none";
+        currentConversationId = null;
+
+        localHistory = [];
+
+        messagesElement.innerHTML = "";
+
+        messagesElement.appendChild(
+            welcomeElement
+        );
+
+        welcomeElement.style.display =
+            "block";
+
+
+        try {
+
+            const response =
+                await fetch(
+                    "/api/conversations",
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type":
+                                "application/json"
+                        },
+                        body: JSON.stringify({
+                            title:
+                                "Nouvelle conversation"
+                        })
+                    }
+                );
+
+
+            const data =
+                await response.json();
+
+
+            if (data.success) {
+
+                currentConversationId =
+                    data.conversation.id;
+
+                await loadConversations();
+
+            }
+
+        } catch (error) {
+
+            console.log(error);
+
         }
 
-
-        const wrapper =
-            document.createElement("div");
-
-
-        wrapper.className =
-            "message assistant";
-
-
-        wrapper.id =
-            "loadingMessage";
-
-
-        const bubble =
-            document.createElement("div");
-
-
-        bubble.className =
-            "bubble";
-
-
-        bubble.innerHTML = `
-            <span class="loading">
-                <span class="dot"></span>
-                <span class="dot"></span>
-                <span class="dot"></span>
-            </span>
-        `;
-
-
-        wrapper.appendChild(
-            bubble
-        );
-
-
-        messagesContainer.appendChild(
-            wrapper
-        );
-
-
-        messagesContainer.scrollTop =
-            messagesContainer.scrollHeight;
-
     }
 
 
-    function removeLoading() {
+    // ========================================================
+    // CHARGER CONVERSATIONS
+    // ========================================================
 
-        const element =
-            document.getElementById(
-                "loadingMessage"
+    async function loadConversations() {
+
+        try {
+
+            const response =
+                await fetch(
+                    "/api/conversations"
+                );
+
+
+            if (response.status === 401) {
+
+                conversationList.innerHTML =
+                    "<div style='opacity:.6;font-size:13px;'>Connecte-toi pour voir tes conversations.</div>";
+
+                return;
+
+            }
+
+
+            const data =
+                await response.json();
+
+
+            conversationList.innerHTML =
+                "";
+
+
+            if (
+                !data.success ||
+                !data.conversations.length
+            ) {
+
+                conversationList.innerHTML =
+                    "<div style='opacity:.6;font-size:13px;'>Aucune conversation.</div>";
+
+                return;
+
+            }
+
+
+            data.conversations.forEach(
+                conversation => {
+
+                    const button =
+                        document.createElement("button");
+
+                    button.className =
+                        "conversation";
+
+                    button.textContent =
+                        "💬 " +
+                        conversation.title;
+
+                    button.onclick =
+                        () => loadConversation(
+                            conversation.id
+                        );
+
+                    conversationList.appendChild(
+                        button
+                    );
+
+                }
             );
 
 
-        if (element) {
-            element.remove();
+        } catch (error) {
+
+            console.log(error);
+
+        }
+
+    }
+
+
+    // ========================================================
+    // CHARGER CONVERSATION
+    // ========================================================
+
+    async function loadConversation(
+        id
+    ) {
+
+        try {
+
+            const response =
+                await fetch(
+                    "/api/conversations/" + id
+                );
+
+
+            const data =
+                await response.json();
+
+
+            if (!data.success) {
+
+                return;
+
+            }
+
+
+            currentConversationId =
+                id;
+
+
+            localHistory = [];
+
+
+            messagesElement.innerHTML = "";
+
+
+            const conversation =
+                data.conversation;
+
+
+            conversation.messages.forEach(
+                message => {
+
+                    addMessage(
+                        message.role,
+                        message.content
+                    );
+
+
+                    localHistory.push({
+
+                        role:
+                            message.role,
+
+                        content:
+                            message.content
+
+                    });
+
+                }
+            );
+
+
+            sidebar.classList.remove(
+                "open"
+            );
+
+
+        } catch (error) {
+
+            console.log(error);
+
         }
 
     }
@@ -677,54 +1116,44 @@
 
     async function sendMessage() {
 
-        if (loading) {
+        const message =
+            promptElement.value.trim();
+
+
+        if (!message) {
+
             return;
-        }
-
-
-        const text =
-            messageInput.value.trim();
-
-
-        // ----------------------------------------------------
-        // IMAGE
-        // ----------------------------------------------------
-
-        if (selectedImage) {
-
-            if (!text) {
-
-                await analyzeImage();
-
-                return;
-
-            }
 
         }
 
 
-        if (!text) {
-            return;
-        }
-
-
-        loading = true;
-
-        sendButton.disabled = true;
+        promptElement.value =
+            "";
 
 
         addMessage(
             "user",
-            text
+            message
         );
 
 
-        messageInput.value = "";
+        localHistory.push({
 
-        autoResize();
+            role:
+                "user",
+
+            content:
+                message
+
+        });
 
 
-        addLoading();
+        sendButton.disabled =
+            true;
+
+        setStatus(
+            "Messie IA réfléchit..."
+        );
 
 
         try {
@@ -733,180 +1162,25 @@
                 await fetch(
                     "/api/chat",
                     {
-
                         method: "POST",
-
                         headers: {
                             "Content-Type":
                                 "application/json"
                         },
+                        body: JSON.stringify({
 
-                        body:
-                            JSON.stringify({
+                            message:
+                                message,
 
-                                message:
-                                    text,
+                            history:
+                                localHistory.slice(
+                                    -20
+                                ),
 
-                                history:
-                                    history
+                            conversation_id:
+                                currentConversationId
 
-                            })
-
-                    }
-                );
-
-
-            let data;
-
-
-            try {
-
-                data =
-                    await response.json();
-
-            } catch {
-
-                throw new Error(
-                    "Le serveur a renvoyé une réponse invalide."
-                );
-
-            }
-
-
-            removeLoading();
-
-
-            if (!response.ok) {
-
-                throw new Error(
-                    data.error ||
-                    "Impossible de contacter Messie IA."
-                );
-
-            }
-
-
-            if (!data.response) {
-
-                throw new Error(
-                    "Messie IA n'a pas renvoyé de réponse."
-                );
-
-            }
-
-
-            addMessage(
-                "assistant",
-                data.response
-            );
-
-
-            history.push({
-
-                role:
-                    "user",
-
-                content:
-                    text
-
-            });
-
-
-            history.push({
-
-                role:
-                    "assistant",
-
-                content:
-                    data.response
-
-            });
-
-
-        } catch (error) {
-
-            removeLoading();
-
-
-            addMessage(
-                "assistant",
-                error.message ||
-                "Impossible de contacter Messie IA.",
-                true
-            );
-
-        } finally {
-
-            loading = false;
-
-            sendButton.disabled =
-                false;
-
-        }
-
-    }
-
-
-    // ========================================================
-    // ANALYSER UNE IMAGE
-    // ========================================================
-
-    async function analyzeImage() {
-
-        if (!selectedImage) {
-            return;
-        }
-
-
-        loading = true;
-
-        sendButton.disabled = true;
-
-
-        const prompt =
-            messageInput.value.trim() ||
-            "Décris et analyse cette image en détail.";
-
-
-        addMessage(
-            "user",
-            prompt
-        );
-
-
-        messageInput.value = "";
-
-        autoResize();
-
-
-        addLoading();
-
-
-        try {
-
-            const response =
-                await fetch(
-                    "/api/analyze-image",
-                    {
-
-                        method: "POST",
-
-                        headers: {
-                            "Content-Type":
-                                "application/json"
-                        },
-
-                        body:
-                            JSON.stringify({
-
-                                image:
-                                    selectedImage,
-
-                                prompt:
-                                    prompt
-
-                            })
-
+                        })
                     }
                 );
 
@@ -915,72 +1189,94 @@
                 await response.json();
 
 
-            removeLoading();
-
-
             if (!response.ok) {
 
                 throw new Error(
                     data.error ||
-                    "Impossible d'analyser l'image."
+                    "Erreur du serveur."
                 );
 
             }
 
 
+            if (!data.success) {
+
+                throw new Error(
+                    data.error ||
+                    "Messie IA n'a pas pu répondre."
+                );
+
+            }
+
+
+            const answer =
+                data.response;
+
+
+            currentConversationId =
+                data.conversation_id ||
+                currentConversationId;
+
+
             addMessage(
                 "assistant",
-                data.response ||
-                "Je n'ai pas pu analyser cette image."
+                answer
+            );
+
+
+            localHistory.push({
+
+                role:
+                    "assistant",
+
+                content:
+                    answer
+
+            });
+
+
+            await loadConversations();
+
+
+            setStatus(
+                ""
             );
 
 
         } catch (error) {
 
-            removeLoading();
-
-
             addMessage(
                 "assistant",
-                error.message ||
-                "Impossible d'analyser l'image.",
-                true
+                "❌ " + error.message
             );
 
-        } finally {
 
-            loading = false;
-
-            sendButton.disabled =
-                false;
+            setStatus(
+                ""
+            );
 
         }
+
+
+        sendButton.disabled =
+            false;
 
     }
 
 
     // ========================================================
-    // IMAGE SÉLECTIONNÉE
+    // IMAGE
     // ========================================================
 
-    imageInput.addEventListener(
+    fileInput.addEventListener(
         "change",
-        function () {
+        async function() {
 
             const file =
                 this.files[0];
 
 
             if (!file) {
-                return;
-            }
-
-
-            if (!file.type.startsWith("image/")) {
-
-                alert(
-                    "Veuillez sélectionner une image."
-                );
 
                 return;
 
@@ -992,18 +1288,86 @@
 
 
             reader.onload =
-                function (event) {
+                async function(event) {
 
                     selectedImage =
                         event.target.result;
 
 
-                    imagePreview.src =
-                        selectedImage;
+                    addMessage(
+                        "user",
+                        "Analyse cette image.",
+                        selectedImage
+                    );
 
 
-                    imagePreviewContainer.style.display =
-                        "block";
+                    setStatus(
+                        "Analyse de l'image..."
+                    );
+
+
+                    try {
+
+                        const response =
+                            await fetch(
+                                "/api/analyze-image",
+                                {
+                                    method: "POST",
+                                    headers: {
+                                        "Content-Type":
+                                            "application/json"
+                                    },
+                                    body: JSON.stringify({
+
+                                        image:
+                                            selectedImage,
+
+                                        prompt:
+                                            "Analyse cette image et explique ce que tu vois de manière détaillée."
+
+                                    })
+                                }
+                            );
+
+
+                        const data =
+                            await response.json();
+
+
+                        if (!response.ok) {
+
+                            throw new Error(
+                                data.error ||
+                                "Erreur d'analyse."
+                            );
+
+                        }
+
+
+                        addMessage(
+                            "assistant",
+                            data.response
+                        );
+
+
+                    } catch (error) {
+
+                        addMessage(
+                            "assistant",
+                            "❌ " +
+                            error.message
+                        );
+
+                    }
+
+
+                    setStatus(
+                        ""
+                    );
+
+
+                    fileInput.value =
+                        "";
 
                 };
 
@@ -1017,85 +1381,679 @@
 
 
     // ========================================================
-    // SUPPRIMER IMAGE
+    // GÉNÉRATION IMAGE
     // ========================================================
 
-    removeImage.addEventListener(
+    generateButton.addEventListener(
         "click",
-        function () {
+        async function() {
 
-            selectedImage = null;
+            const prompt =
+                promptElement.value.trim();
 
-            imageInput.value = "";
 
-            imagePreview.src = "";
+            if (!prompt) {
 
-            imagePreviewContainer.style.display =
-                "none";
+                alert(
+                    "Décris l'image que tu veux créer."
+                );
+
+                return;
+
+            }
+
+
+            setStatus(
+                "Génération de l'image..."
+            );
+
+
+            generateButton.disabled =
+                true;
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        "/api/generate-image",
+                        {
+                            method: "POST",
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
+                            body: JSON.stringify({
+
+                                prompt:
+                                    prompt,
+
+                                aspect_ratio:
+                                    "1:1",
+
+                                resolution:
+                                    "1K",
+
+                                quality:
+                                    "auto",
+
+                                output_format:
+                                    "png"
+
+                            })
+                        }
+                    );
+
+
+                const data =
+                    await response.json();
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        data.error ||
+                        "Erreur de génération."
+                    );
+
+                }
+
+
+                if (
+                    !data.success ||
+                    !data.images ||
+                    !data.images.length
+                ) {
+
+                    throw new Error(
+                        data.error ||
+                        "Aucune image générée."
+                    );
+
+                }
+
+
+                data.images.forEach(
+                    image => {
+
+                        addMessage(
+                            "assistant",
+                            "Voici ton image :",
+                            image.data
+                        );
+
+                    }
+                );
+
+
+            } catch (error) {
+
+                addMessage(
+                    "assistant",
+                    "❌ " +
+                    error.message
+                );
+
+            }
+
+
+            generateButton.disabled =
+                false;
+
+
+            setStatus(
+                ""
+            );
 
         }
     );
 
 
     // ========================================================
-    // NOUVELLE DISCUSSION
+    // VOIX
     // ========================================================
 
-    clearButton.addEventListener(
-        "click",
-        function () {
-
-            history = [];
-
-            selectedImage = null;
-
-            imageInput.value = "";
-
-            imagePreview.src = "";
-
-            imagePreviewContainer.style.display =
-                "none";
+    let recognition = null;
 
 
-            messagesContainer.innerHTML = `
-                <div
-                    class="welcome"
-                    id="welcome"
-                >
+    function setupVoice() {
 
-                    <div class="welcome-logo">
-                        M
-                    </div>
+        const SpeechRecognition =
+            window.SpeechRecognition ||
+            window.webkitSpeechRecognition;
 
-                    <h2>
-                        Bonjour 👋
-                    </h2>
 
-                    <p>
-                        Je suis Messie IA.
-                        Pose-moi une question,
-                        demande-moi de t'aider,
-                        d'apprendre ou d'analyser
-                        une image.
-                    </p>
+        if (!SpeechRecognition) {
 
-                </div>
-            `;
+            voiceButton.addEventListener(
+                "click",
+                function() {
+
+                    alert(
+                        "La reconnaissance vocale n'est pas disponible dans ce navigateur."
+                    );
+
+                }
+            );
+
+            return;
 
         }
-    );
+
+
+        recognition =
+            new SpeechRecognition();
+
+
+        recognition.lang =
+            "fr-FR";
+
+
+        recognition.continuous =
+            false;
+
+
+        recognition.interimResults =
+            true;
+
+
+        recognition.onstart =
+            function() {
+
+                voiceButton.classList.add(
+                    "recording"
+                );
+
+                voiceButton.textContent =
+                    "⏹️ Arrêter";
+
+                setStatus(
+                    "Je t'écoute..."
+                );
+
+            };
+
+
+        recognition.onresult =
+            function(event) {
+
+                let transcript =
+                    "";
+
+
+                for (
+                    let i = event.resultIndex;
+                    i < event.results.length;
+                    i++
+                ) {
+
+                    transcript +=
+                        event.results[i][0].transcript;
+
+                }
+
+
+                promptElement.value =
+                    transcript;
+
+            };
+
+
+        recognition.onerror =
+            function(event) {
+
+                console.log(
+                    "Voice error:",
+                    event.error
+                );
+
+                setStatus(
+                    "Impossible d'utiliser le microphone."
+                );
+
+            };
+
+
+        recognition.onend =
+            function() {
+
+                voiceButton.classList.remove(
+                    "recording"
+                );
+
+                voiceButton.textContent =
+                    "🎙️ Voix";
+
+                setStatus(
+                    ""
+                );
+
+            };
+
+
+        voiceButton.addEventListener(
+            "click",
+            function() {
+
+                if (
+                    voiceButton.classList.contains(
+                        "recording"
+                    )
+                ) {
+
+                    recognition.stop();
+
+                    return;
+
+                }
+
+
+                recognition.start();
+
+            }
+        );
+
+    }
+
+
+    setupVoice();
 
 
     // ========================================================
-    // ENTRÉE CLAVIER
+    // AUTHENTIFICATION
     // ========================================================
 
-    messageInput.addEventListener(
-        "keydown",
-        function (event) {
+    function openLogin() {
+
+        authMode =
+            "login";
+
+
+        authTitle.textContent =
+            "Connexion";
+
+
+        authSubmit.textContent =
+            "Se connecter";
+
+
+        nameContainer.classList.add(
+            "hidden"
+        );
+
+
+        passwordInput.autocomplete =
+            "current-password";
+
+
+        authSwitch.textContent =
+            "Créer un compte";
+
+
+        authError.textContent =
+            "";
+
+
+        authModal.classList.add(
+            "show"
+        );
+
+    }
+
+
+    function openRegister() {
+
+        authMode =
+            "register";
+
+
+        authTitle.textContent =
+            "Créer un compte";
+
+
+        authSubmit.textContent =
+            "Créer mon compte";
+
+
+        nameContainer.classList.remove(
+            "hidden"
+        );
+
+
+        passwordInput.autocomplete =
+            "new-password";
+
+
+        authSwitch.textContent =
+            "J'ai déjà un compte";
+
+
+        authError.textContent =
+            "";
+
+
+        authModal.classList.add(
+            "show"
+        );
+
+    }
+
+
+    authSwitch.addEventListener(
+        "click",
+        function() {
 
             if (
-                event.key === "Enter" &&
+                authMode ===
+                "login"
+            ) {
+
+                openRegister();
+
+            } else {
+
+                openLogin();
+
+            }
+
+        }
+    );
+
+
+    authClose.addEventListener(
+        "click",
+        function() {
+
+            authModal.classList.remove(
+                "show"
+            );
+
+        }
+    );
+
+
+    accountButton.addEventListener(
+        "click",
+        async function() {
+
+            const response =
+                await fetch(
+                    "/api/me"
+                );
+
+
+            const data =
+                await response.json();
+
+
+            if (data.logged_in) {
+
+                const shouldLogout =
+                    confirm(
+                        "Voulez-vous vous déconnecter ?"
+                    );
+
+
+                if (shouldLogout) {
+
+                    await fetch(
+                        "/api/logout",
+                        {
+                            method: "POST"
+                        }
+                    );
+
+
+                    location.reload();
+
+                }
+
+            } else {
+
+                openLogin();
+
+            }
+
+        }
+    );
+
+
+    authSubmit.addEventListener(
+        "click",
+        async function() {
+
+            authError.textContent =
+                "";
+
+
+            const email =
+                emailInput.value.trim();
+
+
+            const password =
+                passwordInput.value;
+
+
+            const name =
+                nameInput.value.trim();
+
+
+            if (!email || !password) {
+
+                authError.textContent =
+                    "Remplis tous les champs.";
+
+                return;
+
+            }
+
+
+            if (
+                authMode ===
+                "register"
+                &&
+                !name
+            ) {
+
+                authError.textContent =
+                    "Entre ton nom.";
+
+                return;
+
+            }
+
+
+            authSubmit.disabled =
+                true;
+
+
+            try {
+
+                const endpoint =
+                    authMode === "login"
+                    ? "/api/login"
+                    : "/api/register";
+
+
+                const body =
+                    authMode === "login"
+                    ? {
+
+                        email:
+                            email,
+
+                        password:
+                            password
+
+                    }
+                    : {
+
+                        name:
+                            name,
+
+                        email:
+                            email,
+
+                        password:
+                            password
+
+                    };
+
+
+                const response =
+                    await fetch(
+                        endpoint,
+                        {
+                            method: "POST",
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
+                            body:
+                                JSON.stringify(body)
+                        }
+                    );
+
+
+                const data =
+                    await response.json();
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        data.error ||
+                        "Erreur de connexion."
+                    );
+
+                }
+
+
+                authModal.classList.remove(
+                    "show"
+                );
+
+
+                emailInput.value =
+                    "";
+
+                passwordInput.value =
+                    "";
+
+                nameInput.value =
+                    "";
+
+
+                await updateUserInterface();
+
+                await loadConversations();
+
+
+            } catch (error) {
+
+                authError.textContent =
+                    error.message;
+
+            }
+
+
+            authSubmit.disabled =
+                false;
+
+        }
+    );
+
+
+    // ========================================================
+    // UTILISATEUR
+    // ========================================================
+
+    async function updateUserInterface() {
+
+        try {
+
+            const response =
+                await fetch(
+                    "/api/me"
+                );
+
+
+            const data =
+                await response.json();
+
+
+            if (
+                data.success &&
+                data.logged_in
+            ) {
+
+                accountName.textContent =
+                    data.user.name;
+
+
+                accountEmail.textContent =
+                    data.user.email;
+
+
+                accountButton.textContent =
+                    "Se déconnecter";
+
+
+                return;
+
+            }
+
+
+            accountName.textContent =
+                "Invité";
+
+
+            accountEmail.textContent =
+                "Connecte-toi pour sauvegarder tes conversations.";
+
+
+            accountButton.textContent =
+                "Se connecter";
+
+
+        } catch (error) {
+
+            console.log(error);
+
+        }
+
+    }
+
+
+    // ========================================================
+    // NOUVELLE CONVERSATION
+    // ========================================================
+
+    document
+        .getElementById("newChatButton")
+        .addEventListener(
+            "click",
+            newConversation
+        );
+
+
+    // ========================================================
+    // ENVOI
+    // ========================================================
+
+    sendButton.addEventListener(
+        "click",
+        sendMessage
+    );
+
+
+    promptElement.addEventListener(
+        "keydown",
+        function(event) {
+
+            if (
+                event.key === "Enter"
+                &&
                 !event.shiftKey
             ) {
 
@@ -1110,42 +2068,40 @@
 
 
     // ========================================================
-    // REDIMENSIONNEMENT TEXTAREA
+    // MENU MOBILE
     // ========================================================
 
-    function autoResize() {
+    mobileMenu.addEventListener(
+        "click",
+        function() {
 
-        messageInput.style.height =
-            "auto";
+            sidebar.classList.toggle(
+                "open"
+            );
+
+        }
+    );
 
 
-        messageInput.style.height =
-            Math.min(
-                messageInput.scrollHeight,
-                140
-            ) + "px";
+    // ========================================================
+    // INITIALISATION
+    // ========================================================
+
+    async function initialize() {
+
+        await updateUserInterface();
+
+        await loadConversations();
 
     }
 
 
-    messageInput.addEventListener(
-        "input",
-        autoResize
-    );
-
-
-    // ========================================================
-    // BOUTON ENVOYER
-    // ========================================================
-
-    sendButton.addEventListener(
-        "click",
-        sendMessage
-    );
+    initialize();
 
 </script>
 
 </body>
+
 </html>
 
 
