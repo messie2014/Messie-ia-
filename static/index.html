@@ -1,1969 +1,2009 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0, maximum-scale=1.0"
-    >
-
-    <meta name="theme-color" content="#000000">
-
-    <title>Messie IA</title>
-
-    <style>
-
-        /* =========================================================
-           MESSIE IA
-           STYLE COMPLET
-        ========================================================= */
-
-        :root {
-            --bg: #000000;
-            --panel: #111111;
-            --panel-2: #181818;
-            --border: #292929;
-            --text: #ffffff;
-            --muted: #9b9b9b;
-            --user: #252525;
-            --accent: #ffffff;
-            --danger: #ff5c5c;
-        }
-
-        * {
-            box-sizing: border-box;
-        }
-
-        html,
-        body {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            background: var(--bg);
-            color: var(--text);
-            font-family:
-                -apple-system,
-                BlinkMacSystemFont,
-                "Segoe UI",
-                Roboto,
-                Arial,
-                sans-serif;
-        }
-
-        body {
-            overflow: hidden;
-        }
-
-        button,
-        textarea {
-            font: inherit;
-        }
-
-        /* =========================================================
-           APPLICATION
-        ========================================================= */
-
-        .app {
-            width: 100%;
-            height: 100dvh;
-            display: flex;
-            flex-direction: column;
-            background: var(--bg);
-        }
-
-        /* =========================================================
-           HEADER
-        ========================================================= */
-
-        .header {
-            height: 64px;
-            min-height: 64px;
-            border-bottom: 1px solid var(--border);
-
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-
-            padding: 0 16px;
-
-            background: rgba(0, 0, 0, 0.96);
-            position: relative;
-            z-index: 10;
-        }
-
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 19px;
-            font-weight: 700;
-        }
+  
+  
+  
 
-        .brand-icon {
-            width: 38px;
-            height: 38px;
+<meta charset="UTF-8">  
 
-            border-radius: 50%;
+<meta  
+    name="viewport"  
+    content="width=device-width, initial-scale=1.0"  
+>  
 
-            display: flex;
-            align-items: center;
-            justify-content: center;
+<title>Messie IA</title>  
 
-            background: #1d1d1d;
-            border: 1px solid #333;
+<style>  
 
-            font-size: 20px;
-        }
+    * {  
+        box-sizing: border-box;  
+        margin: 0;  
+        padding: 0;  
+    }  
 
-        .header-actions {
-            display: flex;
-            gap: 8px;
-        }
+    :root {  
 
-        .icon-button {
-            width: 42px;
-            height: 42px;
+        --bg: #020617;  
+        --panel: #0f172a;  
+        --panel2: #111827;  
+        --card: #1e293b;  
 
-            border-radius: 50%;
+        --text: #ffffff;  
+        --text-soft: #cbd5e1;  
+        --muted: #94a3b8;  
 
-            border: 1px solid #333;
-            background: #1d1d1d;
+        --border: rgba(255,255,255,0.09);  
 
-            color: white;
+        --primary: #2563eb;  
+        --secondary: #7c3aed;  
 
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        --danger: #ef4444;  
 
-            cursor: pointer;
+    }  
 
-            transition: 0.2s;
-        }
 
-        .icon-button:hover {
-            background: #292929;
-        }
+    /* =====================================================  
+       MODE CLAIR  
+    ===================================================== */  
 
-        .icon-button:active {
-            transform: scale(0.94);
-        }
+    body.light {  
 
-        /* =========================================================
-           CHAT
-        ========================================================= */
+        --bg: #f1f5f9;  
+        --panel: #ffffff;  
+        --panel2: #f8fafc;  
+        --card: #e2e8f0;  
 
-        .chat {
-            flex: 1;
+        --text: #0f172a;  
+        --text-soft: #334155;  
+        --muted: #64748b;  
 
-            overflow-y: auto;
-            overflow-x: hidden;
+        --border: rgba(15,23,42,0.12);  
 
-            padding: 24px 16px 150px;
+    }  
 
-            scroll-behavior: smooth;
 
-            -webkit-overflow-scrolling: touch;
-        }
+    /* =====================================================  
+       COULEURS  
+    ===================================================== */  
 
-        .chat::-webkit-scrollbar {
-            width: 5px;
-        }
+    body.theme-purple {  
+        --primary: #7c3aed;  
+        --secondary: #2563eb;  
+    }  
 
-        .chat::-webkit-scrollbar-thumb {
-            background: #333;
-            border-radius: 10px;
-        }
+    body.theme-green {  
+        --primary: #16a34a;  
+        --secondary: #0d9488;  
+    }  
 
-        /* =========================================================
-           MESSAGE
-        ========================================================= */
+    body.theme-orange {  
+        --primary: #ea580c;  
+        --secondary: #e11d48;  
+    }  
 
-        .message {
-            width: 100%;
-            max-width: 900px;
+    body.theme-pink {  
+        --primary: #db2777;  
+        --secondary: #9333ea;  
+    }  
 
-            margin: 0 auto 22px;
 
-            display: flex;
-        }
+    /* =====================================================  
+       BODY  
+    ===================================================== */  
 
-        .message.user {
-            justify-content: flex-end;
-        }
+    body {  
 
-        .message.ai {
-            justify-content: flex-start;
-        }
+        font-family:  
+            Arial,  
+            Helvetica,  
+            sans-serif;  
 
-        .bubble {
-            max-width: 85%;
+        background:  
+            linear-gradient(  
+                135deg,  
+                #0f172a,  
+                #111827,  
+                #020617  
+            );  
 
-            border-radius: 18px;
+        color: var(--text);  
 
-            position: relative;
-        }
+        min-height: 100vh;  
 
-        .user .bubble {
-            background: var(--user);
+        overflow: hidden;  
 
-            padding: 12px 15px;
+        transition:  
+            background .25s,  
+            color .25s;  
 
-            border-bottom-right-radius: 5px;
-        }
+    }  
 
-        .ai .bubble {
-            width: 100%;
-            max-width: 100%;
 
-            padding: 4px 0;
+    body.light {  
 
-            background: transparent;
-        }
+        background:  
+            linear-gradient(  
+                135deg,  
+                #e2e8f0,  
+                #f8fafc,  
+                #cbd5e1  
+            );  
 
-        /* =========================================================
-           CONTENU IA
-        ========================================================= */
+    }  
 
-        .ai-content {
-            line-height: 1.7;
 
-            font-size: 16px;
+    /* =====================================================  
+       APPLICATION  
+    ===================================================== */  
 
-            overflow-wrap: anywhere;
-            word-break: break-word;
-        }
+    .app {  
 
-        .ai-content strong {
-            font-weight: 700;
-        }
+        width: 100%;  
 
-        .ai-content em {
-            font-style: italic;
-        }
+        height: 100vh;  
 
-        .ai-content h1,
-        .ai-content h2,
-        .ai-content h3 {
-            margin-top: 22px;
-            margin-bottom: 10px;
+        display: flex;  
 
-            line-height: 1.3;
-        }
+        background: var(--panel);  
 
-        .ai-content h1 {
-            font-size: 25px;
-        }
+    }  
 
-        .ai-content h2 {
-            font-size: 21px;
-        }
 
-        .ai-content h3 {
-            font-size: 18px;
-        }
+    /* =====================================================  
+       SIDEBAR  
+    ===================================================== */  
 
-        .ai-content p {
-            margin: 9px 0;
-        }
+    .sidebar {  
 
-        .ai-content ul,
-        .ai-content ol {
-            margin: 10px 0;
-            padding-left: 25px;
-        }
+        width: 280px;  
 
-        .ai-content li {
-            margin: 5px 0;
-        }
+        background:  
+            rgba(2,6,23,.98);  
 
-        .ai-content blockquote {
-            margin: 12px 0;
-            padding: 8px 14px;
+        border-right:  
+            1px solid var(--border);  
 
-            border-left: 3px solid #777;
+        display: flex;  
 
-            color: #c8c8c8;
-            background: #101010;
-            border-radius: 5px;
-        }
+        flex-direction: column;  
 
-        .ai-content a {
-            color: #fff;
-            text-decoration: underline;
-        }
+        flex-shrink: 0;  
 
-        .ai-content code:not(pre code) {
-            background: #202020;
+        z-index: 20;  
 
-            border: 1px solid #303030;
+    }  
 
-            padding: 2px 6px;
 
-            border-radius: 5px;
+    body.light .sidebar {  
 
-            font-family:
-                "SFMono-Regular",
-                Consolas,
-                "Liberation Mono",
-                monospace;
+        background:  
+            rgba(255,255,255,.98);  
 
-            font-size: 0.9em;
-        }
+    }  
 
-        /* =========================================================
-           BLOCS DE CODE
-        ========================================================= */
 
-        .code-wrapper {
-            margin: 15px 0;
+    .sidebar-header {  
 
-            border: 1px solid #303030;
-            border-radius: 12px;
+        padding: 18px;  
 
-            overflow: hidden;
+        border-bottom:  
+            1px solid var(--border);  
 
-            background: #0c0c0c;
-        }
+    }  
 
-        .code-header {
-            height: 38px;
 
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+    .brand {  
 
-            padding: 0 10px;
+        display: flex;  
 
-            background: #171717;
+        align-items: center;  
 
-            border-bottom: 1px solid #292929;
-        }
+        gap: 10px;  
 
-        .code-language {
-            color: #999;
+        margin-bottom: 18px;  
 
-            font-size: 12px;
+    }  
 
-            font-family:
-                "SFMono-Regular",
-                Consolas,
-                monospace;
-        }
 
-        .copy-code {
-            border: 0;
+    .brand-icon {  
 
-            background: transparent;
+        width: 42px;  
 
-            color: #bbb;
+        height: 42px;  
 
-            padding: 6px 9px;
+        border-radius: 13px;  
 
-            border-radius: 6px;
+        display: flex;  
 
-            cursor: pointer;
+        align-items: center;  
 
-            font-size: 12px;
-        }
+        justify-content: center;  
 
-        .copy-code:hover {
-            background: #292929;
-            color: white;
-        }
+        background:  
+            linear-gradient(  
+                135deg,  
+                var(--primary),  
+                var(--secondary)  
+            );  
 
-        .code-wrapper pre {
-            margin: 0;
+        color: white;  
 
-            padding: 15px;
+        font-size: 20px;  
 
-            overflow-x: auto;
+        font-weight: bold;  
 
-            font-size: 13px;
+    }  
 
-            line-height: 1.55;
 
-            font-family:
-                "SFMono-Regular",
-                Consolas,
-                "Liberation Mono",
-                monospace;
-        }
+    .brand-text h1 {  
 
-        .code-wrapper pre::-webkit-scrollbar {
-            height: 5px;
-        }
+        font-size: 18px;  
 
-        .code-wrapper pre::-webkit-scrollbar-thumb {
-            background: #444;
-            border-radius: 10px;
-        }
+    }  
 
-        /* =========================================================
-           ACTIONS IA
-        ========================================================= */
 
-        .ai-actions {
-            display: flex;
+    .brand-text p {  
 
-            gap: 6px;
+        color: var(--muted);  
 
-            margin-top: 8px;
-        }
+        font-size: 11px;  
 
-        .ai-action-button {
-            border: 1px solid #292929;
+        margin-top: 3px;  
 
-            background: #111;
+    }  
 
-            color: #aaa;
 
-            border-radius: 7px;
+    /* =====================================================  
+       NOUVELLE CONVERSATION  
+    ===================================================== */  
 
-            padding: 6px 9px;
+    #newChatButton {  
 
-            font-size: 11px;
+        width: 100%;  
 
-            cursor: pointer;
+        padding: 12px;  
 
-            transition: 0.15s;
-        }
+        border: none;  
 
-        .ai-action-button:hover {
-            background: #fff;
-            color: #000;
-        }
+        border-radius: 12px;  
 
-        .ai-action-button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
+        background:  
+            linear-gradient(  
+                135deg,  
+                var(--primary),  
+                var(--secondary)  
+            );  
 
-        /* =========================================================
-           ÉCRAN D'ACCUEIL
-        ========================================================= */
+        color: white;  
 
-        .welcome {
-            min-height: 55vh;
+        font-size: 14px;  
 
-            display: flex;
-            flex-direction: column;
+        font-weight: bold;  
 
-            align-items: center;
-            justify-content: center;
+        cursor: pointer;  
 
-            text-align: center;
+    }  
 
-            padding: 30px 15px;
-        }
 
-        .welcome-icon {
-            font-size: 52px;
+    #newChatButton:hover {  
 
-            margin-bottom: 15px;
-        }
+        opacity: .9;  
 
-        .welcome h1 {
-            margin: 0 0 8px;
+    }  
 
-            font-size: 29px;
-        }
 
-        .welcome p {
-            color: var(--muted);
+    /* =====================================================  
+       HISTORIQUE  
+    ===================================================== */  
 
-            max-width: 500px;
+    .history-title {  
 
-            line-height: 1.6;
+        padding:  
+            16px 18px 8px;  
 
-            margin: 0;
-        }
+        color: var(--muted);  
 
-        /* =========================================================
-           ZONE D'ENVOI
-        ========================================================= */
+        font-size: 12px;  
 
-        .composer-area {
-            position: fixed;
+        font-weight: bold;  
 
-            left: 0;
-            right: 0;
-            bottom: 0;
+        text-transform: uppercase;  
 
-            padding: 10px 12px 14px;
+    }  
 
-            background:
-                linear-gradient(
-                    to top,
-                    #000 75%,
-                    rgba(0,0,0,0)
-                );
 
-            z-index: 20;
-        }
+    .history {  
 
-        .composer {
-            width: 100%;
-            max-width: 900px;
+        flex: 1;  
 
-            margin: 0 auto;
+        overflow-y: auto;  
 
-            display: flex;
-            align-items: flex-end;
+        padding:  
+            5px 10px 15px;  
 
-            gap: 8px;
+    }  
 
-            padding: 8px;
 
-            border: 1px solid #333;
+    .history-empty {  
 
-            border-radius: 24px;
+        padding: 20px 10px;  
 
-            background: #171717;
+        text-align: center;  
 
-            box-shadow:
-                0 10px 40px rgba(0,0,0,.45);
-        }
+        color: var(--muted);  
 
-        #messageInput {
-            flex: 1;
+        font-size: 13px;  
 
-            min-height: 42px;
-            max-height: 150px;
+        line-height: 1.5;  
 
-            resize: none;
+    }  
 
-            border: 0;
-            outline: 0;
 
-            background: transparent;
+    .conversation {  
 
-            color: white;
+        display: flex;  
 
-            padding: 10px 8px;
+        align-items: center;  
 
-            line-height: 1.4;
-        }
+        gap: 8px;  
 
-        #messageInput::placeholder {
-            color: #777;
-        }
+        padding: 11px 10px;  
 
-        #sendButton {
-            width: 42px;
-            height: 42px;
+        margin-bottom: 5px;  
 
-            flex-shrink: 0;
+        border-radius: 10px;  
 
-            border: 0;
+        cursor: pointer;  
 
-            border-radius: 50%;
+        transition:  
+            background .2s;  
 
-            background: white;
+    }  
 
-            color: black;
 
-            cursor: pointer;
+    .conversation:hover {  
 
-            font-size: 18px;
+        background:  
+            rgba(255,255,255,.06);  
 
-            display: flex;
-            align-items: center;
-            justify-content: center;
+    }  
 
-            transition: 0.2s;
-        }
 
-        #sendButton:hover {
-            transform: scale(1.04);
-        }
+    body.light .conversation:hover {  
 
-        #sendButton:active {
-            transform: scale(.94);
-        }
+        background:  
+            rgba(15,23,42,.06);  
 
-        #sendButton:disabled {
-            opacity: .45;
-            cursor: not-allowed;
-        }
+    }  
 
-        /* =========================================================
-           LOADING
-        ========================================================= */
 
-        .typing {
-            display: flex;
-            align-items: center;
-            gap: 5px;
+    .conversation.active {  
 
-            padding: 8px 0;
-        }
+        background:  
+            rgba(37,99,235,.18);  
 
-        .typing span {
-            width: 7px;
-            height: 7px;
+    }  
 
-            background: #aaa;
 
-            border-radius: 50%;
+    .conversation-main {  
 
-            animation: typing 1.2s infinite;
-        }
+        flex: 1;  
 
-        .typing span:nth-child(2) {
-            animation-delay: .15s;
-        }
+        min-width: 0;  
 
-        .typing span:nth-child(3) {
-            animation-delay: .3s;
-        }
+    }  
 
-        @keyframes typing {
-            0%,
-            60%,
-            100% {
-                opacity: .25;
-                transform: translateY(0);
-            }
 
-            30% {
-                opacity: 1;
-                transform: translateY(-3px);
-            }
-        }
+    .conversation-title {  
 
-        /* =========================================================
-           ERREUR
-        ========================================================= */
+        color: var(--text-soft);  
 
-        .error {
-            color: #ff8b8b;
+        font-size: 13px;  
 
-            background: rgba(255, 70, 70, .08);
+        white-space: nowrap;  
 
-            border: 1px solid rgba(255, 70, 70, .2);
+        overflow: hidden;  
 
-            border-radius: 10px;
+        text-overflow: ellipsis;  
 
-            padding: 10px;
+    }  
 
-            margin-top: 8px;
-        }
 
-        /* =========================================================
-           MOBILE
-        ========================================================= */
+    .conversation-date {  
 
-        @media (max-width: 600px) {
+        color: var(--muted);  
 
-            .header {
-                height: 58px;
-                min-height: 58px;
+        font-size: 10px;  
 
-                padding: 0 12px;
-            }
+        margin-top: 4px;  
 
-            .brand {
-                font-size: 17px;
-            }
+    }  
 
-            .brand-icon {
-                width: 34px;
-                height: 34px;
-            }
 
-            .chat {
-                padding: 18px 12px 145px;
-            }
+    .conversation-actions {  
 
-            .bubble {
-                max-width: 92%;
-            }
+        display: flex;  
 
-            .ai .bubble {
-                max-width: 100%;
-            }
+        gap: 3px;  
 
-            .ai-content {
-                font-size: 15px;
-            }
+        opacity: 0;  
 
-            .welcome h1 {
-                font-size: 25px;
-            }
+    }  
 
-            .code-wrapper pre {
-                font-size: 12px;
-            }
 
-            .composer-area {
-                padding-left: 8px;
-                padding-right: 8px;
-                padding-bottom: 9px;
-            }
+    .conversation:hover  
+    .conversation-actions {  
 
-            .composer {
-                border-radius: 22px;
-            }
-        }
+        opacity: 1;  
 
-    </style>
-</head>
+    }  
 
 
-<body>
+    .history-button {  
 
-<div class="app">
+        width: 28px;  
 
-    <!-- =========================================================
-         HEADER
-    ========================================================= -->
+        height: 28px;  
 
-    <header class="header">
+        border: none;  
 
-        <div class="brand">
+        border-radius: 7px;  
 
-            <div class="brand-icon">
-                🤖
-            </div>
+        background: transparent;  
 
-            <span>Messie IA</span>
+        color: var(--muted);  
 
-        </div>
+        cursor: pointer;  
 
-        <div class="header-actions">
+    }  
 
-            <button
-                class="icon-button"
-                id="clearButton"
-                title="Nouvelle conversation"
-                aria-label="Nouvelle conversation"
-            >
-                ✏️
-            </button>
 
-        </div>
+    .history-button:hover {  
 
-    </header>
+        background:  
+            rgba(255,255,255,.08);  
 
+        color: var(--text);  
 
-    <!-- =========================================================
-         CHAT
-    ========================================================= -->
+    }  
 
-    <main
-        id="chat"
-        class="chat"
-    >
 
-        <div
-            id="welcome"
-            class="welcome"
-        >
+    .history-button.delete:hover {  
 
-            <div class="welcome-icon">
-                ✨
-            </div>
+        color: var(--danger);  
 
-            <h1>
-                Bonjour, je suis Messie IA
-            </h1>
+    }  
 
-            <p>
-                Pose-moi une question, demande-moi du code,
-                une explication ou de l'aide pour ton projet.
-            </p>
 
-        </div>
+    /* =====================================================  
+       SIDEBAR FOOTER  
+    ===================================================== */  
 
-    </main>
+    .sidebar-footer {  
 
+        padding: 12px;  
 
-    <!-- =========================================================
-         COMPOSER
-    ========================================================= -->
+        border-top:  
+            1px solid var(--border);  
 
-    <div class="composer-area">
+    }  
 
-        <form
-            id="composer"
-            class="composer"
-        >
 
-            <textarea
-                id="messageInput"
-                placeholder="Répondre à Messie IA..."
-                rows="1"
-                autocomplete="off"
-            ></textarea>
+    .settings-button {  
 
-            <button
-                id="sendButton"
-                type="submit"
-                aria-label="Envoyer"
-            >
-                ➤
-            </button>
+        width: 100%;  
 
-        </form>
+        padding: 10px;  
 
-    </div>
+        border: none;  
 
-</div>
+        border-radius: 10px;  
 
+        background:  
+            rgba(255,255,255,.05);  
 
-<script>
+        color: var(--text-soft);  
 
-/* ================================================================
-   MESSIE IA
-   JAVASCRIPT COMPLET
-================================================================ */
+        cursor: pointer;  
 
+        text-align: left;  
 
-/*
-   IMPORTANT :
+        font-size: 13px;  
 
-   Si ton Flask utilise une autre route que /chat,
-   change uniquement cette ligne.
-*/
+    }  
 
-const API_URL = "/chat";
 
+    .settings-button:hover {  
 
-/* ================================================================
-   ÉLÉMENTS
-================================================================ */
+        background:  
+            rgba(255,255,255,.09);  
 
-const chat = document.getElementById("chat");
+    }  
 
-const input = document.getElementById("messageInput");
 
-const sendButton = document.getElementById("sendButton");
+    .footer-brand {  
 
-const composer = document.getElementById("composer");
+        text-align: center;  
 
-const clearButton = document.getElementById("clearButton");
+        color: var(--muted);  
 
-const welcome = document.getElementById("welcome");
+        font-size: 10px;  
 
+        margin-top: 10px;  
 
-/* ================================================================
-   ÉTAT
-================================================================ */
+    }  
 
-let isSending = false;
 
-let lastUserMessage = "";
+    /* =====================================================  
+       ZONE PRINCIPALE  
+    ===================================================== */  
 
-let lastUserMessageElement = null;
+    .main {  
 
-let lastAIMessageElement = null;
+        flex: 1;  
 
+        min-width: 0;  
 
-/* ================================================================
-   ÉCHAPPER LE HTML
-================================================================ */
+        display: flex;  
 
-/*
-   Protection contre l'injection HTML / JavaScript.
+        flex-direction: column;  
 
-   Le texte utilisateur ou IA est d'abord traité comme
-   du texte normal.
-*/
+        height: 100vh;  
 
-function escapeHTML(text) {
+    }  
 
-    const div = document.createElement("div");
 
-    div.textContent = String(text ?? "");
+    /* =====================================================  
+       HEADER  
+    ===================================================== */  
 
-    return div.innerHTML;
-}
+    .header {  
 
+        height: 72px;  
 
-/* ================================================================
-   FORMATAGE MARKDOWN
-================================================================ */
+        padding:  
+            12px 20px;  
 
-function formatAIText(text) {
+        background:  
+            rgba(2,6,23,.95);  
 
-    if (text === null || text === undefined) {
-        return "";
-    }
+        border-bottom:  
+            1px solid var(--border);  
 
-    text = String(text);
+        display: flex;  
 
-    /*
-       On protège d'abord tout le HTML.
-       Ainsi, une réponse contenant :
-       <script>...</script>
+        align-items: center;  
 
-       ne pourra pas être exécutée.
-    */
+        justify-content: space-between;  
 
-    let safe = escapeHTML(text);
+        flex-shrink: 0;  
 
+    }  
 
-    /* ============================================================
-       BLOCS DE CODE
-    ============================================================ */
 
-    const codeBlocks = [];
+    body.light .header {  
 
-    safe = safe.replace(
-        /```([a-zA-Z0-9_+#.-]*)\n?([\s\S]*?)```/g,
-        function(match, language, code) {
+        background:  
+            rgba(255,255,255,.96);  
 
-            const id = "code_" + codeBlocks.length;
+    }  
 
-            codeBlocks.push({
-                id: id,
-                language: language || "code",
-                code: code
-            });
 
-            return `@@CODE_${codeBlocks.length - 1}@@`;
-        }
-    );
+    .header-left {  
 
+        display: flex;  
 
-    /* ============================================================
-       CODE INLINE
-    ============================================================ */
+        align-items: center;  
 
-    safe = safe.replace(
-        /`([^`\n]+)`/g,
-        "<code>$1</code>"
-    );
+        gap: 12px;  
 
+        min-width: 0;  
 
-    /* ============================================================
-       TITRES
-    ============================================================ */
+    }  
 
-    safe = safe.replace(
-        /^### (.*)$/gm,
-        "<h3>$1</h3>"
-    );
 
-    safe = safe.replace(
-        /^## (.*)$/gm,
-        "<h2>$1</h2>"
-    );
+    .mobile-menu {  
 
-    safe = safe.replace(
-        /^# (.*)$/gm,
-        "<h1>$1</h1>"
-    );
+        display: none;  
 
+        width: 40px;  
 
-    /* ============================================================
-       GRAS
-    ============================================================ */
+        height: 40px;  
 
-    safe = safe.replace(
-        /\*\*(.*?)\*\*/g,
-        "<strong>$1</strong>"
-    );
+        border: none;  
 
-    safe = safe.replace(
-        /__(.*?)__/g,
-        "<strong>$1</strong>"
-    );
+        border-radius: 10px;  
 
+        background: var(--card);  
 
-    /* ============================================================
-       ITALIQUE
-    ============================================================ */
+        color: var(--text);  
 
-    safe = safe.replace(
-        /(?<!\*)\*([^*\n]+)\*(?!\*)/g,
-        "<em>$1</em>"
-    );
+        font-size: 20px;  
 
+        cursor: pointer;  
 
-    /* ============================================================
-       LISTES
-    ============================================================ */
+    }  
 
-    safe = safe.replace(
-        /^\s*[-*] (.*)$/gm,
-        "<li>$1</li>"
-    );
 
-    safe = safe.replace(
-        /(<li>.*<\/li>\n?)+/g,
-        function(match) {
+    .current-chat {  
 
-            return "<ul>" + match + "</ul>";
-        }
-    );
+        min-width: 0;  
 
+    }  
 
-    /* ============================================================
-       LISTES NUMÉROTÉES
-    ============================================================ */
 
-    safe = safe.replace(
-        /^\s*\d+\.\s+(.*)$/gm,
-        "<li>$1</li>"
-    );
+    .current-chat h2 {  
 
+        font-size: 17px;  
 
-    /* ============================================================
-       CITATIONS
-    ============================================================ */
+        white-space: nowrap;  
 
-    safe = safe.replace(
-        /^&gt; (.*)$/gm,
-        "<blockquote>$1</blockquote>"
-    );
+        overflow: hidden;  
 
+        text-overflow: ellipsis;  
 
-    /* ============================================================
-       LIENS
-    ============================================================ */
+    }  
 
-    /*
-       On n'autorise que http/https.
 
-       Cela évite notamment :
-       javascript:...
-    */
+    .current-chat p {  
 
-    safe = safe.replace(
-        /(^|[\s>])(https?:\/\/[^\s<]+)/g,
-        '$1<a href="$2" target="_blank" rel="noopener noreferrer">$2</a>'
-    );
+        color: #22c55e;  
 
+        font-size: 11px;  
 
-    /* ============================================================
-       RETOURS À LA LIGNE
-    ============================================================ */
+        margin-top: 3px;  
 
-    safe = safe.replace(
-        /\n{2,}/g,
-        "</p><p>"
-    );
+    }  
 
-    safe = safe.replace(
-        /\n/g,
-        "<br>"
-    );
 
+    .online-dot {  
 
-    /*
-       Nettoyage des <p> autour des éléments structurés.
-    */
+        display: inline-block;  
 
-    safe = "<p>" + safe + "</p>";
+        width: 7px;  
 
-    safe = safe.replace(
-        /<p>\s*(<h[1-3]>)/g,
-        "$1"
-    );
+        height: 7px;  
 
-    safe = safe.replace(
-        /(<\/h[1-3]>)\s*<\/p>/g,
-        "$1"
-    );
+        background: #22c55e;  
 
-    safe = safe.replace(
-        /<p>\s*(<ul>)/g,
-        "$1"
-    );
+        border-radius: 50%;  
 
-    safe = safe.replace(
-        /(<\/ul>)\s*<\/p>/g,
-        "$1"
-    );
+        margin-right: 4px;  
 
-    safe = safe.replace(
-        /<p>\s*(<blockquote>)/g,
-        "$1"
-    );
+    }  
 
-    safe = safe.replace(
-        /(<\/blockquote>)\s*<\/p>/g,
-        "$1"
-    );
 
+    /* =====================================================  
+       CHAT  
+    ===================================================== */  
 
-    /* ============================================================
-       RESTAURATION DES BLOCS DE CODE
-    ============================================================ */
+    .chat {  
 
-    codeBlocks.forEach(function(block, index) {
+        flex: 1;  
 
-        /*
-           Le code est déjà échappé.
-           On utilise textContent plus loin lorsque
-           le bouton Copier sera utilisé.
-        */
+        overflow-y: auto;  
 
-        const placeholder =
-            `@@CODE_${index}@@`;
+        padding:  
+            25px 18px;  
 
-        const html = `
-            <div class="code-wrapper">
+        scroll-behavior: smooth;  
 
-                <div class="code-header">
+    }  
 
-                    <span class="code-language">
-                        ${escapeHTML(block.language)}
-                    </span>
 
-                    <button
-                        class="copy-code"
-                        type="button"
-                        data-code-index="${index}"
-                    >
-                        📋 Copier
-                    </button>
+    .welcome {  
 
-                </div>
+        text-align: center;  
 
-                <pre><code>${block.code}</code></pre>
+        max-width: 650px;  
 
-            </div>
-        `;
+        margin: 0 auto;  
 
-        safe = safe.replace(
-            placeholder,
-            html
-        );
+        padding:  
+            60px 15px;  
 
-    });
+    }  
 
 
-    return safe;
-}
+    .welcome-icon {  
 
+        font-size: 55px;  
 
-/* ================================================================
-   CRÉER UN MESSAGE
-================================================================ */
+        margin-bottom: 15px;  
 
-function createMessage(text, type) {
+    }  
 
-    const message = document.createElement("div");
 
-    message.className =
-        "message " +
-        (type === "ai" ? "ai" : "user");
+    .welcome h2 {  
 
+        font-size: 28px;  
 
-    const bubble = document.createElement("div");
+        margin-bottom: 10px;  
 
-    bubble.className = "bubble";
+    }  
 
 
-    if (type === "ai") {
+    .welcome p {  
 
-        const content = document.createElement("div");
+        color: var(--muted);  
 
-        content.className = "ai-content";
+        line-height: 1.7;  
 
-        content.innerHTML = formatAIText(text);
+        font-size: 14px;  
 
-        bubble.appendChild(content);
+    }  
 
-    } else {
 
-        /*
-           textContent = protection supplémentaire.
-        */
+    .suggestions {  
 
-        bubble.textContent = String(text ?? "");
+        display: flex;  
 
-    }
+        flex-wrap: wrap;  
 
+        justify-content: center;  
 
-    message.appendChild(bubble);
+        gap: 8px;  
 
-    chat.appendChild(message);
+        margin-top: 25px;  
 
-    return message;
-}
+    }  
 
 
-/* ================================================================
-   MESSAGE IA AVEC BOUTONS
-================================================================ */
+    .suggestion {  
 
-function displayMessage(
-    text,
-    type,
-    options = {}
-) {
+        padding: 9px 13px;  
 
-    const message = createMessage(
-        text,
-        type
-    );
+        border:  
+            1px solid var(--border);  
 
+        border-radius: 20px;  
 
-    if (type === "ai") {
+        background:  
+            rgba(255,255,255,.03);  
 
-        const actions =
-            document.createElement("div");
+        color: var(--text-soft);  
 
-        actions.className =
-            "ai-actions";
+        cursor: pointer;  
 
+        font-size: 12px;  
 
-        /* ========================================================
-           COPIER
-        ======================================================== */
+    }  
 
-        const copyButton =
-            document.createElement("button");
 
-        copyButton.className =
-            "ai-action-button";
+    .suggestion:hover {  
 
-        copyButton.type = "button";
+        background:  
+            rgba(255,255,255,.08);  
 
-        copyButton.textContent =
-            "📋 Copier";
+    }  
 
 
-        copyButton.addEventListener(
-            "click",
-            async function() {
+    /* =====================================================  
+       MESSAGES  
+    ===================================================== */  
 
-                try {
+    .message {  
 
-                    await navigator.clipboard.writeText(
-                        String(text ?? "")
-                    );
+        display: flex;  
 
-                    copyButton.textContent =
-                        "✅ Copié";
+        margin-bottom: 20px;  
 
-                    setTimeout(function() {
+    }  
 
-                        copyButton.textContent =
-                            "📋 Copier";
 
-                    }, 1800);
+    .message.user {  
 
-                } catch (error) {
+        justify-content: flex-end;  
 
-                    copyButton.textContent =
-                        "❌ Impossible";
+    }  
 
-                }
 
-            }
-        );
+    .message.ai {  
 
+        justify-content: flex-start;  
 
-        actions.appendChild(copyButton);
+    }  
 
 
-        /* ========================================================
-           RÉGÉNÉRER
-        ======================================================== */
+    .bubble {  
 
-        if (options.regenerate !== false) {
+        max-width: 85%;  
 
-            const regenerateButton =
-                document.createElement("button");
+        padding:  
+            13px 16px;  
 
-            regenerateButton.className =
-                "ai-action-button";
+        border-radius: 18px;  
 
-            regenerateButton.type =
-                "button";
+        line-height: 1.6;  
 
-            regenerateButton.textContent =
-                "🔄 Régénérer";
+        white-space: pre-wrap;  
 
+        word-wrap: break-word;  
 
-            regenerateButton.addEventListener(
-                "click",
-                function() {
+        overflow-wrap: anywhere;  
 
-                    regenerateLastResponse(
-                        regenerateButton
-                    );
+        font-size: 14px;  
 
-                }
-            );
+    }  
 
 
-            actions.appendChild(
-                regenerateButton
-            );
+    .user .bubble {  
 
-        }
+        background:  
+            linear-gradient(  
+                135deg,  
+                var(--primary),  
+                var(--secondary)  
+            );  
 
+        color: white;  
 
-        bubbleActions:
+        border-bottom-right-radius: 5px;  
 
-        message
-            .querySelector(".bubble")
-            .appendChild(actions);
+    }  
 
-    }
 
+    .ai .bubble {  
 
-    chat.scrollTop =
-        chat.scrollHeight;
+        background: var(--card);  
 
+        color: var(--text);  
 
-    return message;
-}
+        border:  
+            1px solid var(--border);  
 
+        border-bottom-left-radius: 5px;  
 
-/* ================================================================
-   INDICATEUR DE CHARGEMENT
-================================================================ */
+    }  
 
-function showTyping() {
 
-    const message =
-        document.createElement("div");
+    /* =====================================================  
+       LOADING  
+    ===================================================== */  
 
-    message.className =
-        "message ai";
+    .loading {  
 
-    message.id =
-        "typingMessage";
+        display: flex;  
 
+        gap: 5px;  
 
-    message.innerHTML = `
-        <div class="bubble">
+        align-items: center;  
 
-            <div class="typing">
+    }  
 
-                <span></span>
-                <span></span>
-                <span></span>
 
-            </div>
+    .loading span {  
 
-        </div>
-    `;
+        width: 7px;  
 
+        height: 7px;  
 
-    chat.appendChild(message);
+        background: var(--muted);  
 
-    chat.scrollTop =
-        chat.scrollHeight;
-}
+        border-radius: 50%;  
 
+        animation:  
+            bounce 1.2s infinite;  
 
-function hideTyping() {
+    }  
 
-    const typing =
-        document.getElementById(
-            "typingMessage"
-        );
 
-    if (typing) {
-        typing.remove();
-    }
-}
+    .loading span:nth-child(2) {  
 
+        animation-delay: .15s;  
 
-/* ================================================================
-   ENVOYER UNE QUESTION
-================================================================ */
+    }  
 
-async function sendMessage(
-    forcedMessage = null
-) {
 
-    if (isSending) {
-        return;
-    }
+    .loading span:nth-child(3) {  
 
+        animation-delay: .3s;  
 
-    const messageText =
-        forcedMessage !== null
-            ? String(forcedMessage).trim()
-            : input.value.trim();
+    }  
 
 
-    if (!messageText) {
-        return;
-    }
+    @keyframes bounce {  
 
+        0%,60%,100% {  
 
-    isSending = true;
+            transform:  
+                translateY(0);  
 
-    sendButton.disabled = true;
+        }  
 
+        30% {  
 
-    if (forcedMessage === null) {
+            transform:  
+                translateY(-6px);  
 
-        input.value = "";
+        }  
 
-        autoResize();
+    }  
 
-    }
 
+    /* =====================================================  
+       INPUT  
+    ===================================================== */  
 
-    /*
-       On mémorise la dernière question
-       pour le bouton Régénérer.
-    */
+    .input-area {  
 
-    lastUserMessage =
-        messageText;
+        padding: 15px;  
 
+        background:  
+            rgba(2,6,23,.98);  
 
-    lastUserMessageElement =
-        displayMessage(
-            messageText,
-            "user"
-        );
+        border-top:  
+            1px solid var(--border);  
 
+        flex-shrink: 0;  
 
-    if (welcome) {
-        welcome.style.display =
-            "none";
-    }
+    }  
 
 
-    showTyping();
+    body.light .input-area {  
 
+        background:  
+            rgba(255,255,255,.98);  
 
-    try {
+    }  
 
-        /*
-           =========================================================
-           REQUÊTE VERS FLASK
-           =========================================================
-        */
 
-        const response =
-            await fetch(
-                API_URL,
-                {
-                    method: "POST",
+    .input-box {  
 
-                    headers: {
-                        "Content-Type":
-                            "application/json"
-                    },
+        display: flex;  
 
-                    body: JSON.stringify({
-                        message: messageText
-                    })
-                }
-            );
+        align-items: flex-end;  
 
+        gap: 10px;  
 
-        if (!response.ok) {
+        background: var(--card);  
 
-            throw new Error(
-                "Erreur serveur : " +
-                response.status
-            );
+        border:  
+            1px solid var(--border);  
 
-        }
+        border-radius: 18px;  
 
+        padding: 8px;  
 
-        const data =
-            await response.json();
+    }  
 
 
-        /*
-           On accepte plusieurs formats
-           possibles venant du Flask.
-        */
+    textarea {  
 
-        const answer =
-            data.answer ??
-            data.response ??
-            data.message ??
-            data.text;
+        flex: 1;  
 
+        resize: none;  
 
-        if (
-            answer === undefined ||
-            answer === null
-        ) {
+        border: none;  
 
-            throw new Error(
-                "La réponse du serveur est vide."
-            );
+        outline: none;  
 
-        }
+        background: transparent;  
 
+        color: var(--text);  
 
-        hideTyping();
+        font-size: 15px;  
 
+        padding: 10px;  
 
-        lastAIMessageElement =
-            displayMessage(
-                answer,
-                "ai",
-                {
-                    regenerate: true
-                }
-            );
+        min-height: 45px;  
 
+        max-height: 140px;  
 
-        saveConversation();
+        font-family: inherit;  
 
+    }  
 
-    } catch (error) {
 
-        hideTyping();
+    textarea::placeholder {  
 
+        color: var(--muted);  
 
-        displayMessage(
-            "❌ Une erreur est survenue : " +
-            error.message,
-            "ai",
-            {
-                regenerate: false
-            }
-        );
+    }  
 
-        console.error(
-            "Messie IA:",
-            error
-        );
 
-    } finally {
+    #sendButton {  
 
-        isSending = false;
+        width: 45px;  
 
-        sendButton.disabled =
-            false;
+        height: 45px;  
 
-        input.focus();
+        border-radius: 14px;  
 
-    }
+        border: none;  
 
-}
+        background:  
+            linear-gradient(  
+                135deg,  
+                var(--primary),  
+                var(--secondary)  
+            );  
 
+        color: white;  
 
-/* ================================================================
-   RÉGÉNÉRER LA DERNIÈRE RÉPONSE
-================================================================ */
+        font-size: 18px;  
 
-async function regenerateLastResponse(
-    button
-) {
+        display: flex;  
 
-    if (isSending) {
-        return;
-    }
+        justify-content: center;  
 
+        align-items: center;  
 
-    if (!lastUserMessage) {
+        cursor: pointer;  
 
-        return;
+    }  
 
-    }
 
+    #sendButton:hover {  
 
-    /*
-       Désactiver temporairement
-       le bouton.
-    */
+        opacity: .9;  
 
-    button.disabled = true;
+    }  
 
-    button.textContent =
-        "⏳ Génération...";
 
+    #sendButton:disabled {  
 
-    /*
-       Supprimer l'ancienne réponse IA
-       si elle existe.
-    */
+        opacity: .5;  
 
-    if (
-        lastAIMessageElement &&
-        lastAIMessageElement.parentNode
-    ) {
+        cursor: not-allowed;  
 
-        lastAIMessageElement.remove();
+    }  
 
-    }
 
+    .info {  
 
-    await sendMessage(
-        lastUserMessage
-    );
+        text-align: center;  
 
+        color: var(--muted);  
 
-    /*
-       Le nouveau bouton Régénérer
-       sera automatiquement créé
-       par displayMessage().
-    */
+        font-size: 10px;  
 
-}
+        margin-top: 8px;  
 
+    }  
 
-/* ================================================================
-   COPIE DES BLOCS DE CODE
-================================================================ */
 
-document.addEventListener(
-    "click",
-    async function(event) {
+    /* =====================================================  
+       OVERLAY  
+    ===================================================== */  
 
-        const button =
-            event.target.closest(
-                ".copy-code"
-            );
+    .overlay {  
 
+        display: none;  
 
-        if (!button) {
-            return;
-        }
+        position: fixed;  
 
+        inset: 0;  
 
-        const wrapper =
-            button.closest(
-                ".code-wrapper"
-            );
+        background:  
+            rgba(0,0,0,.6);  
 
+        z-index: 10;  
 
-        if (!wrapper) {
-            return;
-        }
+    }  
 
 
-        const code =
-            wrapper.querySelector(
-                "code"
-            );
+    /* =====================================================  
+       MODAL PARAMÈTRES  
+    ===================================================== */  
 
+    .modal-overlay {  
 
-        if (!code) {
-            return;
-        }
+        position: fixed;  
 
+        inset: 0;  
 
-        try {
+        background:  
+            rgba(0,0,0,.65);  
 
-            /*
-               textContent permet de récupérer
-               le vrai code sans HTML.
-            */
+        display: none;  
 
-            await navigator.clipboard.writeText(
-                code.textContent
-            );
+        align-items: center;  
 
+        justify-content: center;  
 
-            button.textContent =
-                "✅ Copié";
+        padding: 15px;  
 
+        z-index: 100;  
 
-            setTimeout(
-                function() {
+    }  
 
-                    button.textContent =
-                        "📋 Copier";
 
-                },
-                1800
-            );
+    .modal-overlay.open {  
 
+        display: flex;  
 
-        } catch (error) {
+    }  
 
-            button.textContent =
-                "❌ Erreur";
 
-        }
+    .settings-modal {  
 
-    }
-);
+        width: 100%;  
 
+        max-width: 480px;  
 
-/* ================================================================
-   ENVOI DU FORMULAIRE
-================================================================ */
+        max-height: 90vh;  
 
-composer.addEventListener(
-    "submit",
-    function(event) {
+        overflow-y: auto;  
 
-        event.preventDefault();
+        background: var(--panel);  
 
-        sendMessage();
+        border:  
+            1px solid var(--border);  
 
-    }
-);
+        border-radius: 20px;  
 
+        box-shadow:  
+            0 30px 80px rgba(0,0,0,.5);  
 
-/* ================================================================
-   ENTRÉE CLAVIER
-================================================================ */
+    }  
 
-input.addEventListener(
-    "keydown",
-    function(event) {
 
-        /*
-           Entrée = envoyer
+    .settings-header {  
 
-           Shift + Entrée = nouvelle ligne
-        */
+        padding: 18px;  
 
-        if (
-            event.key === "Enter" &&
-            !event.shiftKey
-        ) {
+        border-bottom:  
+            1px solid var(--border);  
 
-            event.preventDefault();
+        display: flex;  
 
-            sendMessage();
+        justify-content: space-between;  
 
-        }
+        align-items: center;  
 
-    }
-);
+    }  
 
 
-/* ================================================================
-   REDIMENSIONNEMENT DU TEXTAREA
-================================================================ */
+    .settings-header h2 {  
 
-function autoResize() {
+        font-size: 18px;  
 
-    input.style.height =
-        "auto";
+    }  
 
 
-    input.style.height =
-        Math.min(
-            input.scrollHeight,
-            150
-        ) + "px";
+    .close-settings {  
 
-}
+        width: 35px;  
 
+        height: 35px;  
 
-input.addEventListener(
-    "input",
-    autoResize
-);
+        border: none;  
 
+        border-radius: 9px;  
 
-/* ================================================================
-   NOUVELLE CONVERSATION
-================================================================ */
+        background: var(--card);  
 
-clearButton.addEventListener(
-    "click",
-    function() {
+        color: var(--text);  
 
-        const confirmed =
-            confirm(
-                "Commencer une nouvelle conversation ?"
-            );
+        cursor: pointer;  
 
+        font-size: 18px;  
 
-        if (!confirmed) {
-            return;
-        }
+    }  
 
 
-        chat.innerHTML = "";
+    .settings-content {  
 
+        padding: 18px;  
 
-        const newWelcome =
-            document.createElement(
-                "div"
-            );
+    }  
 
-        newWelcome.className =
-            "welcome";
 
+    .setting-group {  
 
-        newWelcome.innerHTML = `
-            <div class="welcome-icon">
-                ✨
-            </div>
+        margin-bottom: 24px;  
 
-            <h1>
-                Bonjour, je suis Messie IA
-            </h1>
+    }  
 
-            <p>
-                Pose-moi une question,
-                demande-moi du code,
-                une explication ou de l'aide
-                pour ton projet.
-            </p>
-        `;
 
+    .setting-group:last-child {  
 
-        chat.appendChild(
-            newWelcome
-        );
+        margin-bottom: 0;  
 
+    }  
 
-        lastUserMessage =
-            "";
 
-        lastUserMessageElement =
-            null;
+    .setting-label {  
 
-        lastAIMessageElement =
-            null;
+        display: block;  
 
+        color: var(--text);  
 
-        localStorage.removeItem(
-            "messieIAConversation"
-        );
+        font-size: 14px;  
 
+        font-weight: bold;  
 
-        input.focus();
+        margin-bottom: 8px;  
 
-    }
-);
+    }  
 
 
-/* ================================================================
-   SAUVEGARDE DE LA CONVERSATION
-================================================================ */
+    .setting-description {  
 
-function saveConversation() {
+        color: var(--muted);  
 
-    try {
+        font-size: 11px;  
 
-        localStorage.setItem(
-            "messieIAConversation",
-            chat.innerHTML
-        );
+        line-height: 1.5;  
 
-    } catch (error) {
+        margin-bottom: 10px;  
 
-        console.warn(
-            "Impossible de sauvegarder l'historique."
-        );
+    }  
 
-    }
 
-}
+    .name-input {  
 
+        width: 100%;  
 
-/* ================================================================
-   RESTAURATION DE LA CONVERSATION
-================================================================ */
+        padding: 11px;  
 
-function loadConversation() {
+        border:  
+            1px solid var(--border);  
 
-    try {
+        border-radius: 10px;  
 
-        const saved =
-            localStorage.getItem(
-                "messieIAConversation"
-            );
+        outline: none;  
 
+        background: var(--card);  
 
-        if (
-            saved &&
-            saved.trim()
-        ) {
+        color: var(--text);  
 
-            chat.innerHTML =
-                saved;
+        font-size: 14px;  
 
+    }  
 
-            const messages =
-                chat.querySelectorAll(
-                    ".message"
-                );
 
+    .save-name {  
 
-            if (messages.length > 0) {
+        margin-top: 8px;  
 
-                if (welcome) {
-                    welcome.style.display =
-                        "none";
-                }
+        padding: 9px 14px;  
 
-                /*
-                   Retrouver le dernier message utilisateur.
-                */
+        border: none;  
 
-                const userMessages =
-                    chat.querySelectorAll(
-                        ".message.user"
-                    );
+        border-radius: 9px;  
 
+        background:  
+            linear-gradient(  
+                135deg,  
+                var(--primary),  
+                var(--secondary)  
+            );  
 
-                if (
-                    userMessages.length
-                ) {
+        color: white;  
 
-                    lastUserMessageElement =
-                        userMessages[
-                            userMessages.length - 1
-                        ];
+        cursor: pointer;  
 
-                    lastUserMessage =
-                        lastUserMessageElement
-                            .textContent
-                            .trim();
+    }  
 
-                }
 
+    /* OPTIONS */  
 
-                const aiMessages =
-                    chat.querySelectorAll(
-                        ".message.ai"
-                    );
+    .options {  
 
+        display: flex;  
 
-                if (
-                    aiMessages.length
-                ) {
+        flex-wrap: wrap;  
 
-                    lastAIMessageElement =
-                        aiMessages[
-                            aiMessages.length - 1
-                        ];
+        gap: 8px;  
 
-                }
+    }  
 
-            }
 
-        }
+    .option {  
 
-    } catch (error) {
+        padding: 9px 13px;  
 
-        console.warn(
-            "Impossible de restaurer l'historique."
-        );
+        border:  
+            1px solid var(--border);  
 
-    }
+        border-radius: 10px;  
 
-}
+        background: var(--card);  
 
+        color: var(--text-soft);  
 
-/* ================================================================
-   INITIALISATION
-================================================================ */
+        cursor: pointer;  
 
-loadConversation();
+        font-size: 12px;  
 
-autoResize();
+    }  
 
-input.focus();
 
+    .option.active {  
 
-/* ================================================================
-   FIN
-================================================================ */
+        border-color:  
+            var(--primary);  
 
-</script>
+        background:  
+            rgba(37,99,235,.18);  
 
-</body>
-        </html>
+        color: var(--text);  
+
+    }  
+
+
+    /* COULEURS */  
+
+    .color-options {  
+
+        display: flex;  
+
+        gap: 10px;  
+
+    }  
+
+
+    .color-option {  
+
+        width: 35px;  
+
+        height: 35px;  
+
+        border-radius: 50%;  
+
+        border: 3px solid transparent;  
+
+        cursor: pointer;  
+
+    }  
+
+
+    .color-option.active {  
+
+        border-color: white;  
+
+        box-shadow:  
+            0 0 0 2px #64748b;  
+
+    }  
+
+
+    .color-blue {  
+
+        background:  
+            linear-gradient(  
+                135deg,  
+                #2563eb,  
+                #7c3aed  
+            );  
+
+    }  
+
+
+    .color-purple {  
+
+        background:  
+            linear-gradient(  
+                135deg,  
+                #7c3aed,  
+                #2563eb  
+            );  
+
+    }  
+
+
+    .color-green {  
+
+        background:  
+            linear-gradient(  
+                135deg,  
+                #16a34a,  
+                #0d9488  
+            );  
+
+    }  
+
+
+    .color-orange {  
+
+        background:  
+            linear-gradient(  
+                135deg,  
+                #ea580c,  
+                #e11d48  
+            );  
+
+    }  
+
+
+    .color-pink {  
+
+        background:  
+            linear-gradient(  
+                135deg,  
+                #db2777,  
+                #9333ea  
+            );  
+
+    }  
+
+
+    /* DANGER */  
+
+    .danger-zone {  
+
+        padding-top: 18px;  
+
+        border-top:  
+            1px solid var(--border);  
+
+    }  
+
+
+    .delete-all {  
+
+        width: 100%;  
+
+        padding: 11px;  
+
+        border:  
+            1px solid rgba(239,68,68,.4);  
+
+        border-radius: 10px;  
+
+        background:  
+            rgba(239,68,68,.08);  
+
+        color: #f87171;  
+
+        cursor: pointer;  
+
+        font-size: 13px;  
+
+    }  
+
+
+    .delete-all:hover {  
+
+        background:  
+            rgba(239,68,68,.16);  
+
+    }  
+
+
+    /* =====================================================  
+       MOBILE  
+    ===================================================== */  
+
+    @media (max-width: 700px) {  
+
+        .sidebar {  
+
+            position: fixed;  
+
+            left: -290px;  
+
+            top: 0;  
+
+            bottom: 0;  
+
+            transition:  
+                left .25s ease;  
+
+            box-shadow:  
+                10px 0 40px rgba(0,0,0,.4);  
+
+        }  
+
+
+        .sidebar.open {  
+
+            left: 0;  
+
+        }  
+
+
+        .overlay.open {  
+
+            display: block;  
+
+        }  
+
+
+        .mobile-menu {  
+
+            display: block;  
+
+        }  
+
+
+        .header {  
+
+            height: 64px;  
+
+            padding:  
+                10px 12px;  
+
+        }  
+
+
+        .chat {  
+
+            padding:  
+                18px 12px;  
+
+        }  
+
+
+        .welcome {  
+
+            padding-top: 50px;  
+
+        }  
+
+
+        .welcome h2 {  
+
+            font-size: 24px;  
+
+        }  
+
+
+        .bubble {  
+
+            max-width: 90%;  
+
+            font-size: 14px;  
+
+        }  
+
+
+        .input-area {  
+
+            padding: 10px;  
+
+        }  
+
+
+        .conversation-actions {  
+
+            opacity: 1;  
+
+        }  
+
+    }  
+
+</style>  
+
+
+  
+  
+
+  
+
+<!-- =====================================================  
+     SIDEBAR  
+====================================================== -->  
+
+<aside  
+    class="sidebar"  
+    id="sidebar"  
+>  
+
+    <div class="sidebar-header">  
+
+        <div class="brand">  
+
+            <div class="brand-icon">  
+                M  
+            </div>  
+
+            <div class="brand-text">  
+
+                <h1>  
+                    Messie IA  
+                </h1>  
+
+                <p>  
+                    Ton assistant intelligent  
+                </p>  
+
+            </div>  
+
+        </div>  
+
+
+        <button  
+            id="newChatButton"  
+        >  
+            ＋ Nouvelle conversation  
+        </button>  
+
+    </div>  
+
+
+    <div class="history-title">  
+        Historique  
+    </div>  
+
+
+    <div  
+        class="history"  
+        id="history"  
+    ></div>  
+
+
+    <div class="sidebar-footer">  
+
+        <button  
+            class="settings-button"  
+            id="settingsButton"  
+        >  
+            ⚙️ Paramètres  
+        </button>  
+
+
+        <div class="footer-brand">  
+            Messie IA  
+        </div>  
+
+    </div>  
+
+</aside>  
+
+
+<!-- =====================================================  
+     OVERLAY MOBILE  
+====================================================== -->  
+
+<div  
+    class="overlay"  
+    id="overlay"  
+></div>  
+
+
+<!-- =====================================================  
+     ZONE PRINCIPALE  
+====================================================== -->  
+
+<main class="main">  
+
+
+    <!-- HEADER -->  
+
+    <header class="header">  
+
+        <div class="header-left">  
+
+            <button  
+                class="mobile-menu"  
+                id="mobileMenu"  
+                aria-label="Menu"  
+            >  
+                ☰  
+            </button>  
+
+
+            <div class="current-chat">  
+
+                <h2  
+                    id="currentChatTitle"  
+                >  
+                    Nouvelle conversation  
+                </h2>  
+
+
+                <p>  
+
+                    <span  
+                        class="online-dot"  
+                    ></span>  
+
+                    En ligne  
+
+                </p>  
+
+            </div>  
+
+        </div>  
+
+    </header>  
+
+
+    <!-- =================================================  
+         CHAT  
+    ================================================== -->  
+
+    <section  
+        class="chat"  
+        id="chat"  
+    ></section>  
+
+
+    <!-- =================================================  
+         INPUT  
+    ================================================== -->  
+
+    <div class="input-area">  
+
+        <div class="input-box">  
+
+            <textarea  
+                id="messageInput"  
+                placeholder="Écris ton message..."  
+                rows="1"  
+            ></textarea>  
+
+
+            <button  
+                id="sendButton"  
+                title="Envoyer"  
+            >  
+                ➤  
+            </button>  
+
+        </div>  
+
+
+        <div class="info">  
+            Messie IA peut parfois faire des erreurs.  
+        </div>  
+
+    </div>  
+
+
+</main>  
+
+
+
+  
+  
+
+  
+
+<div class="settings-modal">  
+
+    <div class="settings-header">  
+
+        <h2>  
+            ⚙️ Paramètres  
+        </h2>  
+
+
+        <button  
+            class="close-settings"  
+            id="closeSettings"  
+        >  
+            ×  
+        </button>  
+
+    </div>  
+
+
+    <div class="settings-content">  
+
+
+        <!-- NOM -->  
+
+        <div class="setting-group">  
+
+            <label  
+                class="setting-label"  
+            >  
+                👤 Ton nom  
+            </label>  
+
+
+            <div  
+                class="setting-description"  
+            >  
+                Personnalise le nom utilisé  
+                par Messie IA.  
+            </div>  
+
+
+            <input  
+                class="name-input"  
+                id="nameInput"  
+                type="text"  
+                maxlength="40"  
+                placeholder="Ton nom"  
+            >  
+
+
+            <button  
+                class="save-name"  
+                id="saveName"  
+            >  
+                Enregistrer  
+            </button>  
+
+        </div>  
+
+
+        <!-- APPARENCE -->  
+
+        <div class="setting-group">  
+
+            <label  
+                class="setting-label"  
+            >  
+                🎨 Apparence  
+            </label>  
+
+
+            <div  
+                class="setting-description"  
+            >  
+                Choisis l'apparence de Messie IA.  
+            </div>  
+
+
+            <div class="options">  
+
+                <button  
+                    class="option"  
+                    data-theme="dark"  
+                >  
+                    🌙 Sombre  
+                </button>  
+
+
+                <button  
+                    class="option"  
+                    data-theme="light"  
+                >  
+                    ☀️ Claire  
+                </button>  
+
+            </div>  
+
+        </div>  
+
+
+        <!-- COULEUR -->  
+
+        <div class="setting-group">  
+
+            <label  
+                class="setting-label"  
+            >  
+                🌈 Couleur principale  
+            </label>  
+
+
+            <div  
+                class="setting-description"  
+            >  
+                Choisis la couleur de Messie IA.  
+            </div>  
+
+
+            <div  
+                class="color-options"  
+            >  
+
+                <button  
+                    class="color-option color-blue"  
+                    data-color="blue"  
+                    title="Bleu"  
+                ></button>  
+
+
+                <button  
+                    class="color-option color-purple"  
+                    data-color="purple"  
+                    title="Violet"  
+                ></button>  
+
+
+                <button  
+                    class="color-option color-green"  
+                    data-color="green"  
+                    title="Vert"  
+                ></button>  
+
+
+                <button  
+                    class="color-option color-orange"  
+                    data-color="orange"  
+                    title="Orange"  
+                ></button>  
+
+
+                <button  
+                    class="color-option color-pink"  
+                    data-color="pink"  
+                    title="Rose"  
+                ></button>  
+
+            </div>  
+
+        </div>  
+
+
+        <!-- LONGUEUR -->  
+
+        <div class="setting-group">  
+
+            <label  
+                class="setting-label"  
+            >  
+                🧠 Longueur des réponses  
+            </label>  
+
+
+            <div  
+                class="setting-description"  
+            >  
+                Indique à Messie IA la longueur  
+                de réponse que tu préfères.  
+            </div>  
+
+
+            <div class="options">  
+
+                <button  
+                    class="option"  
+                    data-length="courte"  
+                >  
+                    ⚡ Courte  
+                </button>  
+
+
+                <button  
+                    class="option"  
+                    data-length="normale"  
+                >  
+                    💬 Normale  
+                </button>  
+
+
+                <button  
+                    class="option"  
+                    data-length="detaillee"  
+                >  
+                    📚 Détaillée  
+                </button>  
+
+            </div>  
+
+        </div>  
+
+
+        <!-- DANGER -->  
+
+        <div  
+            class="setting-group danger-zone"  
+        >  
+
+            <label  
+                class="setting-label"  
+            >  
+                🗑️ Gestion des données  
+            </label>  
+
+
+            <div  
+                class="setting-description"  
+            >  
+                Cette action supprime toutes les  
+                conversations enregistrées dans  
+                ce navigateur.  
+            </div>  
+
+
+            <button  
+                class="delete-all"  
+                id="deleteAll"  
+            >  
+                🗑️ Effacer tout l'historique  
+            </button>  
+
+        </div>  
+
+
+    </div>  
+
+</div>  
+
+
+
+  
+  
+  
+
+                    </html>  
+
+
+
