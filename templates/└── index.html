@@ -10,13 +10,7 @@
         content="width=device-width, initial-scale=1.0"
     >
 
-    <meta
-        name="theme-color"
-        content="#0b1020"
-    >
-
     <title>Messie IA</title>
-
 
     <style>
 
@@ -24,33 +18,14 @@
             box-sizing: border-box;
         }
 
-
-        html,
         body {
-            width: 100%;
-            height: 100%;
             margin: 0;
-            font-family:
-                Arial,
-                Helvetica,
-                sans-serif;
-            background: #0b1020;
-            color: white;
-        }
-
-
-        body {
+            font-family: Arial, sans-serif;
+            background: #0f1115;
+            color: #ffffff;
+            height: 100vh;
             overflow: hidden;
         }
-
-
-        button,
-        textarea,
-        select,
-        input {
-            font: inherit;
-        }
-
 
         .app {
             height: 100vh;
@@ -58,358 +33,114 @@
             flex-direction: column;
         }
 
-
-        /* ====================================================
+        /* ==================================================
            HEADER
-        ==================================================== */
+        ================================================== */
 
-        .header {
-            height: 68px;
-            flex-shrink: 0;
+        header {
+            height: 64px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 16px;
-            background: #10172a;
-            border-bottom:
-                1px solid
-                rgba(255,255,255,.08);
+            padding: 0 18px;
+            border-bottom: 1px solid #292d35;
+            background: #151821;
         }
 
-
-        .brand {
+        .logo {
             display: flex;
             align-items: center;
             gap: 10px;
+            font-size: 20px;
+            font-weight: bold;
         }
 
-
-        .logo {
-            width: 42px;
-            height: 42px;
-            border-radius: 13px;
+        .logo-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 21px;
+            background: #ffffff;
+            color: #111111;
             font-weight: bold;
-            background:
-                linear-gradient(
-                    135deg,
-                    #2563eb,
-                    #7c3aed
-                );
         }
-
-
-        .brand h1 {
-            margin: 0;
-            font-size: 18px;
-        }
-
-
-        .brand small {
-            display: block;
-            color: #94a3b8;
-            margin-top: 2px;
-        }
-
 
         .status {
-            display: flex;
-            align-items: center;
-            gap: 7px;
-            color: #94a3b8;
             font-size: 12px;
+            color: #7ee787;
         }
 
+        /* ==================================================
+           CHAT
+        ================================================== */
 
-        .status-dot {
-            width: 9px;
-            height: 9px;
-            border-radius: 50%;
-            background: #22c55e;
-            box-shadow:
-                0 0 10px
-                #22c55e;
-        }
-
-
-        /* ====================================================
-           MESSAGES
-        ==================================================== */
-
-        .messages {
+        #chat {
             flex: 1;
             overflow-y: auto;
-            padding:
-                25px
-                15px
-                180px;
+            padding: 20px;
         }
-
 
         .welcome {
             max-width: 700px;
-            margin: 55px auto;
+            margin: 50px auto;
             text-align: center;
         }
 
-
-        .welcome-icon {
-            width: 75px;
-            height: 75px;
-            margin: auto auto 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 24px;
-            font-size: 38px;
-            background:
-                linear-gradient(
-                    135deg,
-                    #2563eb,
-                    #7c3aed
-                );
+        .welcome h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
         }
-
-
-        .welcome h2 {
-            margin: 0 0 10px;
-            font-size: 28px;
-        }
-
 
         .welcome p {
-            color: #94a3b8;
+            color: #a7adb8;
             line-height: 1.6;
         }
 
-
-        .suggestions {
-            margin-top: 25px;
-            display: grid;
-            grid-template-columns:
-                repeat(
-                    auto-fit,
-                    minmax(170px, 1fr)
-                );
-            gap: 10px;
-        }
-
-
-        .suggestion {
-            padding: 14px;
-            border-radius: 14px;
-            border:
-                1px solid
-                rgba(255,255,255,.08);
-            background: #121b30;
-            color: #dbe4f0;
-            cursor: pointer;
-            text-align: left;
-        }
-
-
-        .suggestion:hover {
-            background: #1a2742;
-        }
-
-
         .message {
-            max-width: 900px;
-            margin:
-                0 auto
-                18px;
+            max-width: 850px;
+            margin: 0 auto 18px auto;
             display: flex;
-            gap: 10px;
         }
-
 
         .message.user {
             justify-content: flex-end;
         }
 
-
-        .avatar {
-            width: 35px;
-            height: 35px;
-            flex-shrink: 0;
-            border-radius: 11px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #1f2937;
-        }
-
-
-        .message.assistant .avatar {
-            background:
-                linear-gradient(
-                    135deg,
-                    #2563eb,
-                    #7c3aed
-                );
-        }
-
-
         .bubble {
             max-width: 80%;
-            padding:
-                13px
-                16px;
-            line-height: 1.6;
+            padding: 13px 16px;
+            border-radius: 16px;
+            line-height: 1.55;
             white-space: pre-wrap;
-            overflow-wrap: anywhere;
-            border-radius: 17px;
+            word-break: break-word;
         }
 
-
-        .message.user .bubble {
-            background: #2563eb;
+        .user .bubble {
+            background: #2d6cdf;
             border-bottom-right-radius: 5px;
         }
 
-
-        .message.assistant .bubble {
-            background: #151d31;
-            border:
-                1px solid
-                rgba(255,255,255,.06);
+        .assistant .bubble {
+            background: #1d2129;
+            border: 1px solid #2b303a;
             border-bottom-left-radius: 5px;
         }
 
-
-        /* ====================================================
-           GENERATED IMAGES
-        ==================================================== */
-
-        .generated-image {
-            max-width: 100%;
-            margin-top: 8px;
-            border-radius: 15px;
-            display: block;
-            cursor: pointer;
+        .error {
+            color: #ff7777;
         }
 
-
-        .image-actions {
-            display: flex;
-            gap: 7px;
-            margin-top: 9px;
-            flex-wrap: wrap;
-        }
-
-
-        .image-action {
-            padding: 7px 10px;
-            border: 0;
-            border-radius: 9px;
-            background: #24304a;
-            color: #dbe4f0;
-            cursor: pointer;
-            font-size: 12px;
-        }
-
-
-        /* ====================================================
-           TYPING
-        ==================================================== */
-
-        .typing {
-            display: flex;
-            gap: 5px;
-            padding: 13px 15px;
-            background: #151d31;
-            border-radius: 17px;
-        }
-
-
-        .typing span {
-            width: 7px;
-            height: 7px;
-            border-radius: 50%;
-            background: #94a3b8;
-            animation:
-                typing 1.2s infinite;
-        }
-
-
-        .typing span:nth-child(2) {
-            animation-delay: .15s;
-        }
-
-
-        .typing span:nth-child(3) {
-            animation-delay: .3s;
-        }
-
-
-        @keyframes typing {
-
-            0%,
-            60%,
-            100% {
-                transform:
-                    translateY(0);
-                opacity: .4;
-            }
-
-            30% {
-                transform:
-                    translateY(-5px);
-                opacity: 1;
-            }
-
-        }
-
-
-        /* ====================================================
-           COMPOSER
-        ==================================================== */
+        /* ==================================================
+           INPUT
+        ================================================== */
 
         .composer-area {
-            position: absolute;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            padding:
-                10px
-                12px
-                18px;
-            background:
-                linear-gradient(
-                    to top,
-                    #0b1020 75%,
-                    transparent
-                );
+            padding: 12px;
+            border-top: 1px solid #292d35;
+            background: #151821;
         }
-
-
-        .tools {
-            max-width: 900px;
-            margin: 0 auto 8px;
-            display: flex;
-            gap: 7px;
-            overflow-x: auto;
-        }
-
-
-        .tool {
-            flex-shrink: 0;
-            padding:
-                8px
-                11px;
-            border-radius: 11px;
-            border:
-                1px solid
-                rgba(255,255,255,.08);
-            background: #151d31;
-            color: #dbe4f0;
-            cursor: pointer;
-            font-size: 12px;
-        }
-
 
         .composer {
             max-width: 900px;
@@ -417,278 +148,153 @@
             display: flex;
             gap: 8px;
             align-items: flex-end;
-            padding: 9px;
-            border-radius: 19px;
-            background: #151d31;
-            border:
-                1px solid
-                rgba(255,255,255,.08);
         }
-
 
         textarea {
             flex: 1;
-            min-width: 0;
-            max-height: 150px;
             resize: none;
-            border: 0;
-            outline: 0;
-            padding: 8px;
+            min-height: 48px;
+            max-height: 150px;
+            padding: 13px;
+            border: 1px solid #343945;
+            border-radius: 14px;
+            outline: none;
+            background: #0f1115;
             color: white;
-            background: transparent;
+            font-size: 15px;
         }
 
-
-        textarea::placeholder {
-            color: #64748b;
+        textarea:focus {
+            border-color: #4b78d1;
         }
 
+        button {
+            border: none;
+            cursor: pointer;
+        }
 
         .send {
-            width: 44px;
-            height: 44px;
-            border: 0;
-            border-radius: 13px;
-            background: #2563eb;
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            background: #2d6cdf;
             color: white;
-            cursor: pointer;
-            font-size: 18px;
+            font-size: 19px;
         }
-
 
         .send:disabled {
-            opacity: .5;
+            opacity: 0.5;
+            cursor: not-allowed;
         }
 
-
-        /* ====================================================
-           PREVIEW
-        ==================================================== */
-
-        .preview {
+        .tools {
             max-width: 900px;
-            margin:
-                0 auto
-                8px;
-            padding: 8px;
-            display: none;
-            align-items: center;
-            gap: 10px;
-            border-radius: 13px;
-            background: #151d31;
+            margin: 8px auto 0 auto;
+            display: flex;
+            gap: 8px;
         }
 
-
-        .preview img {
-            width: 55px;
-            height: 55px;
-            object-fit: cover;
-            border-radius: 9px;
+        .tool {
+            background: #242933;
+            color: #ddd;
+            border: 1px solid #343945;
+            padding: 8px 12px;
+            border-radius: 10px;
+            font-size: 13px;
         }
 
-
-        .preview-info {
-            flex: 1;
+        .tool:hover {
+            background: #2c323e;
         }
-
-
-        .preview-info strong {
-            display: block;
-        }
-
-
-        .preview-info small {
-            color: #94a3b8;
-        }
-
-
-        .remove {
-            border: 0;
-            background: transparent;
-            color: #ef4444;
-            font-size: 20px;
-            cursor: pointer;
-        }
-
 
         input[type="file"] {
             display: none;
         }
 
+        /* ==================================================
+           IMAGE PREVIEW
+        ================================================== */
 
-        /* ====================================================
-           MODAL
-        ==================================================== */
-
-        .modal {
-            position: fixed;
-            inset: 0;
-            z-index: 50;
+        #preview-container {
+            max-width: 900px;
+            margin: 0 auto 10px auto;
             display: none;
-            align-items: center;
-            justify-content: center;
-            padding: 15px;
-            background:
-                rgba(0,0,0,.75);
         }
 
-
-        .modal.active {
-            display: flex;
-        }
-
-
-        .modal-card {
-            width:
-                min(
-                    650px,
-                    100%
-                );
-            max-height: 90vh;
-            overflow-y: auto;
-            padding: 20px;
-            border-radius: 20px;
-            background: #111827;
-        }
-
-
-        .modal-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 18px;
-        }
-
-
-        .modal-header h3 {
-            margin: 0;
-        }
-
-
-        .close {
-            border: 0;
-            background: transparent;
-            color: #94a3b8;
-            font-size: 25px;
-            cursor: pointer;
-        }
-
-
-        .field {
-            margin-bottom: 15px;
-        }
-
-
-        .field label {
-            display: block;
-            margin-bottom: 7px;
-            color: #cbd5e1;
-            font-size: 13px;
-        }
-
-
-        .field textarea {
-            width: 100%;
-            min-height: 90px;
-            max-height: 200px;
-            padding: 12px;
+        #preview {
+            max-width: 180px;
+            max-height: 180px;
             border-radius: 12px;
-            background: #0b1020;
-            border:
-                1px solid
-                rgba(255,255,255,.1);
+            border: 1px solid #343945;
         }
 
+        /* ==================================================
+           LOADING
+        ================================================== */
 
-        select {
-            width: 100%;
-            padding: 11px;
-            border-radius: 11px;
-            border:
-                1px solid
-                rgba(255,255,255,.1);
-            background: #0b1020;
-            color: white;
-            outline: none;
+        .typing {
+            display: inline-flex;
+            gap: 4px;
         }
 
-
-        .options {
-            display: grid;
-            grid-template-columns:
-                repeat(2, 1fr);
-            gap: 10px;
+        .typing span {
+            width: 6px;
+            height: 6px;
+            background: #aaa;
+            border-radius: 50%;
+            animation: blink 1s infinite;
         }
 
-
-        .generate {
-            width: 100%;
-            padding: 13px;
-            border: 0;
-            border-radius: 12px;
-            background: #2563eb;
-            color: white;
-            cursor: pointer;
-            font-weight: bold;
+        .typing span:nth-child(2) {
+            animation-delay: 0.15s;
         }
 
-
-        .generate:disabled {
-            opacity: .5;
+        .typing span:nth-child(3) {
+            animation-delay: 0.3s;
         }
 
+        @keyframes blink {
+            0%, 80%, 100% {
+                opacity: 0.3;
+            }
 
-        .modal-preview {
-            display: none;
-            margin-top: 15px;
+            40% {
+                opacity: 1;
+            }
         }
 
-
-        .modal-preview img {
-            width: 100%;
-            border-radius: 15px;
-        }
-
+        /* ==================================================
+           MOBILE
+        ================================================== */
 
         @media (max-width: 600px) {
 
-            .header {
-                height: 62px;
+            header {
+                height: 58px;
             }
 
-
-            .status {
-                display: none;
+            #chat {
+                padding: 12px;
             }
-
-
-            .messages {
-                padding:
-                    15px
-                    10px
-                    180px;
-            }
-
 
             .welcome {
-                margin:
-                    30px
-                    auto;
+                margin: 30px auto;
             }
 
-
-            .welcome h2 {
-                font-size: 24px;
+            .welcome h1 {
+                font-size: 26px;
             }
-
 
             .bubble {
                 max-width: 88%;
             }
 
+            .composer-area {
+                padding: 8px;
+            }
 
-            .options {
-                grid-template-columns: 1fr;
+            .tools {
+                overflow-x: auto;
             }
 
         }
@@ -700,211 +306,78 @@
 
 <body>
 
-
 <div class="app">
 
 
-    <!-- ====================================================
+    <!-- ==================================================
          HEADER
-    ===================================================== -->
+    ================================================== -->
 
-    <header class="header">
+    <header>
 
-        <div class="brand">
+        <div class="logo">
 
-            <div class="logo">
+            <div class="logo-icon">
                 M
             </div>
 
-            <div>
-
-                <h1>
-                    Messie IA
-                </h1>
-
-                <small>
-                    Assistant intelligent
-                </small>
-
-            </div>
+            <span>
+                Messie IA
+            </span>
 
         </div>
 
 
-        <div class="status">
-
-            <span
-                class="status-dot"
-                id="statusDot"
-            ></span>
-
-            <span id="statusText">
-                Vérification...
-            </span>
-
+        <div
+            id="status"
+            class="status"
+        >
+            ● En ligne
         </div>
 
     </header>
 
 
-    <!-- ====================================================
-         MESSAGES
-    ===================================================== -->
+    <!-- ==================================================
+         CHAT
+    ================================================== -->
 
-    <main
-        class="messages"
-        id="messages"
-    >
+    <main id="chat">
 
         <div
-            class="welcome"
             id="welcome"
+            class="welcome"
         >
 
-            <div class="welcome-icon">
-                ✨
-            </div>
-
-            <h2>
-                Bonjour, je suis Messie IA
-            </h2>
+            <h1>
+                Bonjour 👋
+            </h1>
 
             <p>
-                Pose-moi une question, demande-moi
-                de créer une image, d'analyser une
-                image, d'écrire du code ou de t'aider
-                dans ton projet.
+                Je suis <strong>Messie IA</strong>.
+                Pose-moi une question pour commencer.
             </p>
-
-
-            <div class="suggestions">
-
-                <button
-                    class="suggestion"
-                    onclick="
-                        setMessage(
-                            'Aide-moi à créer une application gratuitement.'
-                        )
-                    "
-                >
-                    💻 Créer une application
-                </button>
-
-
-                <button
-                    class="suggestion"
-                    onclick="
-                        setMessage(
-                            'Explique-moi Python simplement.'
-                        )
-                    "
-                >
-                    🐍 Apprendre Python
-                </button>
-
-
-                <button
-                    class="suggestion"
-                    onclick="
-                        setMessage(
-                            'Donne-moi une idée de projet innovant.'
-                        )
-                    "
-                >
-                    💡 Idée de projet
-                </button>
-
-
-                <button
-                    class="suggestion"
-                    onclick="
-                        openImageModal()
-                    "
-                >
-                    🎨 Créer une image
-                </button>
-
-            </div>
 
         </div>
 
     </main>
 
 
-    <!-- ====================================================
+    <!-- ==================================================
          COMPOSER
-    ===================================================== -->
+    ================================================== -->
 
     <div class="composer-area">
 
 
-        <div
-            class="preview"
-            id="preview"
-        >
+        <!-- PREVIEW IMAGE -->
+
+        <div id="preview-container">
 
             <img
-                id="previewImage"
-                src=""
-                alt="Image"
+                id="preview"
+                alt="Image sélectionnée"
             >
-
-
-            <div class="preview-info">
-
-                <strong>
-                    Image sélectionnée
-                </strong>
-
-                <small id="previewName">
-                    Image
-                </small>
-
-            </div>
-
-
-            <button
-                class="remove"
-                onclick="removeReference()"
-            >
-                ×
-            </button>
-
-        </div>
-
-
-        <div class="tools">
-
-            <button
-                class="tool"
-                onclick="
-                    document
-                    .getElementById('imageInput')
-                    .click()
-                "
-            >
-                📷 Analyser
-            </button>
-
-
-            <button
-                class="tool"
-                onclick="
-                    openImageModal()
-                "
-            >
-                🎨 Générer
-            </button>
-
-
-            <button
-                class="tool"
-                onclick="
-                    clearConversation()
-                "
-            >
-                🗑️ Nouvelle conversation
-            </button>
 
         </div>
 
@@ -912,445 +385,130 @@
         <div class="composer">
 
             <textarea
-                id="messageInput"
+                id="message"
+                placeholder="Écris ton message..."
                 rows="1"
-                maxlength="12000"
-                placeholder="Écrivez votre message à Messie IA..."
             ></textarea>
 
 
             <button
+                id="send"
                 class="send"
-                id="sendButton"
-                onclick="sendMessage()"
+                title="Envoyer"
             >
                 ➤
             </button>
 
         </div>
 
-    </div>
 
-</div>
+        <div class="tools">
 
-
-<!-- ========================================================
-     IMAGE INPUT
-========================================================= -->
-
-<input
-    type="file"
-    id="imageInput"
-    accept="image/*"
->
+            <label
+                class="tool"
+                for="image-input"
+            >
+                🖼️ Image
+            </label>
 
 
-<!-- ========================================================
-     GÉNÉRATION IMAGE MODAL
-========================================================= -->
+            <input
+                id="image-input"
+                type="file"
+                accept="image/*"
+            >
 
-<div
-    class="modal"
-    id="imageModal"
->
-
-    <div class="modal-card">
-
-
-        <div class="modal-header">
-
-            <h3>
-                🎨 Générer une image
-            </h3>
 
             <button
-                class="close"
-                onclick="closeImageModal()"
+                id="analyze-button"
+                class="tool"
+                type="button"
             >
-                ×
+                🔍 Analyser
+            </button>
+
+
+            <button
+                id="clear-button"
+                class="tool"
+                type="button"
+            >
+                🗑️ Effacer
             </button>
 
         </div>
 
-
-        <div class="field">
-
-            <label>
-                Description de l'image
-            </label>
-
-            <textarea
-                id="imagePrompt"
-                placeholder="Exemple : une ville futuriste à Lubumbashi au coucher du soleil, style cinématographique..."
-            ></textarea>
-
-        </div>
-
-
-        <div class="field">
-
-            <label>
-                Image de référence
-            </label>
-
-            <input
-                type="file"
-                id="referenceInput"
-                accept="image/*"
-                style="display:block;"
-            >
-
-        </div>
-
-
-        <div class="options">
-
-
-            <div class="field">
-
-                <label>
-                    Format
-                </label>
-
-                <select
-                    id="imageRatio"
-                >
-
-                    <option value="1:1">
-                        Carré 1:1
-                    </option>
-
-                    <option value="16:9">
-                        Paysage 16:9
-                    </option>
-
-                    <option value="9:16">
-                        Portrait 9:16
-                    </option>
-
-                    <option value="4:3">
-                        Paysage 4:3
-                    </option>
-
-                    <option value="3:4">
-                        Portrait 3:4
-                    </option>
-
-                </select>
-
-            </div>
-
-
-            <div class="field">
-
-                <label>
-                    Résolution
-                </label>
-
-                <select
-                    id="imageResolution"
-                >
-
-                    <option value="1K">
-                        1K
-                    </option>
-
-                    <option value="2K">
-                        2K
-                    </option>
-
-                    <option value="4K">
-                        4K
-                    </option>
-
-                </select>
-
-            </div>
-
-
-            <div class="field">
-
-                <label>
-                    Qualité
-                </label>
-
-                <select
-                    id="imageQuality"
-                >
-
-                    <option value="auto">
-                        Automatique
-                    </option>
-
-                    <option value="low">
-                        Faible
-                    </option>
-
-                    <option value="medium">
-                        Moyenne
-                    </option>
-
-                    <option value="high">
-                        Haute
-                    </option>
-
-                </select>
-
-            </div>
-
-
-            <div class="field">
-
-                <label>
-                    Nombre
-                </label>
-
-                <select
-                    id="imageCount"
-                >
-
-                    <option value="1">
-                        1 image
-                    </option>
-
-                    <option value="2">
-                        2 images
-                    </option>
-
-                    <option value="3">
-                        3 images
-                    </option>
-
-                    <option value="4">
-                        4 images
-                    </option>
-
-                </select>
-
-            </div>
-
-        </div>
-
-
-        <button
-            class="generate"
-            id="generateButton"
-            onclick="generateImage()"
-        >
-            ✨ Générer l'image
-        </button>
-
-
-        <div
-            class="modal-preview"
-            id="generatedPreview"
-        ></div>
-
-
     </div>
+
 
 </div>
 
 
 <script>
 
-    // ========================================================
+    // =====================================================
     // VARIABLES
-    // ========================================================
+    // =====================================================
 
-    const messages =
-        document.getElementById(
-            "messages"
-        );
-
+    const chat =
+        document.getElementById("chat");
 
     const welcome =
-        document.getElementById(
-            "welcome"
-        );
-
+        document.getElementById("welcome");
 
     const messageInput =
-        document.getElementById(
-            "messageInput"
-        );
-
+        document.getElementById("message");
 
     const sendButton =
-        document.getElementById(
-            "sendButton"
-        );
-
+        document.getElementById("send");
 
     const imageInput =
-        document.getElementById(
-            "imageInput"
-        );
+        document.getElementById("image-input");
 
+    const analyzeButton =
+        document.getElementById("analyze-button");
+
+    const clearButton =
+        document.getElementById("clear-button");
 
     const preview =
-        document.getElementById(
-            "preview"
-        );
+        document.getElementById("preview");
 
-
-    const previewImage =
-        document.getElementById(
-            "previewImage"
-        );
-
-
-    const previewName =
-        document.getElementById(
-            "previewName"
-        );
+    const previewContainer =
+        document.getElementById("preview-container");
 
 
     let history = [];
 
     let selectedImage = null;
 
-    let sending = false;
+    let loading = false;
 
 
-    // ========================================================
-    // HISTORIQUE
-    // ========================================================
-
-    try {
-
-        const saved =
-            localStorage.getItem(
-                "messie_ia_history"
-            );
-
-
-        if (saved) {
-
-            const parsed =
-                JSON.parse(
-                    saved
-                );
-
-
-            if (Array.isArray(parsed)) {
-
-                history =
-                    parsed.slice(-30);
-
-
-                for (
-                    const item of history
-                ) {
-
-                    if (
-                        item.role === "user" ||
-                        item.role === "assistant"
-                    ) {
-
-                        addMessage(
-                            item.role,
-                            item.content,
-                            false
-                        );
-
-                    }
-
-                }
-
-
-                if (history.length) {
-
-                    welcome.style.display =
-                        "none";
-
-                }
-
-            }
-
-        }
-
-    } catch (error) {
-
-        console.warn(
-            "Historique indisponible.",
-            error
-        );
-
-    }
-
-
-    function saveHistory() {
-
-        try {
-
-            localStorage.setItem(
-
-                "messie_ia_history",
-
-                JSON.stringify(
-                    history.slice(-30)
-                )
-
-            );
-
-        } catch (error) {
-
-            console.warn(
-                "Impossible de sauvegarder.",
-                error
-            );
-
-        }
-
-    }
-
-
-    // ========================================================
+    // =====================================================
     // AJOUT MESSAGE
-    // ========================================================
+    // =====================================================
 
     function addMessage(
         role,
-        content,
-        scroll = true
+        text
     ) {
 
-        welcome.style.display =
-            "none";
+        if (welcome) {
+            welcome.style.display = "none";
+        }
 
 
         const wrapper =
-            document.createElement(
-                "div"
-            );
+            document.createElement("div");
 
 
         wrapper.className =
-            "message " +
-            role;
-
-
-        const avatar =
-            document.createElement(
-                "div"
-            );
-
-
-        avatar.className =
-            "avatar";
-
-
-        avatar.textContent =
-            role === "user"
-                ? "👤"
-                : "M";
+            "message " + role;
 
 
         const bubble =
-            document.createElement(
-                "div"
-            );
+            document.createElement("div");
 
 
         bubble.className =
@@ -1358,176 +516,7 @@
 
 
         bubble.textContent =
-            content;
-
-
-        if (role === "user") {
-
-            wrapper.appendChild(
-                bubble
-            );
-
-            wrapper.appendChild(
-                avatar
-            );
-
-        } else {
-
-            wrapper.appendChild(
-                avatar
-            );
-
-            wrapper.appendChild(
-                bubble
-            );
-
-        }
-
-
-        messages.appendChild(
-            wrapper
-        );
-
-
-        if (scroll) {
-
-            scrollBottom();
-
-        }
-
-
-        return bubble;
-
-    }
-
-
-    // ========================================================
-    // AJOUT IMAGE
-    // ========================================================
-
-    function addGeneratedImage(
-        src
-    ) {
-
-        welcome.style.display =
-            "none";
-
-
-        const wrapper =
-            document.createElement(
-                "div"
-            );
-
-
-        wrapper.className =
-            "message assistant";
-
-
-        const avatar =
-            document.createElement(
-                "div"
-            );
-
-
-        avatar.className =
-            "avatar";
-
-
-        avatar.textContent =
-            "M";
-
-
-        const bubble =
-            document.createElement(
-                "div"
-            );
-
-
-        bubble.className =
-            "bubble";
-
-
-        const img =
-            document.createElement(
-                "img"
-            );
-
-
-        img.className =
-            "generated-image";
-
-
-        img.src =
-            src;
-
-
-        img.alt =
-            "Image générée par Messie IA";
-
-
-        img.onclick =
-            function() {
-
-                window.open(
-                    src,
-                    "_blank"
-                );
-
-            };
-
-
-        const actions =
-            document.createElement(
-                "div"
-            );
-
-
-        actions.className =
-            "image-actions";
-
-
-        const download =
-            document.createElement(
-                "button"
-            );
-
-
-        download.className =
-            "image-action";
-
-
-        download.textContent =
-            "⬇️ Télécharger";
-
-
-        download.onclick =
-            function() {
-
-                downloadImage(
-                    src
-                );
-
-            };
-
-
-        actions.appendChild(
-            download
-        );
-
-
-        bubble.appendChild(
-            img
-        );
-
-
-        bubble.appendChild(
-            actions
-        );
-
-
-        wrapper.appendChild(
-            avatar
-        );
+            text;
 
 
         wrapper.appendChild(
@@ -1535,165 +524,96 @@
         );
 
 
-        messages.appendChild(
+        chat.appendChild(
             wrapper
         );
 
 
-        scrollBottom();
+        chat.scrollTop =
+            chat.scrollHeight;
 
+
+        return bubble;
     }
 
 
-    // ========================================================
-    // DOWNLOAD
-    // ========================================================
+    // =====================================================
+    // INDICATEUR
+    // =====================================================
 
-    function downloadImage(
-        src
-    ) {
+    function addTyping() {
 
-        const link =
-            document.createElement(
-                "a"
-            );
+        if (welcome) {
+            welcome.style.display = "none";
+        }
 
-
-        link.href =
-            src;
-
-
-        link.download =
-            "messie-ia-image.png";
-
-
-        document.body.appendChild(
-            link
-        );
-
-
-        link.click();
-
-
-        link.remove();
-
-    }
-
-
-    // ========================================================
-    // TYPING
-    // ========================================================
-
-    function showTyping() {
 
         const wrapper =
-            document.createElement(
-                "div"
-            );
-
-
-        wrapper.id =
-            "typing";
+            document.createElement("div");
 
 
         wrapper.className =
             "message assistant";
 
 
-        const avatar =
-            document.createElement(
-                "div"
-            );
+        wrapper.id =
+            "typing-message";
 
 
-        avatar.className =
-            "avatar";
+        const bubble =
+            document.createElement("div");
 
 
-        avatar.textContent =
-            "M";
+        bubble.className =
+            "bubble";
 
 
-        const typing =
-            document.createElement(
-                "div"
-            );
-
-
-        typing.className =
-            "typing";
-
-
-        typing.innerHTML =
-            "<span></span><span></span><span></span>";
+        bubble.innerHTML = `
+            <div class="typing">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        `;
 
 
         wrapper.appendChild(
-            avatar
+            bubble
         );
 
 
-        wrapper.appendChild(
-            typing
-        );
-
-
-        messages.appendChild(
+        chat.appendChild(
             wrapper
         );
 
 
-        scrollBottom();
-
+        chat.scrollTop =
+            chat.scrollHeight;
     }
 
 
-    function hideTyping() {
+    function removeTyping() {
 
         const element =
             document.getElementById(
-                "typing"
+                "typing-message"
             );
 
 
         if (element) {
-
             element.remove();
-
         }
-
     }
 
 
-    // ========================================================
-    // SCROLL
-    // ========================================================
-
-    function scrollBottom() {
-
-        messages.scrollTo({
-
-            top:
-                messages.scrollHeight,
-
-            behavior:
-                "smooth"
-
-        });
-
-    }
-
-
-    // ========================================================
-    // CHAT
-    // ========================================================
+    // =====================================================
+    // ENVOYER MESSAGE
+    // =====================================================
 
     async function sendMessage() {
 
-        if (sending) {
-
+        if (loading) {
             return;
-
         }
 
 
@@ -1701,40 +621,9 @@
             messageInput.value.trim();
 
 
-        // Si une image est sélectionnée,
-        // on analyse l'image.
-        if (selectedImage) {
-
-            await analyzeImage(
-                text ||
-                "Décris cette image en détail."
-            );
-
-            return;
-
-        }
-
-
         if (!text) {
-
             return;
-
         }
-
-
-        sending =
-            true;
-
-
-        sendButton.disabled =
-            true;
-
-
-        messageInput.value =
-            "";
-
-
-        resizeTextarea();
 
 
         addMessage(
@@ -1743,25 +632,20 @@
         );
 
 
-        const previousHistory =
-            history.slice(-30);
+        messageInput.value = "";
 
 
-        history.push({
-
-            role:
-                "user",
-
-            content:
-                text
-
-        });
+        messageInput.style.height =
+            "48px";
 
 
-        saveHistory();
+        loading = true;
+
+        sendButton.disabled =
+            true;
 
 
-        showTyping();
+        addTyping();
 
 
         try {
@@ -1788,7 +672,7 @@
                                     text,
 
                                 history:
-                                    previousHistory
+                                    history
 
                             })
 
@@ -1797,36 +681,47 @@
 
 
             const data =
-                await response.json()
-                    .catch(
-                        () => ({})
-                    );
+                await response.json();
 
 
-            hideTyping();
+            removeTyping();
 
 
-            if (!response.ok) {
+            if (!response.ok || !data.success) {
 
-                throw new Error(
-
+                const error =
                     data.error ||
-                    "Erreur du serveur."
+                    "Une erreur est survenue.";
 
+                addMessage(
+                    "assistant",
+                    "❌ " + error
                 );
 
+                return;
             }
 
 
             const answer =
                 data.response ||
-                "Aucune réponse reçue.";
+                "Je n'ai pas reçu de réponse.";
 
 
             addMessage(
                 "assistant",
                 answer
             );
+
+
+            history.push({
+
+                role:
+                    "user",
+
+                content:
+                    text
+
+            });
 
 
             history.push({
@@ -1840,44 +735,34 @@
             });
 
 
-            saveHistory();
+        }
 
+        catch (error) {
 
-            setStatus(
-                true
-            );
-
-        } catch (error) {
-
-            hideTyping();
+            removeTyping();
 
 
             addMessage(
 
                 "assistant",
 
-                "❌ " +
-                (
-                    error.message ||
-                    "Erreur de connexion."
-                )
+                "❌ Impossible de contacter Messie IA."
 
             );
 
 
-            setStatus(
-                false
+            console.error(
+                error
             );
 
-        } finally {
+        }
 
-            sending =
-                false;
+        finally {
 
+            loading = false;
 
             sendButton.disabled =
                 false;
-
 
             messageInput.focus();
 
@@ -1886,63 +771,28 @@
     }
 
 
-    // ========================================================
-    // IMAGE INPUT
-    // ========================================================
+    // =====================================================
+    // IMAGE
+    // =====================================================
 
     imageInput.addEventListener(
         "change",
-        function() {
+        function () {
 
             const file =
-                imageInput.files[0];
+                this.files[0];
 
 
             if (!file) {
 
-                return;
+                selectedImage =
+                    null;
 
-            }
-
-
-            if (
-                !file.type.startsWith(
-                    "image/"
-                )
-            ) {
-
-                alert(
-                    "Sélectionne une image."
-                );
+                previewContainer.style.display =
+                    "none";
 
                 return;
-
             }
-
-
-            if (
-                file.size >
-                15 * 1024 * 1024
-            ) {
-
-                alert(
-                    "Image trop volumineuse. Maximum 15 Mo."
-                );
-
-                imageInput.value =
-                    "";
-
-                return;
-
-            }
-
-
-            selectedImage =
-                file;
-
-
-            previewName.textContent =
-                file.name;
 
 
             const reader =
@@ -1950,10 +800,18 @@
 
 
             reader.onload =
-                function(event) {
+                function (event) {
 
-                    previewImage.src =
+                    selectedImage =
                         event.target.result;
+
+
+                    preview.src =
+                        selectedImage;
+
+
+                    previewContainer.style.display =
+                        "block";
 
                 };
 
@@ -1962,609 +820,200 @@
                 file
             );
 
+        }
+    );
 
-            preview.style.display =
-                "flex";
+
+    // =====================================================
+    // ANALYSE IMAGE
+    // =====================================================
+
+    analyzeButton.addEventListener(
+        "click",
+        async function () {
+
+            if (!selectedImage) {
+
+                addMessage(
+                    "assistant",
+                    "📷 Sélectionne d'abord une image."
+                );
+
+                return;
+            }
 
 
-            messageInput.placeholder =
-                "Que veux-tu savoir sur cette image ?";
+            if (loading) {
+                return;
+            }
+
+
+            loading = true;
+
+            analyzeButton.disabled =
+                true;
+
+
+            addTyping();
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        "/api/analyze-image",
+                        {
+
+                            method:
+                                "POST",
+
+                            headers: {
+
+                                "Content-Type":
+                                    "application/json"
+
+                            },
+
+                            body:
+                                JSON.stringify({
+
+                                    image:
+                                        selectedImage,
+
+                                    prompt:
+                                        messageInput.value.trim()
+                                        ||
+                                        "Décris cette image en détail."
+
+                                })
+
+                        }
+                    );
+
+
+                const data =
+                    await response.json();
+
+
+                removeTyping();
+
+
+                if (!response.ok || !data.success) {
+
+                    addMessage(
+                        "assistant",
+                        "❌ " +
+                        (
+                            data.error ||
+                            "Impossible d'analyser l'image."
+                        )
+                    );
+
+                    return;
+                }
+
+
+                addMessage(
+                    "assistant",
+                    data.response ||
+                    "Analyse terminée."
+                );
+
+            }
+
+            catch (error) {
+
+                removeTyping();
+
+                addMessage(
+                    "assistant",
+                    "❌ Erreur pendant l'analyse de l'image."
+                );
+
+                console.error(
+                    error
+                );
+
+            }
+
+            finally {
+
+                loading = false;
+
+                analyzeButton.disabled =
+                    false;
+
+            }
 
         }
     );
 
 
-    // ========================================================
-    // ANALYSE IMAGE
-    // ========================================================
+    // =====================================================
+    // EFFACER
+    // =====================================================
 
-    async function analyzeImage(
-        prompt
-    ) {
+    clearButton.addEventListener(
+        "click",
+        function () {
 
-        if (!selectedImage) {
+            history = [];
 
-            return;
-
-        }
-
-
-        sending =
-            true;
-
-
-        sendButton.disabled =
-            true;
-
-
-        const file =
-            selectedImage;
-
-
-        removeReference();
-
-
-        addMessage(
-            "user",
-            "📷 " + prompt
-        );
-
-
-        showTyping();
-
-
-        try {
-
-            const base64 =
-                await fileToBase64(
-                    file
-                );
-
-
-            const response =
-                await fetch(
-                    "/api/analyze-image",
-                    {
-
-                        method:
-                            "POST",
-
-                        headers: {
-
-                            "Content-Type":
-                                "application/json"
-
-                        },
-
-                        body:
-                            JSON.stringify({
-
-                                image:
-                                    base64,
-
-                                prompt:
-                                    prompt
-
-                            })
-
-                    }
-                );
-
-
-            const data =
-                await response.json()
-                    .catch(
-                        () => ({})
-                    );
-
-
-            hideTyping();
-
-
-            if (!response.ok) {
-
-                throw new Error(
-
-                    data.error ||
-                    "Erreur pendant l'analyse."
-
-                );
-
-            }
-
-
-            const answer =
-                data.response ||
-                "Je n'ai pas pu analyser cette image.";
-
-
-            addMessage(
-                "assistant",
-                answer
-            );
-
-
-            setStatus(
-                true
-            );
-
-        } catch (error) {
-
-            hideTyping();
-
-
-            addMessage(
-
-                "assistant",
-
-                "❌ " +
-                (
-                    error.message ||
-                    "Impossible d'analyser l'image."
-                )
-
-            );
-
-
-            setStatus(
-                false
-            );
-
-        } finally {
-
-            sending =
-                false;
-
-
-            sendButton.disabled =
-                false;
-
-        }
-
-    }
-
-
-    // ========================================================
-    // FILE TO BASE64
-    // ========================================================
-
-    function fileToBase64(
-        file
-    ) {
-
-        return new Promise(
-            function(resolve, reject) {
-
-                const reader =
-                    new FileReader();
-
-
-                reader.onload =
-                    function() {
-
-                        resolve(
-                            reader.result
-                        );
-
-                    };
-
-
-                reader.onerror =
-                    function() {
-
-                        reject(
-                            new Error(
-                                "Impossible de lire l'image."
-                            )
-                        );
-
-                    };
-
-
-                reader.readAsDataURL(
-                    file
-                );
-
-            }
-        );
-
-    }
-
-
-    // ========================================================
-    // REMOVE REFERENCE
-    // ========================================================
-
-    function removeReference() {
-
-        selectedImage =
-            null;
-
-
-        preview.style.display =
-            "none";
-
-
-        previewImage.src =
-            "";
-
-
-        previewName.textContent =
-            "";
-
-
-        imageInput.value =
-            "";
-
-
-        messageInput.placeholder =
-            "Écrivez votre message à Messie IA...";
-
-    }
-
-
-    // ========================================================
-    // IMAGE GENERATION MODAL
-    // ========================================================
-
-    function openImageModal() {
-
-        document
-            .getElementById(
-                "imageModal"
-            )
-            .classList.add(
-                "active"
-            );
-
-    }
-
-
-    function closeImageModal() {
-
-        document
-            .getElementById(
-                "imageModal"
-            )
-            .classList.remove(
-                "active"
-            );
-
-    }
-
-
-    // ========================================================
-    // GENERATE IMAGE
-    // ========================================================
-
-    async function generateImage() {
-
-        const prompt =
-            document
-            .getElementById(
-                "imagePrompt"
-            )
-            .value
-            .trim();
-
-
-        if (!prompt) {
-
-            alert(
-                "Décris l'image à générer."
-            );
-
-            return;
-
-        }
-
-
-        const button =
-            document.getElementById(
-                "generateButton"
-            );
-
-
-        const preview =
-            document.getElementById(
-                "generatedPreview"
-            );
-
-
-        button.disabled =
-            true;
-
-
-        button.textContent =
-            "⏳ Génération en cours...";
-
-
-        preview.style.display =
-            "none";
-
-
-        try {
-
-            let referenceImage =
+            selectedImage =
                 null;
 
-
-            const referenceFile =
-                document
-                .getElementById(
-                    "referenceInput"
-                )
-                .files[0];
+            chat.innerHTML = "";
 
 
-            if (referenceFile) {
-
-                if (
-                    referenceFile.size >
-                    15 * 1024 * 1024
-                ) {
-
-                    throw new Error(
-                        "L'image de référence est trop volumineuse."
-                    );
-
-                }
-
-
-                referenceImage =
-                    await fileToBase64(
-                        referenceFile
-                    );
-
-            }
-
-
-            const response =
-                await fetch(
-                    "/api/generate-image",
-                    {
-
-                        method:
-                            "POST",
-
-                        headers: {
-
-                            "Content-Type":
-                                "application/json"
-
-                        },
-
-                        body:
-                            JSON.stringify({
-
-                                prompt:
-                                    prompt,
-
-                                aspect_ratio:
-                                    document
-                                    .getElementById(
-                                        "imageRatio"
-                                    )
-                                    .value,
-
-                                resolution:
-                                    document
-                                    .getElementById(
-                                        "imageResolution"
-                                    )
-                                    .value,
-
-                                quality:
-                                    document
-                                    .getElementById(
-                                        "imageQuality"
-                                    )
-                                    .value,
-
-                                n:
-                                    Number(
-                                        document
-                                        .getElementById(
-                                            "imageCount"
-                                        )
-                                        .value
-                                    ),
-
-                                output_format:
-                                    "png",
-
-                                reference_image:
-                                    referenceImage
-
-                            })
-
-                    }
+            const newWelcome =
+                document.createElement(
+                    "div"
                 );
 
 
-            const data =
-                await response.json()
-                    .catch(
-                        () => ({})
-                    );
+            newWelcome.className =
+                "welcome";
 
 
-            if (!response.ok) {
+            newWelcome.innerHTML = `
+                <h1>
+                    Bonjour 👋
+                </h1>
 
-                throw new Error(
-
-                    data.error ||
-                    "Erreur pendant la génération."
-
-                );
-
-            }
-
-
-            if (
-                !Array.isArray(
-                    data.images
-                ) ||
-                !data.images.length
-            ) {
-
-                throw new Error(
-                    "Aucune image n'a été reçue."
-                );
-
-            }
+                <p>
+                    Je suis <strong>Messie IA</strong>.
+                    Pose-moi une question pour commencer.
+                </p>
+            `;
 
 
-            closeImageModal();
-
-
-            addMessage(
-                "user",
-                "🎨 " + prompt
+            chat.appendChild(
+                newWelcome
             );
 
 
-            for (
-                const image
-                of data.images
-            ) {
-
-                if (
-                    image &&
-                    image.data
-                ) {
-
-                    addGeneratedImage(
-                        image.data
-                    );
-
-                }
-
-            }
+            previewContainer.style.display =
+                "none";
 
 
-            setStatus(
-                true
-            );
-
-        } catch (error) {
-
-            alert(
-
-                "❌ " +
-                (
-                    error.message ||
-                    "Impossible de générer l'image."
-                )
-
-            );
-
-        } finally {
-
-            button.disabled =
-                false;
+            imageInput.value =
+                "";
 
 
-            button.textContent =
-                "✨ Générer l'image";
+            messageInput.value =
+                "";
 
         }
-
-    }
-
-
-    // ========================================================
-    // SET MESSAGE
-    // ========================================================
-
-    function setMessage(
-        text
-    ) {
-
-        messageInput.value =
-            text;
-
-
-        resizeTextarea();
-
-
-        messageInput.focus();
-
-    }
-
-
-    // ========================================================
-    // CLEAR CONVERSATION
-    // ========================================================
-
-    function clearConversation() {
-
-        if (
-            !confirm(
-                "Effacer cette conversation ?"
-            )
-        ) {
-
-            return;
-
-        }
-
-
-        history =
-            [];
-
-
-        localStorage.removeItem(
-            "messie_ia_history"
-        );
-
-
-        messages.innerHTML =
-            "";
-
-
-        messages.appendChild(
-            welcome
-        );
-
-
-        welcome.style.display =
-            "block";
-
-
-        removeReference();
-
-    }
-
-
-    // ========================================================
-    // TEXTAREA
-    // ========================================================
-
-    messageInput.addEventListener(
-        "input",
-        resizeTextarea
     );
 
 
-    function resizeTextarea() {
-
-        messageInput.style.height =
-            "auto";
-
-
-        messageInput.style.height =
-            Math.min(
-                messageInput.scrollHeight,
-                150
-            ) + "px";
-
-    }
-
+    // =====================================================
+    // ENTRÉE CLAVIER
+    // =====================================================
 
     messageInput.addEventListener(
         "keydown",
-        function(event) {
+        function (event) {
 
             if (
                 event.key === "Enter" &&
@@ -2581,132 +1030,79 @@
     );
 
 
-    // ========================================================
-    // STATUS
-    // ========================================================
+    // =====================================================
+    // AUTO-AGRANDISSEMENT
+    // =====================================================
 
-    function setStatus(
-        online
-    ) {
+    messageInput.addEventListener(
+        "input",
+        function () {
 
-        const dot =
-            document.getElementById(
-                "statusDot"
-            );
+            this.style.height =
+                "48px";
 
 
-        const text =
-            document.getElementById(
-                "statusText"
-            );
-
-
-        if (online) {
-
-            text.textContent =
-                "En ligne";
-
-
-            dot.style.background =
-                "#22c55e";
-
-
-            dot.style.boxShadow =
-                "0 0 10px #22c55e";
-
-        } else {
-
-            text.textContent =
-                "Erreur";
-
-
-            dot.style.background =
-                "#ef4444";
-
-
-            dot.style.boxShadow =
-                "0 0 10px #ef4444";
+            this.style.height =
+                Math.min(
+                    this.scrollHeight,
+                    150
+                ) + "px";
 
         }
-
-    }
-
-
-    // ========================================================
-    // HEALTH
-    // ========================================================
-
-    async function checkHealth() {
-
-        try {
-
-            const response =
-                await fetch(
-                    "/health"
-                );
+    );
 
 
-            if (!response.ok) {
+    // =====================================================
+    // BOUTON ENVOYER
+    // =====================================================
 
-                throw new Error();
-
-            }
-
-
-            const data =
-                await response.json();
-
-
-            setStatus(
-                data.status === "ok" &&
-                data.openrouter === true
-            );
-
-        } catch (error) {
-
-            setStatus(
-                false
-            );
-
-        }
-
-    }
+    sendButton.addEventListener(
+        "click",
+        sendMessage
+    );
 
 
-    // ========================================================
-    // MODAL CLICK OUTSIDE
-    // ========================================================
+    // =====================================================
+    // TEST DU SERVEUR
+    // =====================================================
 
-    document
-        .getElementById(
-            "imageModal"
+    fetch("/health")
+        .then(
+            response =>
+                response.json()
         )
-        .addEventListener(
-            "click",
-            function(event) {
+        .then(
+            data => {
+
+                const status =
+                    document.getElementById(
+                        "status"
+                    );
+
 
                 if (
-                    event.target === this
+                    data &&
+                    data.status === "ok"
                 ) {
 
-                    closeImageModal();
+                    status.textContent =
+                        "● Serveur actif";
 
                 }
 
             }
+        )
+        .catch(
+            error => {
+
+                console.error(
+                    error
+                );
+
+            }
         );
 
-
-    // ========================================================
-    // START
-    // ========================================================
-
-    checkHealth();
-
-    messageInput.focus();
-
 </script>
-
 
 </body>
 
