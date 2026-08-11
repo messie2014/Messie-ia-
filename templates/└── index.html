@@ -2,22 +2,55 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="theme-color"
+        content="#111827"
+    >
 
     <title>Messie IA</title>
 
     <style>
+
+        /* =====================================================
+           RESET
+        ===================================================== */
+
         * {
             box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
 
+
+        html,
         body {
-            margin: 0;
-            font-family: Arial, Helvetica, sans-serif;
-            background: #0f1117;
-            color: #ffffff;
-            min-height: 100vh;
+            width: 100%;
+            height: 100%;
         }
+
+
+        body {
+            font-family:
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                Roboto,
+                Arial,
+                sans-serif;
+
+            background: #f5f7fb;
+
+            color: #111827;
+
+            overflow: hidden;
+        }
+
 
         button,
         textarea,
@@ -26,442 +59,1065 @@
             font: inherit;
         }
 
-        .app {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
+
+        button {
+            cursor: pointer;
         }
 
-        /* ==================================================
-           HEADER
-        ================================================== */
 
-        header {
+        /* =====================================================
+           APPLICATION
+        ===================================================== */
+
+        .app {
+            width: 100%;
+            height: 100vh;
+
+            display: flex;
+            flex-direction: column;
+
+            background: #ffffff;
+        }
+
+
+        /* =====================================================
+           HEADER
+        ===================================================== */
+
+        .header {
             height: 64px;
+
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 18px;
-            background: #171a22;
-            border-bottom: 1px solid #292d38;
-            position: sticky;
-            top: 0;
-            z-index: 20;
+
+            padding: 0 16px;
+
+            background: #111827;
+
+            color: white;
+
+            flex-shrink: 0;
         }
 
-        .logo {
+
+        .brand {
             display: flex;
             align-items: center;
             gap: 10px;
-            font-size: 20px;
-            font-weight: bold;
         }
 
-        .logo-icon {
+
+        .brand-icon {
             width: 38px;
             height: 38px;
-            border-radius: 12px;
+
             display: flex;
             align-items: center;
             justify-content: center;
-            background: linear-gradient(135deg, #7c3aed, #2563eb);
-            font-weight: bold;
+
+            border-radius: 12px;
+
+            background: linear-gradient(
+                135deg,
+                #6366f1,
+                #8b5cf6
+            );
+
+            font-size: 20px;
         }
 
-        .status {
-            font-size: 12px;
-            color: #9ca3af;
-        }
 
-        .status-dot {
-            display: inline-block;
-            width: 8px;
-            height: 8px;
-            background: #22c55e;
-            border-radius: 50%;
-            margin-right: 5px;
-        }
-
-        /* ==================================================
-           MAIN
-        ================================================== */
-
-        main {
-            width: 100%;
-            max-width: 1000px;
-            margin: auto;
-            padding: 24px 15px 130px;
-            flex: 1;
-        }
-
-        .welcome {
-            text-align: center;
-            padding: 40px 10px 25px;
-        }
-
-        .welcome h1 {
-            font-size: 32px;
-            margin: 0 0 10px;
-        }
-
-        .welcome p {
-            color: #9ca3af;
-            margin: 0;
-        }
-
-        /* ==================================================
-           MESSAGES
-        ================================================== */
-
-        #messages {
+        .brand-text {
             display: flex;
             flex-direction: column;
-            gap: 15px;
         }
 
-        .message {
+
+        .brand-name {
+            font-size: 17px;
+            font-weight: 700;
+        }
+
+
+        .brand-status {
+            font-size: 11px;
+            color: #a7f3d0;
+
+            margin-top: 2px;
+        }
+
+
+        .header-actions {
             display: flex;
-            width: 100%;
+            align-items: center;
+            gap: 8px;
         }
 
-        .message.user {
+
+        .header-button {
+            width: 40px;
+            height: 40px;
+
+            border: none;
+
+            border-radius: 10px;
+
+            background: rgba(
+                255,
+                255,
+                255,
+                0.08
+            );
+
+            color: white;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 18px;
+        }
+
+
+        .header-button:hover {
+            background: rgba(
+                255,
+                255,
+                255,
+                0.16
+            );
+        }
+
+
+        /* =====================================================
+           CHAT
+        ===================================================== */
+
+        .chat-container {
+            flex: 1;
+
+            overflow-y: auto;
+
+            padding: 20px 14px 30px;
+
+            background: #f5f7fb;
+        }
+
+
+        .chat {
+            width: 100%;
+            max-width: 900px;
+
+            margin: 0 auto;
+        }
+
+
+        /* =====================================================
+           MESSAGE BIENVENUE
+        ===================================================== */
+
+        .welcome {
+            min-height: 55vh;
+
+            display: flex;
+            flex-direction: column;
+
+            align-items: center;
+            justify-content: center;
+
+            text-align: center;
+
+            padding: 30px 15px;
+        }
+
+
+        .welcome-icon {
+            width: 76px;
+            height: 76px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 24px;
+
+            background: linear-gradient(
+                135deg,
+                #6366f1,
+                #8b5cf6
+            );
+
+            color: white;
+
+            font-size: 38px;
+
+            box-shadow:
+                0 12px 30px
+                rgba(99, 102, 241, 0.25);
+
+            margin-bottom: 20px;
+        }
+
+
+        .welcome h1 {
+            font-size: 28px;
+
+            margin-bottom: 10px;
+        }
+
+
+        .welcome p {
+            max-width: 500px;
+
+            color: #6b7280;
+
+            line-height: 1.6;
+
+            font-size: 15px;
+        }
+
+
+        .suggestions {
+            display: flex;
+            flex-wrap: wrap;
+
+            justify-content: center;
+
+            gap: 8px;
+
+            margin-top: 24px;
+        }
+
+
+        .suggestion {
+            border: 1px solid #e5e7eb;
+
+            background: white;
+
+            color: #374151;
+
+            border-radius: 999px;
+
+            padding: 9px 13px;
+
+            font-size: 13px;
+        }
+
+
+        .suggestion:hover {
+            border-color: #6366f1;
+            color: #4f46e5;
+        }
+
+
+        /* =====================================================
+           MESSAGES
+        ===================================================== */
+
+        .message-row {
+            display: flex;
+
+            margin-bottom: 18px;
+        }
+
+
+        .message-row.user {
             justify-content: flex-end;
         }
 
-        .message.assistant {
+
+        .message-row.assistant {
             justify-content: flex-start;
         }
 
-        .bubble {
+
+        .message-bubble {
             max-width: 85%;
-            padding: 13px 16px;
+
+            padding: 12px 15px;
+
             border-radius: 18px;
-            line-height: 1.5;
+
+            line-height: 1.55;
+
             white-space: pre-wrap;
+
             word-wrap: break-word;
+
+            font-size: 15px;
         }
 
-        .user .bubble {
-            background: #2563eb;
+
+        .message-row.user
+        .message-bubble {
+            background: #4f46e5;
+
+            color: white;
+
             border-bottom-right-radius: 5px;
         }
 
-        .assistant .bubble {
-            background: #1b1f29;
-            border: 1px solid #292d38;
+
+        .message-row.assistant
+        .message-bubble {
+            background: white;
+
+            color: #1f2937;
+
+            border: 1px solid #e5e7eb;
+
             border-bottom-left-radius: 5px;
+
+            box-shadow:
+                0 2px 8px
+                rgba(0, 0, 0, 0.03);
         }
 
-        .bubble img {
+
+        .message-image {
             max-width: 100%;
-            border-radius: 12px;
+
+            border-radius: 14px;
+
+            display: block;
+
             margin-top: 8px;
         }
 
-        /* ==================================================
-           IMAGE GENERATOR
-        ================================================== */
 
-        .panel {
-            background: #171a22;
-            border: 1px solid #292d38;
-            border-radius: 18px;
-            padding: 18px;
-            margin-top: 25px;
+        .typing {
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 4px;
         }
 
-        .panel-title {
-            font-size: 19px;
-            font-weight: bold;
-            margin-bottom: 5px;
+
+        .typing span {
+            width: 7px;
+            height: 7px;
+
+            border-radius: 50%;
+
+            background: #9ca3af;
+
+            animation:
+                typing 1.2s infinite;
         }
 
-        .panel-subtitle {
-            color: #9ca3af;
-            font-size: 13px;
-            margin-bottom: 16px;
+
+        .typing span:nth-child(2) {
+            animation-delay: 0.15s;
         }
 
-        textarea {
-            width: 100%;
-            min-height: 100px;
-            resize: vertical;
-            background: #0f1117;
-            color: white;
-            border: 1px solid #343946;
+
+        .typing span:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+
+
+        @keyframes typing {
+
+            0%,
+            60%,
+            100% {
+                opacity: 0.3;
+                transform: translateY(0);
+            }
+
+            30% {
+                opacity: 1;
+                transform: translateY(-3px);
+            }
+        }
+
+
+        /* =====================================================
+           IMAGE PREVIEW
+        ===================================================== */
+
+        .image-preview-container {
+            display: none;
+
+            max-width: 900px;
+
+            margin: 0 auto;
+
+            padding: 0 14px 10px;
+        }
+
+
+        .image-preview {
+            position: relative;
+
+            display: inline-block;
+        }
+
+
+        .image-preview img {
+            width: 90px;
+            height: 90px;
+
+            object-fit: cover;
+
             border-radius: 12px;
-            padding: 13px;
-            outline: none;
+
+            border: 1px solid #e5e7eb;
         }
 
-        textarea:focus {
-            border-color: #6366f1;
+
+        .remove-image {
+            position: absolute;
+
+            top: -7px;
+            right: -7px;
+
+            width: 24px;
+            height: 24px;
+
+            border: none;
+
+            border-radius: 50%;
+
+            background: #ef4444;
+
+            color: white;
+
+            font-size: 14px;
         }
 
-        .controls {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
-            margin-top: 12px;
+
+        /* =====================================================
+           INPUT
+        ===================================================== */
+
+        .composer-area {
+            flex-shrink: 0;
+
+            background: white;
+
+            border-top: 1px solid #e5e7eb;
+
+            padding:
+                10px
+                12px
+                calc(10px + env(safe-area-inset-bottom));
         }
 
-        .control label {
-            display: block;
-            font-size: 12px;
-            color: #9ca3af;
-            margin-bottom: 5px;
-        }
 
-        select {
+        .composer {
             width: 100%;
-            padding: 10px;
-            background: #0f1117;
-            color: white;
-            border: 1px solid #343946;
-            border-radius: 10px;
-            outline: none;
-        }
+            max-width: 900px;
 
-        .actions {
+            margin: 0 auto;
+
             display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-top: 14px;
+
+            align-items: flex-end;
+
+            gap: 8px;
         }
 
-        button {
-            border: 0;
-            cursor: pointer;
-            border-radius: 11px;
-            padding: 11px 16px;
+
+        .composer-box {
+            flex: 1;
+
+            display: flex;
+
+            align-items: flex-end;
+
+            gap: 5px;
+
+            background: #f3f4f6;
+
+            border: 1px solid #e5e7eb;
+
+            border-radius: 18px;
+
+            padding: 6px 7px 6px 10px;
+        }
+
+
+        .composer-box:focus-within {
+            border-color: #818cf8;
+
+            box-shadow:
+                0 0 0 3px
+                rgba(99, 102, 241, 0.08);
+        }
+
+
+        #messageInput {
+            flex: 1;
+
+            resize: none;
+
+            border: none;
+
+            outline: none;
+
+            background: transparent;
+
+            color: #111827;
+
+            min-height: 38px;
+
+            max-height: 150px;
+
+            padding: 8px 4px;
+
+            line-height: 1.4;
+        }
+
+
+        #messageInput::placeholder {
+            color: #9ca3af;
+        }
+
+
+        .icon-button {
+            width: 38px;
+            height: 38px;
+
+            flex-shrink: 0;
+
+            border: none;
+
+            background: transparent;
+
+            border-radius: 10px;
+
+            color: #6b7280;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            font-size: 19px;
+        }
+
+
+        .icon-button:hover {
+            background: #e5e7eb;
+
+            color: #4f46e5;
+        }
+
+
+        .send-button {
+            width: 46px;
+            height: 46px;
+
+            flex-shrink: 0;
+
+            border: none;
+
+            border-radius: 15px;
+
+            background: #4f46e5;
+
             color: white;
-            background: #292d38;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            font-size: 19px;
         }
 
-        button:hover {
-            opacity: 0.9;
+
+        .send-button:hover {
+            background: #4338ca;
         }
 
-        button.primary {
-            background: linear-gradient(135deg, #7c3aed, #2563eb);
-            font-weight: bold;
-        }
 
-        button:disabled {
+        .send-button:disabled {
             opacity: 0.5;
+
             cursor: not-allowed;
         }
 
-        .file-button {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            background: #292d38;
-            padding: 11px 16px;
-            border-radius: 11px;
-            cursor: pointer;
-        }
 
-        #imageInput {
-            display: none;
-        }
-
-        /* ==================================================
-           GENERATION STATUS
-        ================================================== */
-
-        #generationStatus {
-            display: none;
-            margin-top: 15px;
-            padding: 13px;
-            border-radius: 12px;
-            background: #111827;
-            border: 1px solid #374151;
-            color: #c4b5fd;
-        }
-
-        .loader {
-            display: inline-block;
-            width: 15px;
-            height: 15px;
-            border: 2px solid #555;
-            border-top-color: #a78bfa;
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-            vertical-align: -3px;
-            margin-right: 8px;
-        }
-
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        /* ==================================================
-           GENERATED IMAGES
-        ================================================== */
-
-        #imageResults {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 15px;
-            margin-top: 18px;
-        }
-
-        .generated-image {
-            background: #0f1117;
-            border: 1px solid #292d38;
-            border-radius: 15px;
-            padding: 8px;
-        }
-
-        .generated-image img {
+        .composer-info {
             width: 100%;
+
+            max-width: 900px;
+
+            margin: 7px auto 0;
+
+            text-align: center;
+
+            font-size: 10px;
+
+            color: #9ca3af;
+        }
+
+
+        /* =====================================================
+           MODE MENU
+        ===================================================== */
+
+        .tools-panel {
+            display: none;
+
+            width: 100%;
+            max-width: 900px;
+
+            margin: 0 auto 10px;
+
+            background: white;
+
+            border: 1px solid #e5e7eb;
+
+            border-radius: 16px;
+
+            padding: 10px;
+
+            box-shadow:
+                0 8px 25px
+                rgba(0, 0, 0, 0.08);
+        }
+
+
+        .tools-panel.show {
             display: block;
+        }
+
+
+        .tools-title {
+            font-size: 12px;
+
+            font-weight: 700;
+
+            color: #6b7280;
+
+            margin-bottom: 8px;
+        }
+
+
+        .tools-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 8px;
+        }
+
+
+        .tool {
+            border: 1px solid #e5e7eb;
+
+            background: #f9fafb;
+
+            border-radius: 12px;
+
+            padding: 10px 7px;
+
+            color: #374151;
+
+            font-size: 12px;
+        }
+
+
+        .tool:hover {
+            border-color: #818cf8;
+
+            color: #4f46e5;
+        }
+
+
+        /* =====================================================
+           MODAL GÉNÉRATION IMAGE
+        ===================================================== */
+
+        .modal {
+            display: none;
+
+            position: fixed;
+
+            z-index: 1000;
+
+            inset: 0;
+
+            background:
+                rgba(17, 24, 39, 0.6);
+
+            padding: 20px;
+
+            overflow-y: auto;
+        }
+
+
+        .modal.show {
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+        }
+
+
+        .modal-content {
+            width: 100%;
+
+            max-width: 560px;
+
+            max-height: 90vh;
+
+            overflow-y: auto;
+
+            background: white;
+
+            border-radius: 20px;
+
+            padding: 20px;
+
+            box-shadow:
+                0 25px 70px
+                rgba(0, 0, 0, 0.25);
+        }
+
+
+        .modal-header {
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            margin-bottom: 18px;
+        }
+
+
+        .modal-header h2 {
+            font-size: 20px;
+        }
+
+
+        .close-modal {
+            width: 35px;
+            height: 35px;
+
+            border: none;
+
+            border-radius: 10px;
+
+            background: #f3f4f6;
+
+            font-size: 20px;
+
+            color: #374151;
+        }
+
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+
+        .form-group label {
+            display: block;
+
+            font-size: 13px;
+
+            font-weight: 600;
+
+            color: #374151;
+
+            margin-bottom: 7px;
+        }
+
+
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+
+            border: 1px solid #d1d5db;
+
+            border-radius: 11px;
+
+            padding: 10px;
+
+            outline: none;
+
+            background: white;
+        }
+
+
+        .form-group textarea {
+            min-height: 110px;
+
+            resize: vertical;
+        }
+
+
+        .form-group textarea:focus,
+        .form-group select:focus {
+            border-color: #6366f1;
+
+            box-shadow:
+                0 0 0 3px
+                rgba(99, 102, 241, 0.08);
+        }
+
+
+        .form-row {
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, 1fr);
+
+            gap: 10px;
+        }
+
+
+        .generate-button {
+            width: 100%;
+
+            border: none;
+
+            border-radius: 12px;
+
+            padding: 12px;
+
+            background: #4f46e5;
+
+            color: white;
+
+            font-weight: 700;
+
+            margin-top: 5px;
+        }
+
+
+        .generate-button:hover {
+            background: #4338ca;
+        }
+
+
+        .generate-button:disabled {
+            opacity: 0.6;
+
+            cursor: not-allowed;
+        }
+
+
+        .reference-preview {
+            display: none;
+
+            margin-top: 8px;
+
+            position: relative;
+
+            width: 90px;
+        }
+
+
+        .reference-preview img {
+            width: 90px;
+            height: 90px;
+
+            object-fit: cover;
+
             border-radius: 10px;
         }
 
-        .image-actions {
-            display: flex;
-            gap: 8px;
-            margin-top: 8px;
+
+        .generated-images {
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, 1fr);
+
+            gap: 10px;
+
+            margin-top: 18px;
         }
 
-        .image-actions button {
-            flex: 1;
+
+        .generated-image {
+            width: 100%;
+
+            border-radius: 13px;
+
+            border: 1px solid #e5e7eb;
+
+            display: block;
+        }
+
+
+        /* =====================================================
+           NOTIFICATION
+        ===================================================== */
+
+        .toast {
+            position: fixed;
+
+            z-index: 2000;
+
+            left: 50%;
+
+            bottom: 85px;
+
+            transform:
+                translate(-50%, 20px);
+
+            opacity: 0;
+
+            pointer-events: none;
+
+            background: #111827;
+
+            color: white;
+
+            padding: 11px 15px;
+
+            border-radius: 11px;
+
             font-size: 13px;
+
+            transition:
+                0.25s ease;
         }
 
-        /* ==================================================
-           IMAGE PREVIEW
-        ================================================== */
 
-        #referencePreview {
-            display: none;
-            margin-top: 12px;
-            position: relative;
+        .toast.show {
+            opacity: 1;
+
+            transform:
+                translate(-50%, 0);
         }
 
-        #referencePreview img {
-            max-width: 180px;
-            max-height: 180px;
-            border-radius: 12px;
-            border: 1px solid #343946;
-        }
 
-        #removeReference {
-            position: absolute;
-            left: 150px;
-            top: -8px;
-            width: 28px;
-            height: 28px;
-            padding: 0;
-            border-radius: 50%;
+        .toast.error {
             background: #dc2626;
         }
 
-        /* ==================================================
-           CHAT BAR
-        ================================================== */
 
-        .chat-area {
-            position: fixed;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            padding: 12px 15px;
-            background: rgba(15, 17, 23, 0.95);
-            border-top: 1px solid #292d38;
-            backdrop-filter: blur(10px);
-            z-index: 15;
+        .toast.success {
+            background: #059669;
         }
 
-        .chat-box {
-            max-width: 1000px;
-            margin: auto;
-            display: flex;
-            gap: 8px;
-            align-items: flex-end;
-        }
 
-        #chatInput {
-            min-height: 48px;
-            max-height: 150px;
-            resize: none;
-        }
-
-        #sendButton {
-            height: 48px;
-            min-width: 48px;
-            padding: 0 15px;
-        }
-
-        /* ==================================================
+        /* =====================================================
            RESPONSIVE
-        ================================================== */
+        ===================================================== */
 
-        @media (max-width: 700px) {
+        @media (max-width: 600px) {
 
-            .controls {
-                grid-template-columns: repeat(2, 1fr);
+            .header {
+                height: 58px;
             }
+
+
+            .brand-icon {
+                width: 34px;
+                height: 34px;
+
+                border-radius: 10px;
+            }
+
+
+            .brand-name {
+                font-size: 15px;
+            }
+
 
             .welcome h1 {
-                font-size: 27px;
+                font-size: 24px;
             }
 
-            .bubble {
-                max-width: 92%;
+
+            .welcome p {
+                font-size: 14px;
             }
 
-            .panel {
-                padding: 14px;
+
+            .message-bubble {
+                max-width: 90%;
+
+                font-size: 14px;
             }
+
+
+            .tools-grid {
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+
+            .generated-images {
+                grid-template-columns:
+                    1fr;
+            }
+
+
+            .modal {
+                padding: 10px;
+            }
+
+
+            .modal-content {
+                border-radius: 16px;
+
+                padding: 16px;
+            }
+
         }
 
-        @media (max-width: 450px) {
-
-            .controls {
-                grid-template-columns: 1fr 1fr;
-            }
-
-            .logo {
-                font-size: 17px;
-            }
-
-            .status {
-                display: none;
-            }
-        }
     </style>
 </head>
 
+
 <body>
 
+
 <div class="app">
+
 
     <!-- =====================================================
          HEADER
     ====================================================== -->
 
-    <header>
+    <header class="header">
 
-        <div class="logo">
+        <div class="brand">
 
-            <div class="logo-icon">
-                M
+            <div class="brand-icon">
+                ✨
             </div>
 
-            <span>Messie IA</span>
+            <div class="brand-text">
+
+                <div class="brand-name">
+                    Messie IA
+                </div>
+
+                <div class="brand-status">
+                    ● En ligne
+                </div>
+
+            </div>
 
         </div>
 
-        <div class="status">
 
-            <span class="status-dot"></span>
+        <div class="header-actions">
 
-            En ligne
+            <button
+                class="header-button"
+                id="clearChatButton"
+                title="Nouvelle conversation"
+            >
+                🗑️
+            </button>
 
         </div>
 
@@ -469,14 +1125,2142 @@
 
 
     <!-- =====================================================
-         CONTENU
+         CHAT
     ====================================================== -->
 
-    <main>
+    <main
+        class="chat-container"
+        id="chatContainer"
+    >
 
-        <section class="welcome" id="welcome">
+        <div
+            class="chat"
+            id="chat"
+        >
 
-            <h1>Bonjour 👋</h1>
+            <!-- WELCOME -->
 
-            <p>
-                Je suis Messie IA
+            <div
+                class="welcome"
+                id="welcome"
+            >
+
+                <div class="welcome-icon">
+                    ✨
+                </div>
+
+                <h1>
+                    Bonjour, je suis Messie IA
+                </h1>
+
+                <p>
+                    Ton assistant intelligent.
+                    Pose-moi une question, demande-moi
+                    de créer une image ou envoie-moi
+                    une image à analyser.
+                </p>
+
+
+                <div class="suggestions">
+
+                    <button
+                        class="suggestion"
+                        data-prompt="Explique-moi comment fonctionne l'intelligence artificielle."
+                    >
+                        🤖 Explique-moi l'IA
+                    </button>
+
+                    <button
+                        class="suggestion"
+                        data-prompt="Donne-moi une idée de projet innovant que je peux créer."
+                    >
+                        💡 Une idée de projet
+                    </button>
+
+                    <button
+                        class="suggestion"
+                        data-prompt="Apprends-moi quelque chose d'intéressant aujourd'hui."
+                    >
+                        🧠 Apprends-moi quelque chose
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- MESSAGES -->
+
+            <div id="messages"></div>
+
+        </div>
+
+    </main>
+
+
+    <!-- =====================================================
+         IMAGE PREVIEW
+    ====================================================== -->
+
+    <div
+        class="image-preview-container"
+        id="imagePreviewContainer"
+    >
+
+        <div class="image-preview">
+
+            <img
+                id="imagePreview"
+                alt="Image sélectionnée"
+            >
+
+            <button
+                class="remove-image"
+                id="removeImageButton"
+                title="Supprimer l'image"
+            >
+                ×
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         COMPOSER
+    ====================================================== -->
+
+    <div class="composer-area">
+
+
+        <!-- TOOLS -->
+
+        <div
+            class="tools-panel"
+            id="toolsPanel"
+        >
+
+            <div class="tools-title">
+                Outils de Messie IA
+            </div>
+
+
+            <div class="tools-grid">
+
+                <button
+                    class="tool"
+                    id="analyzeTool"
+                >
+                    🔍 Analyser une image
+                </button>
+
+
+                <button
+                    class="tool"
+                    id="generateTool"
+                >
+                    🎨 Générer une image
+                </button>
+
+
+                <button
+                    class="tool"
+                    id="referenceTool"
+                >
+                    ✏️ Modifier une image
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <div class="composer">
+
+
+            <div class="composer-box">
+
+
+                <!-- TOOLS BUTTON -->
+
+                <button
+                    class="icon-button"
+                    id="toolsButton"
+                    title="Outils"
+                >
+                    ＋
+                </button>
+
+
+                <!-- FILE INPUT -->
+
+                <input
+                    type="file"
+                    id="imageInput"
+                    accept="image/*"
+                    hidden
+                >
+
+
+                <button
+                    class="icon-button"
+                    id="attachButton"
+                    title="Ajouter une image"
+                >
+                    📎
+                </button>
+
+
+                <!-- TEXT -->
+
+                <textarea
+                    id="messageInput"
+                    rows="1"
+                    placeholder="Écris ton message..."
+                ></textarea>
+
+            </div>
+
+
+            <!-- SEND -->
+
+            <button
+                class="send-button"
+                id="sendButton"
+                title="Envoyer"
+            >
+                ➤
+            </button>
+
+        </div>
+
+
+        <div class="composer-info">
+            Messie IA peut parfois faire des erreurs. Vérifie les informations importantes.
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     MODAL GÉNÉRATION D'IMAGE
+========================================================= -->
+
+<div
+    class="modal"
+    id="imageModal"
+>
+
+    <div class="modal-content">
+
+
+        <div class="modal-header">
+
+            <h2>
+                🎨 Créer une image
+            </h2>
+
+            <button
+                class="close-modal"
+                id="closeModal"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <!-- PROMPT -->
+
+        <div class="form-group">
+
+            <label for="imagePrompt">
+                Décris l'image
+            </label>
+
+            <textarea
+                id="imagePrompt"
+                placeholder="Exemple : Une ville futuriste africaine au coucher du soleil, très détaillée, style cinématographique..."
+            ></textarea>
+
+        </div>
+
+
+        <!-- OPTIONS -->
+
+        <div class="form-row">
+
+
+            <div class="form-group">
+
+                <label for="aspectRatio">
+                    Format
+                </label>
+
+                <select id="aspectRatio">
+
+                    <option value="1:1">
+                        Carré 1:1
+                    </option>
+
+                    <option value="16:9">
+                        Paysage 16:9
+                    </option>
+
+                    <option value="9:16">
+                        Portrait 9:16
+                    </option>
+
+                    <option value="4:3">
+                        Paysage 4:3
+                    </option>
+
+                    <option value="3:4">
+                        Portrait 3:4
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="resolution">
+                    Résolution
+                </label>
+
+                <select id="resolution">
+
+                    <option value="512">
+                        512
+                    </option>
+
+                    <option value="1K" selected>
+                        1K
+                    </option>
+
+                    <option value="2K">
+                        2K
+                    </option>
+
+                    <option value="4K">
+                        4K
+                    </option>
+
+                </select>
+
+            </div>
+
+
+        </div>
+
+
+        <div class="form-row">
+
+
+            <div class="form-group">
+
+                <label for="quality">
+                    Qualité
+                </label>
+
+                <select id="quality">
+
+                    <option value="auto">
+                        Automatique
+                    </option>
+
+                    <option value="low">
+                        Faible
+                    </option>
+
+                    <option value="medium">
+                        Moyenne
+                    </option>
+
+                    <option value="high">
+                        Haute
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="outputFormat">
+                    Format fichier
+                </label>
+
+                <select id="outputFormat">
+
+                    <option value="png">
+                        PNG
+                    </option>
+
+                    <option value="jpeg">
+                        JPEG
+                    </option>
+
+                    <option value="webp">
+                        WEBP
+                    </option>
+
+                </select>
+
+            </div>
+
+
+        </div>
+
+
+        <!-- IMAGE DE RÉFÉRENCE -->
+
+        <div class="form-group">
+
+            <label>
+                Image de référence
+                <small>
+                    (facultatif)
+                </small>
+            </label>
+
+            <button
+                class="tool"
+                id="referenceButton"
+                style="width:100%;"
+            >
+                📷 Choisir une image
+            </button>
+
+            <input
+                type="file"
+                id="referenceInput"
+                accept="image/*"
+                hidden
+            >
+
+
+            <div
+                class="reference-preview"
+                id="referencePreview"
+            >
+
+                <img
+                    id="referencePreviewImage"
+                    alt="Image de référence"
+                >
+
+            </div>
+
+        </div>
+
+
+        <!-- GENERATE -->
+
+        <button
+            class="generate-button"
+            id="generateButton"
+        >
+            ✨ Générer l'image
+        </button>
+
+
+        <!-- RESULTS -->
+
+        <div
+            class="generated-images"
+            id="generatedImages"
+        ></div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     TOAST
+========================================================= -->
+
+<div
+    class="toast"
+    id="toast"
+></div>
+
+
+<script>
+
+    /* ========================================================
+       VARIABLES
+    ======================================================== */
+
+    const chatContainer =
+        document.getElementById(
+            "chatContainer"
+        );
+
+
+    const messagesContainer =
+        document.getElementById(
+            "messages"
+        );
+
+
+    const welcome =
+        document.getElementById(
+            "welcome"
+        );
+
+
+    const messageInput =
+        document.getElementById(
+            "messageInput"
+        );
+
+
+    const sendButton =
+        document.getElementById(
+            "sendButton"
+        );
+
+
+    const toolsButton =
+        document.getElementById(
+            "toolsButton"
+        );
+
+
+    const toolsPanel =
+        document.getElementById(
+            "toolsPanel"
+        );
+
+
+    const imageInput =
+        document.getElementById(
+            "imageInput"
+        );
+
+
+    const attachButton =
+        document.getElementById(
+            "attachButton"
+        );
+
+
+    const imagePreviewContainer =
+        document.getElementById(
+            "imagePreviewContainer"
+        );
+
+
+    const imagePreview =
+        document.getElementById(
+            "imagePreview"
+        );
+
+
+    const removeImageButton =
+        document.getElementById(
+            "removeImageButton"
+        );
+
+
+    const clearChatButton =
+        document.getElementById(
+            "clearChatButton"
+        );
+
+
+    const imageModal =
+        document.getElementById(
+            "imageModal"
+        );
+
+
+    const closeModal =
+        document.getElementById(
+            "closeModal"
+        );
+
+
+    const imagePrompt =
+        document.getElementById(
+            "imagePrompt"
+        );
+
+
+    const aspectRatio =
+        document.getElementById(
+            "aspectRatio"
+        );
+
+
+    const resolution =
+        document.getElementById(
+            "resolution"
+        );
+
+
+    const quality =
+        document.getElementById(
+            "quality"
+        );
+
+
+    const outputFormat =
+        document.getElementById(
+            "outputFormat"
+        );
+
+
+    const referenceInput =
+        document.getElementById(
+            "referenceInput"
+        );
+
+
+    const referenceButton =
+        document.getElementById(
+            "referenceButton"
+        );
+
+
+    const referencePreview =
+        document.getElementById(
+            "referencePreview"
+        );
+
+
+    const referencePreviewImage =
+        document.getElementById(
+            "referencePreviewImage"
+        );
+
+
+    const generateButton =
+        document.getElementById(
+            "generateButton"
+        );
+
+
+    const generatedImages =
+        document.getElementById(
+            "generatedImages"
+        );
+
+
+    const toast =
+        document.getElementById(
+            "toast"
+        );
+
+
+    /* ========================================================
+       ÉTAT
+    ======================================================== */
+
+    let conversationHistory = [];
+
+    let selectedImage = null;
+
+    let selectedReferenceImage = null;
+
+    let isSending = false;
+
+
+    /* ========================================================
+       STOCKAGE
+    ======================================================== */
+
+    function saveHistory() {
+
+        try {
+
+            localStorage.setItem(
+                "messie_ia_history",
+                JSON.stringify(
+                    conversationHistory
+                )
+            );
+
+        } catch (error) {
+
+            console.log(
+                "Impossible de sauvegarder l'historique.",
+                error
+            );
+
+        }
+
+    }
+
+
+    function loadHistory() {
+
+        try {
+
+            const saved =
+                localStorage.getItem(
+                    "messie_ia_history"
+                );
+
+
+            if (!saved) {
+                return;
+            }
+
+
+            const parsed =
+                JSON.parse(saved);
+
+
+            if (!Array.isArray(parsed)) {
+                return;
+            }
+
+
+            conversationHistory =
+                parsed;
+
+
+            for (
+                const item
+                of conversationHistory
+            ) {
+
+                if (
+                    item.role === "user"
+                    ||
+                    item.role === "assistant"
+                ) {
+
+                    addMessageToScreen(
+                        item.role,
+                        item.content
+                    );
+
+                }
+
+            }
+
+
+            if (
+                conversationHistory.length > 0
+            ) {
+
+                welcome.style.display =
+                    "none";
+
+            }
+
+            scrollToBottom();
+
+        } catch (error) {
+
+            console.log(
+                "Erreur chargement historique.",
+                error
+            );
+
+        }
+
+    }
+
+
+    /* ========================================================
+       TOAST
+    ======================================================== */
+
+    let toastTimer = null;
+
+
+    function showToast(
+        message,
+        type = ""
+    ) {
+
+        toast.textContent =
+            message;
+
+
+        toast.className =
+            "toast show " + type;
+
+
+        clearTimeout(
+            toastTimer
+        );
+
+
+        toastTimer =
+            setTimeout(
+                () => {
+
+                    toast.className =
+                        "toast";
+
+                },
+                3000
+            );
+
+    }
+
+
+    /* ========================================================
+       AFFICHAGE MESSAGE
+    ======================================================== */
+
+    function addMessageToScreen(
+        role,
+        content
+    ) {
+
+        welcome.style.display =
+            "none";
+
+
+        const row =
+            document.createElement(
+                "div"
+            );
+
+
+        row.className =
+            "message-row " + role;
+
+
+        const bubble =
+            document.createElement(
+                "div"
+            );
+
+
+        bubble.className =
+            "message-bubble";
+
+
+        bubble.textContent =
+            content;
+
+
+        row.appendChild(
+            bubble
+        );
+
+
+        messagesContainer.appendChild(
+            row
+        );
+
+
+        scrollToBottom();
+
+    }
+
+
+    function addImageMessage(
+        role,
+        imageData,
+        text = ""
+    ) {
+
+        welcome.style.display =
+            "none";
+
+
+        const row =
+            document.createElement(
+                "div"
+            );
+
+
+        row.className =
+            "message-row " + role;
+
+
+        const bubble =
+            document.createElement(
+                "div"
+            );
+
+
+        bubble.className =
+            "message-bubble";
+
+
+        if (text) {
+
+            const paragraph =
+                document.createElement(
+                    "div"
+                );
+
+
+            paragraph.textContent =
+                text;
+
+
+            bubble.appendChild(
+                paragraph
+            );
+
+        }
+
+
+        const image =
+            document.createElement(
+                "img"
+            );
+
+
+        image.src =
+            imageData;
+
+
+        image.className =
+            "message-image";
+
+
+        image.alt =
+            "Image générée";
+
+
+        bubble.appendChild(
+            image
+        );
+
+
+        row.appendChild(
+            bubble
+        );
+
+
+        messagesContainer.appendChild(
+            row
+        );
+
+
+        scrollToBottom();
+
+    }
+
+
+    /* ========================================================
+       TYPING
+    ======================================================== */
+
+    function showTyping() {
+
+        removeTyping();
+
+
+        const row =
+            document.createElement(
+                "div"
+            );
+
+
+        row.className =
+            "message-row assistant";
+
+
+        row.id =
+            "typingMessage";
+
+
+        const bubble =
+            document.createElement(
+                "div"
+            );
+
+
+        bubble.className =
+            "message-bubble";
+
+
+        bubble.innerHTML = `
+
+            <div class="typing">
+
+                <span></span>
+                <span></span>
+                <span></span>
+
+            </div>
+
+        `;
+
+
+        row.appendChild(
+            bubble
+        );
+
+
+        messagesContainer.appendChild(
+            row
+        );
+
+
+        scrollToBottom();
+
+    }
+
+
+    function removeTyping() {
+
+        const typing =
+            document.getElementById(
+                "typingMessage"
+            );
+
+
+        if (typing) {
+
+            typing.remove();
+
+        }
+
+    }
+
+
+    /* ========================================================
+       SCROLL
+    ======================================================== */
+
+    function scrollToBottom() {
+
+        setTimeout(
+            () => {
+
+                chatContainer.scrollTop =
+                    chatContainer.scrollHeight;
+
+            },
+            50
+        );
+
+    }
+
+
+    /* ========================================================
+       TEXTAREA
+    ======================================================== */
+
+    function resizeTextarea() {
+
+        messageInput.style.height =
+            "auto";
+
+
+        messageInput.style.height =
+            Math.min(
+                messageInput.scrollHeight,
+                150
+            ) + "px";
+
+    }
+
+
+    messageInput.addEventListener(
+        "input",
+        resizeTextarea
+    );
+
+
+    /* ========================================================
+       ENVOI MESSAGE
+    ======================================================== */
+
+    async function sendMessage() {
+
+        if (isSending) {
+            return;
+        }
+
+
+        const message =
+            messageInput.value.trim();
+
+
+        if (!message) {
+
+            showToast(
+                "Écris un message.",
+                "error"
+            );
+
+            return;
+
+        }
+
+
+        isSending = true;
+
+        sendButton.disabled =
+            true;
+
+
+        messageInput.value =
+            "";
+
+        resizeTextarea();
+
+
+        addMessageToScreen(
+            "user",
+            message
+        );
+
+
+        conversationHistory.push({
+
+            role: "user",
+
+            content: message
+
+        });
+
+
+        saveHistory();
+
+
+        showTyping();
+
+
+        try {
+
+            const response =
+                await fetch(
+                    "/api/chat",
+                    {
+
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type":
+                                "application/json"
+                        },
+
+                        body:
+                            JSON.stringify({
+
+                                message:
+                                    message,
+
+                                history:
+                                    conversationHistory
+                                    .slice(
+                                        0,
+                                        -1
+                                    )
+
+                            })
+
+                    }
+                );
+
+
+            let data;
+
+
+            try {
+
+                data =
+                    await response.json();
+
+            } catch (error) {
+
+                throw new Error(
+                    "Le serveur a renvoyé une réponse invalide."
+                );
+
+            }
+
+
+            removeTyping();
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    data.error
+                    ||
+                    "Erreur du serveur."
+                );
+
+            }
+
+
+            const answer =
+                data.response
+                ||
+                "Je n'ai pas reçu de réponse.";
+
+
+            addMessageToScreen(
+                "assistant",
+                answer
+            );
+
+
+            conversationHistory.push({
+
+                role: "assistant",
+
+                content: answer
+
+            });
+
+
+            saveHistory();
+
+
+        } catch (error) {
+
+            removeTyping();
+
+
+            console.error(
+                error
+            );
+
+
+            addMessageToScreen(
+                "assistant",
+                "❌ " + (
+                    error.message
+                    ||
+                    "Une erreur est survenue."
+                )
+            );
+
+
+        } finally {
+
+            isSending =
+                false;
+
+
+            sendButton.disabled =
+                false;
+
+
+            messageInput.focus();
+
+        }
+
+    }
+
+
+    /* ========================================================
+       BOUTON ENVOYER
+    ======================================================== */
+
+    sendButton.addEventListener(
+        "click",
+        sendMessage
+    );
+
+
+    messageInput.addEventListener(
+        "keydown",
+        (event) => {
+
+            if (
+                event.key === "Enter"
+                &&
+                !event.shiftKey
+            ) {
+
+                event.preventDefault();
+
+                sendMessage();
+
+            }
+
+        }
+    );
+
+
+    /* ========================================================
+       SUGGESTIONS
+    ======================================================== */
+
+    document
+        .querySelectorAll(
+            ".suggestion"
+        )
+        .forEach(
+            button => {
+
+                button.addEventListener(
+                    "click",
+                    () => {
+
+                        messageInput.value =
+                            button.dataset.prompt;
+
+                        resizeTextarea();
+
+                        messageInput.focus();
+
+                    }
+                );
+
+            }
+        );
+
+
+    /* ========================================================
+       OUTILS
+    ======================================================== */
+
+    toolsButton.addEventListener(
+        "click",
+        () => {
+
+            toolsPanel.classList.toggle(
+                "show"
+            );
+
+        }
+    );
+
+
+    /* ========================================================
+       AJOUT IMAGE
+    ======================================================== */
+
+    attachButton.addEventListener(
+        "click",
+        () => {
+
+            imageInput.click();
+
+        }
+    );
+
+
+    imageInput.addEventListener(
+        "change",
+        () => {
+
+            const file =
+                imageInput.files[0];
+
+
+            if (!file) {
+                return;
+            }
+
+
+            if (
+                !file.type.startsWith(
+                    "image/"
+                )
+            ) {
+
+                showToast(
+                    "Sélectionne une image.",
+                    "error"
+                );
+
+                return;
+
+            }
+
+
+            selectedImage =
+                file;
+
+
+            const reader =
+                new FileReader();
+
+
+            reader.onload =
+                event => {
+
+                    imagePreview.src =
+                        event.target.result;
+
+                    imagePreviewContainer.style.display =
+                        "block";
+
+                };
+
+
+            reader.readAsDataURL(
+                file
+            );
+
+        }
+    );
+
+
+    removeImageButton.addEventListener(
+        "click",
+        () => {
+
+            selectedImage =
+                null;
+
+
+            imageInput.value =
+                "";
+
+
+            imagePreview.src =
+                "";
+
+
+            imagePreviewContainer.style.display =
+                "none";
+
+        }
+    );
+
+
+    /* ========================================================
+       CONVERSION FICHIER -> BASE64
+    ======================================================== */
+
+    function fileToDataURL(
+        file
+    ) {
+
+        return new Promise(
+            (
+                resolve,
+                reject
+            ) => {
+
+                const reader =
+                    new FileReader();
+
+
+                reader.onload =
+                    () => {
+
+                        resolve(
+                            reader.result
+                        );
+
+                    };
+
+
+                reader.onerror =
+                    reject;
+
+
+                reader.readAsDataURL(
+                    file
+                );
+
+            }
+        );
+
+    }
+
+
+    /* ========================================================
+       ANALYSE IMAGE
+    ======================================================== */
+
+    async function analyzeImage() {
+
+        if (!selectedImage) {
+
+            showToast(
+                "Choisis d'abord une image.",
+                "error"
+            );
+
+            imageInput.click();
+
+            return;
+
+        }
+
+
+        let imageData;
+
+
+        try {
+
+            imageData =
+                await fileToDataURL(
+                    selectedImage
+                );
+
+        } catch (error) {
+
+            showToast(
+                "Impossible de lire l'image.",
+                "error"
+            );
+
+            return;
+
+        }
+
+
+        const prompt =
+            messageInput.value.trim()
+            ||
+            "Décris cette image en détail. Explique ce qu'elle contient et donne les informations importantes visibles.";
+
+
+        messageInput.value =
+            "";
+
+
+        addMessageToScreen(
+            "user",
+            "🔍 Analyse cette image : " +
+            prompt
+        );
+
+
+        conversationHistory.push({
+
+            role: "user",
+
+            content:
+                "Analyse de l'image : "
+                +
+                prompt
+
+        });
+
+
+        saveHistory();
+
+
+        showTyping();
+
+
+        try {
+
+            const response =
+                await fetch(
+                    "/api/analyze-image",
+                    {
+
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type":
+                                "application/json"
+                        },
+
+                        body:
+                            JSON.stringify({
+
+                                image:
+                                    imageData,
+
+                                prompt:
+                                    prompt
+
+                            })
+
+                    }
+                );
+
+
+            const data =
+                await response.json();
+
+
+            removeTyping();
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    data.error
+                    ||
+                    "Erreur pendant l'analyse."
+                );
+
+            }
+
+
+            const answer =
+                data.response
+                ||
+                "Je n'ai pas pu analyser cette image.";
+
+
+            addMessageToScreen(
+                "assistant",
+                answer
+            );
+
+
+            conversationHistory.push({
+
+                role: "assistant",
+
+                content: answer
+
+            });
+
+
+            saveHistory();
+
+
+        } catch (error) {
+
+            removeTyping();
+
+
+            addMessageToScreen(
+                "assistant",
+                "❌ " +
+                (
+                    error.message
+                    ||
+                    "Erreur pendant l'analyse."
+                )
+            );
+
+        }
+
+    }
+
+
+    document
+        .getElementById(
+            "analyzeTool"
+        )
+        .addEventListener(
+            "click",
+            () => {
+
+                toolsPanel.classList.remove(
+                    "show"
+                );
+
+                analyzeImage();
+
+            }
+        );
+
+
+    /* ========================================================
+       MODAL IMAGE
+    ======================================================== */
+
+    function openImageModal(
+        referenceMode = false
+    ) {
+
+        imageModal.classList.add(
+            "show"
+        );
+
+
+        if (referenceMode) {
+
+            showToast(
+                "Ajoute une image de référence puis décris la modification."
+            );
+
+        }
+
+
+        imagePrompt.focus();
+
+    }
+
+
+    function closeImageModal() {
+
+        imageModal.classList.remove(
+            "show"
+        );
+
+    }
+
+
+    closeModal.addEventListener(
+        "click",
+        closeImageModal
+    );
+
+
+    imageModal.addEventListener(
+        "click",
+        event => {
+
+            if (
+                event.target ===
+                imageModal
+            ) {
+
+                closeImageModal();
+
+            }
+
+        }
+    );
+
+
+    /* ========================================================
+       GÉNÉRATION IMAGE
+    ======================================================== */
+
+    document
+        .getElementById(
+            "generateTool"
+        )
+        .addEventListener(
+            "click",
+            () => {
+
+                toolsPanel.classList.remove(
+                    "show"
+                );
+
+                openImageModal(
+                    false
+                );
+
+            }
+        );
+
+
+    /* ========================================================
+       MODIFICATION IMAGE
+    ======================================================== */
+
+    document
+        .getElementById(
+            "referenceTool"
+        )
+        .addEventListener(
+            "click",
+            () => {
+
+                toolsPanel.classList.remove(
+                    "show"
+                );
+
+                openImageModal(
+                    true
+                );
+
+            }
+        );
+
+
+    referenceButton.addEventListener(
+        "click",
+        () => {
+
+            referenceInput.click();
+
+        }
+    );
+
+
+    referenceInput.addEventListener(
+        "change",
+        async () => {
+
+            const file =
+                referenceInput.files[0];
+
+
+            if (!file) {
+                return;
+            }
+
+
+            if (
+                !file.type.startsWith(
+                    "image/"
+                )
+            ) {
+
+                showToast(
+                    "Sélectionne une image valide.",
+                    "error"
+                );
+
+                return;
+
+            }
+
+
+            selectedReferenceImage =
+                file;
+
+
+            const dataURL =
+                await fileToDataURL(
+                    file
+                );
+
+
+            referencePreviewImage.src =
+                dataURL;
+
+
+            referencePreview.style.display =
+                "block";
+
+        }
+    );
+
+
+    /* ========================================================
+       GÉNÉRER
+    ======================================================== */
+
+    generateButton.addEventListener(
+        "click",
+        generateImage
+    );
+
+
+    async function generateImage() {
+
+        const prompt =
+            imagePrompt.value.trim();
+
+
+        if (!prompt) {
+
+            showToast(
+                "Décris l'image à générer.",
+                "error"
+            );
+
+            imagePrompt.focus();
+
+            return;
+
+        }
+
+
+        generateButton.disabled =
+            true;
+
+
+        generateButton.textContent =
+            "⏳ Génération en cours...";
+
+
+        generatedImages.innerHTML =
+            "";
+
+
+        try {
+
+            let referenceImage =
+                null;
+
+
+            if (
+                selectedReferenceImage
+            ) {
+
+                referenceImage =
+                    await fileToDataURL(
+                        selectedReferenceImage
+                    );
+
+            }
+
+
+            const payload = {
+
+                prompt:
+                    prompt,
+
+                aspect_ratio:
+                    aspectRatio.value,
+
+                resolution:
+                    resolution.value,
+
+                quality:
+                    quality.value,
+
+                output_format:
+                    outputFormat.value,
+
+                n:
+                    1
+
+            };
+
+
+            if (referenceImage) {
+
+                payload.reference_image =
+                    referenceImage;
+
+            }
+
+
+            const response =
+                await fetch(
+                    "/api/generate-image",
+                    {
+
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type":
+                                "application/json"
+                        },
+
+                        body:
+                            JSON.stringify(
+                                payload
+                            )
+
+                    }
+                );
+
+
+            const data =
+                await response.json();
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    data.error
+                    ||
+                    "Erreur pendant la génération."
+                );
+
+            }
+
+
+            if (
+                !Array.isArray(
+                    data.images
+                )
+                ||
+                data.images.length === 0
+            ) {
+
+                throw new Error(
+                    "Aucune image n'a été générée."
+                );
+
+            }
+
+
+            data.images.forEach(
+                image => {
+
+                    if (!image.data) {
+                        return;
+                    }
+
+
+                    const img =
+                        document.createElement(
+                            "img"
+                        );
+
+
+                    img.src =
+                        image.data;
+
+
+                    img.className =
+                        "generated-image";
+
+
+                    img.alt =
+                        "Image générée par Messie IA";
+
+
+                    generatedImages.appendChild(
+                        img
+                    );
+
+
+                    addImageMessage(
+                        "assistant",
+                        image.data,
+                        "✨ Image générée par Messie IA"
+                    );
+
+                }
+            );
+
+
+            showToast(
+                "Image générée avec succès.",
+                "success"
+            );
+
+
+        } catch (error) {
+
+            console.error(
+                error
+            );
+
+
+            generatedImages.innerHTML = `
+
+                <div style="
+                    grid-column: 1 / -1;
+                    padding: 12px;
+                    border-radius: 10px;
+                    background: #fee2e2;
+                    color: #991b1b;
+                    font-size: 13px;
+                ">
+                    ❌ ${
+                        error.message
+                        ||
+                        "Erreur pendant la génération."
+                    }
+                </div>
+
+            `;
+
+
+            showToast(
+                error.message
+                ||
+                "Erreur pendant la génération.",
+                "error"
+            );
+
+        } finally {
+
+            generateButton.disabled =
+                false;
+
+
+            generateButton.textContent =
+                "✨ Générer l'image";
+
+        }
+
+    }
+
+
+    /* ========================================================
+       NOUVELLE CONVERSATION
+    ======================================================== */
+
+    clearChatButton.addEventListener(
+        "click",
+        () => {
+
+            const confirmed =
+                confirm(
+                    "Voulez-vous effacer cette conversation ?"
+                );
+
+
+            if (!confirmed) {
+                return;
+            }
+
+
+            conversationHistory =
+                [];
+
+
+            localStorage.removeItem(
+                "messie_ia_history"
+            );
+
+
+            messagesContainer.innerHTML =
+                "";
+
+
+            welcome.style.display =
+                "flex";
+
+
+            selectedImage =
+                null;
+
+
+            imageInput.value =
+                "";
+
+
+            imagePreview.src =
+                "";
+
+
+            imagePreviewContainer.style.display =
+                "none";
+
+
+            showToast(
+                "Nouvelle conversation.",
+                "success"
+            );
+
+        }
+    );
+
+
+    /* ========================================================
+       FERMER OUTILS EN CLIQUANT AILLEURS
+    ======================================================== */
+
+    document.addEventListener(
+        "click",
+        event => {
+
+            if (
+                !toolsPanel.contains(
+                    event.target
+                )
+                &&
+                !toolsButton.contains(
+                    event.target
+                )
+            ) {
+
+                toolsPanel.classList.remove(
+                    "show"
+                );
+
+            }
+
+        }
+    );
+
+
+    /* ========================================================
+       INITIALISATION
+    ======================================================== */
+
+    loadHistory();
+
+    messageInput.focus();
+
+</script>
+
+
+</body>
+</html>
+
+
+
