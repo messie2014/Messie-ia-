@@ -1,658 +1,419 @@
 
 
 
-    
-    
-    
 
-<style>
-    * {
-        box-sizing: border-box;
-    }
 
-    body {
-        margin: 0;
-        font-family: Arial, Helvetica, sans-serif;
-        background: #f5f7fb;
-        color: #1f2937;
-        height: 100vh;
-        overflow: hidden;
-    }
 
-    button,
-    textarea,
-    input {
-        font: inherit;
-    }
 
-    button {
-        cursor: pointer;
-    }
 
-    .app {
-        display: flex;
-        height: 100vh;
-        width: 100%;
-    }
 
-    /* =========================
-       SIDEBAR
-    ========================= */
 
-    .sidebar {
-        width: 280px;
-        background: #111827;
-        color: white;
-        display: flex;
-        flex-direction: column;
-        padding: 18px;
-        transition: transform .25s ease;
-        z-index: 100;
-    }
 
-    .logo {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        font-size: 22px;
-        font-weight: bold;
-        margin-bottom: 25px;
-    }
 
-    .logo-icon {
-        width: 42px;
-        height: 42px;
-        border-radius: 50%;
-        background: linear-gradient(135deg, #6366f1, #8b5cf6);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: bold;
-    }
 
-    .new-chat {
-        border: none;
-        background: white;
-        color: #111827;
-        border-radius: 12px;
-        padding: 12px;
-        font-weight: bold;
-        margin-bottom: 18px;
-    }
 
-    .nav {
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-    }
+<div class="logo">
+    <div class="logo-icon">M</div>
+    <span>Messie IA</span>
+</div>
 
-    .nav button {
-        border: none;
-        background: transparent;
-        color: #d1d5db;
-        padding: 12px;
-        border-radius: 10px;
-        text-align: left;
-        font-size: 15px;
-    }
+<button class="new-chat" onclick="newConversation()">
+    ＋ Nouvelle conversation
+</button>
 
-    .nav button:hover,
-    .nav button.active {
-        background: #1f2937;
-        color: white;
-    }
+<nav class="nav">
 
-    .account {
-        margin-top: auto;
-        border-top: 1px solid #374151;
-        padding-top: 15px;
-    }
-
-    .account button {
-        width: 100%;
-        border: none;
-        background: #1f2937;
-        color: white;
-        padding: 11px;
-        border-radius: 10px;
-    }
-
-    /* =========================
-       MAIN
-    ========================= */
-
-    .main {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        min-width: 0;
-    }
-
-    .topbar {
-        height: 62px;
-        background: white;
-        border-bottom: 1px solid #e5e7eb;
-        display: flex;
-        align-items: center;
-        padding: 0 18px;
-        gap: 12px;
-    }
-
-    .menu-btn {
-        display: none;
-        border: none;
-        background: transparent;
-        font-size: 25px;
-    }
-
-    .top-title {
-        font-size: 18px;
-        font-weight: bold;
-    }
-
-    /* =========================
-       VIEWS
-    ========================= */
-
-    .view {
-        display: none;
-        flex: 1;
-        min-height: 0;
-    }
-
-    .view.active {
-        display: flex;
-    }
-
-    /* =========================
-       CHAT
-    ========================= */
-
-    #messagesView {
-        flex-direction: column;
-    }
-
-    .messages {
-        flex: 1;
-        overflow-y: auto;
-        padding: 25px;
-    }
-
-    .welcome {
-        max-width: 720px;
-        margin: 80px auto 30px;
-        text-align: center;
-    }
-
-    .welcome h1 {
-        font-size: 34px;
-        margin-bottom: 10px;
-    }
-
-    .welcome p {
-        color: #6b7280;
-    }
-
-    .message {
-        max-width: 820px;
-        margin: 0 auto 18px;
-        display: flex;
-    }
-
-    .message.user {
-        justify-content: flex-end;
-    }
-
-    .bubble {
-        max-width: 78%;
-        padding: 13px 16px;
-        border-radius: 16px;
-        line-height: 1.5;
-        white-space: pre-wrap;
-        word-break: break-word;
-    }
-
-    .message.user .bubble {
-        background: #6366f1;
-        color: white;
-        border-bottom-right-radius: 4px;
-    }
-
-    .message.assistant .bubble {
-        background: white;
-        border: 1px solid #e5e7eb;
-        border-bottom-left-radius: 4px;
-    }
-
-    .typing {
-        color: #6b7280;
-        font-style: italic;
-    }
-
-    /* =========================
-       INPUT
-    ========================= */
-
-    .composer {
-        padding: 15px;
-        background: white;
-        border-top: 1px solid #e5e7eb;
-    }
-
-    .composer-inner {
-        max-width: 850px;
-        margin: auto;
-        display: flex;
-        align-items: flex-end;
-        gap: 8px;
-        background: #f3f4f6;
-        border: 1px solid #d1d5db;
-        border-radius: 16px;
-        padding: 8px;
-    }
-
-    textarea {
-        flex: 1;
-        resize: none;
-        border: none;
-        outline: none;
-        background: transparent;
-        min-height: 42px;
-        max-height: 130px;
-        padding: 10px;
-    }
-
-    .icon-btn,
-    .send-btn {
-        width: 42px;
-        height: 42px;
-        border: none;
-        border-radius: 12px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .icon-btn {
-        background: #e5e7eb;
-    }
-
-    .send-btn {
-        background: #6366f1;
-        color: white;
-    }
-
-    .recording {
-        background: #ef4444 !important;
-        color: white;
-    }
-
-    /* =========================
-       CONVERSATIONS
-    ========================= */
-
-    #conversationsView {
-        overflow-y: auto;
-        padding: 25px;
-        flex-direction: column;
-    }
-
-    .conversation-header {
-        max-width: 850px;
-        width: 100%;
-        margin: 0 auto 20px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 10px;
-    }
-
-    .conversation-header h2 {
-        margin: 0;
-    }
-
-    .conversation-list {
-        max-width: 850px;
-        width: 100%;
-        margin: auto;
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-    }
-
-    .conversation-item {
-        background: white;
-        border: 1px solid #e5e7eb;
-        border-radius: 14px;
-        padding: 15px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 10px;
-    }
-
-    .conversation-open {
-        flex: 1;
-        border: none;
-        background: transparent;
-        text-align: left;
-        cursor: pointer;
-    }
-
-    .conversation-title {
-        font-weight: bold;
-        margin-bottom: 5px;
-    }
-
-    .conversation-preview {
-        color: #6b7280;
-        font-size: 14px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
-    .delete-conversation {
-        border: none;
-        background: #fee2e2;
-        color: #b91c1c;
-        width: 38px;
-        height: 38px;
-        border-radius: 9px;
-    }
-
-    .empty {
-        text-align: center;
-        color: #6b7280;
-        padding: 60px 20px;
-    }
-
-    /* =========================
-       PROFILE
-    ========================= */
-
-    #profileView {
-        overflow-y: auto;
-        padding: 25px;
-        flex-direction: column;
-    }
-
-    .profile-card {
-        width: 100%;
-        max-width: 600px;
-        margin: 20px auto;
-        background: white;
-        border: 1px solid #e5e7eb;
-        border-radius: 16px;
-        padding: 25px;
-    }
-
-    .profile-card h2 {
-        margin-top: 0;
-    }
-
-    .profile-card input {
-        width: 100%;
-        padding: 12px;
-        border: 1px solid #d1d5db;
-        border-radius: 10px;
-        margin: 8px 0 12px;
-        outline: none;
-    }
-
-    .profile-card button {
-        border: none;
-        background: #6366f1;
-        color: white;
-        padding: 11px 16px;
-        border-radius: 10px;
-    }
-
-    /* =========================
-       MOBILE
-    ========================= */
-
-    @media (max-width: 750px) {
-
-        .sidebar {
-            position: fixed;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            transform: translateX(-100%);
-        }
-
-        .sidebar.open {
-            transform: translateX(0);
-        }
-
-        .menu-btn {
-            display: block;
-        }
-
-        .messages {
-            padding: 15px;
-        }
-
-        .bubble {
-            max-width: 88%;
-        }
-
-        .welcome {
-            margin: 55px auto 25px;
-        }
-
-        .welcome h1 {
-            font-size: 27px;
-        }
-
-        .conversation-header {
-            align-items: flex-start;
-        }
-    }
-</style>
-
-
-
-
-
-
-
-<!-- =========================
-     SIDEBAR
-========================== -->
-
-<aside class="sidebar" id="sidebar">
-
-    <div class="logo">
-        <div class="logo-icon">M</div>
-        <span>Messie IA</span>
-    </div>
-
-    <button class="new-chat" onclick="newConversation()">
-        ＋ Nouvelle conversation
+    <button
+        id="navMessages"
+        class="active"
+        onclick="showView('messages')">
+        💬 Messages
     </button>
 
-    <nav class="nav">
+    <button
+        id="navConversations"
+        onclick="showView('conversations')">
+        🕘 Conversations
+    </button>
 
-        <button
-            id="messagesNav"
-            class="active"
-            onclick="showView('messages')">
-            💬 Messages
-        </button>
+    <button
+        id="navTools"
+        onclick="showView('tools')">
+        🛠️ Outils IA
+    </button>
 
-        <button
-            id="conversationsNav"
-            onclick="showView('conversations')">
-            🕘 Conversations
-        </button>
+    <button
+        id="navProfile"
+        onclick="showView('profile')">
+        👤 Mon compte
+    </button>
 
-        <button
-            id="profileNav"
-            onclick="showView('profile')">
-            👤 Mon compte
-        </button>
+</nav>
 
-    </nav>
+<div class="account-area">
+    <button onclick="showView('profile')">
+        👤 Compte
+    </button>
+</div>
 
-    <div class="account">
-        <button onclick="showView('profile')">
-            Compte
-        </button>
+
+
+
+
+
+
+<button
+    class="menu-button"
+    onclick="toggleSidebar()">
+    ☰
+</button>
+
+<div
+    id="topTitle"
+    class="top-title">
+    Messie IA
+</div>
+
+
+
+
+
+
+
+<div
+    id="messages"
+    class="messages">
+
+    <div
+        id="welcome"
+        class="welcome">
+
+        <h1>Bonjour 👋</h1>
+
+        <p>
+            Je suis Messie IA.
+            Pose-moi une question pour commencer.
+        </p>
+
     </div>
 
-</aside>
+</div>
 
-<!-- =========================
-     MAIN
-========================== -->
 
-<main class="main">
+<div class="composer">
 
-    <header class="topbar">
+    <div class="composer-inner">
 
         <button
-            class="menu-btn"
-            onclick="toggleSidebar()">
-            ☰
+            id="voiceButton"
+            class="icon-button"
+            title="Enregistrer vocal"
+            onclick="toggleVoice()">
+            🎤
+        </button>
+
+        <button
+            class="icon-button"
+            title="Outils"
+            onclick="showView('tools')">
+            📎
+        </button>
+
+        <textarea
+            id="messageInput"
+            class="message-input"
+            rows="1"
+            placeholder="Écris ton message..."
+            onkeydown="handleEnter(event)"></textarea>
+
+        <button
+            class="send-button"
+            onclick="sendMessage()">
+            ➤
+        </button>
+
+    </div>
+
+</div>
+
+
+
+
+
+
+
+
+<div class="section-header">
+
+    <div>
+        <h2>Conversations</h2>
+
+        <p>
+            Retrouve tes discussions avec Messie IA.
+        </p>
+    </div>
+
+    <button
+        class="primary-button"
+        onclick="showView('messages')">
+        💬 Messages
+    </button>
+
+</div>
+
+<div
+    id="conversationList"
+    class="conversation-list">
+</div>
+
+
+
+
+
+
+
+
+<div class="section-header">
+
+    <div>
+        <h2>Outils IA</h2>
+
+        <p>
+            Analyse des images et génération d'images.
+        </p>
+    </div>
+
+    <button
+        class="primary-button"
+        onclick="showView('messages')">
+        💬 Retour au chat
+    </button>
+
+</div>
+
+
+<div class="tools-grid">
+
+
+    <!-- ANALYSE IMAGE -->
+
+    <div class="tool-card">
+
+        <h3>🔍 Analyser une image</h3>
+
+        <p>
+            Envoie une image et demande à Messie IA
+            de l'analyser.
+        </p>
+
+        <input
+            id="analysisImage"
+            type="file"
+            accept="image/*">
+
+        <textarea
+            id="analysisPrompt"
+            placeholder="Que veux-tu savoir sur cette image ?"></textarea>
+
+        <br><br>
+
+        <button
+            class="primary-button"
+            onclick="analyzeImage()">
+            Analyser l'image
         </button>
 
         <div
-            class="top-title"
-            id="topTitle">
-            Messie IA
+            id="analysisResult"
+            class="result-box"
+            style="display:none;">
         </div>
 
-    </header>
+    </div>
 
-    <!-- =========================
-         MESSAGES
-    ========================== -->
 
-    <section
-        id="messagesView"
-        class="view active">
+    <!-- GENERATION IMAGE -->
+
+    <div class="tool-card">
+
+        <h3>🎨 Générer une image</h3>
+
+        <p>
+            Décris l'image que tu veux créer.
+        </p>
+
+        <textarea
+            id="imagePrompt"
+            placeholder="Exemple : une ville futuriste de nuit..."></textarea>
+
+        <label>Format</label>
+
+        <select id="aspectRatio">
+
+            <option value="1:1">
+                Carré 1:1
+            </option>
+
+            <option value="16:9">
+                Paysage 16:9
+            </option>
+
+            <option value="9:16">
+                Portrait 9:16
+            </option>
+
+            <option value="4:3">
+                Paysage 4:3
+            </option>
+
+            <option value="3:4">
+                Portrait 3:4
+            </option>
+
+        </select>
+
+
+        <label>Résolution</label>
+
+        <select id="resolution">
+
+            <option value="1K">
+                1K
+            </option>
+
+            <option value="2K">
+                2K
+            </option>
+
+            <option value="4K">
+                4K
+            </option>
+
+        </select>
+
+
+        <label>Qualité</label>
+
+        <select id="quality">
+
+            <option value="auto">
+                Automatique
+            </option>
+
+            <option value="low">
+                Faible
+            </option>
+
+            <option value="medium">
+                Moyenne
+            </option>
+
+            <option value="high">
+                Haute
+            </option>
+
+        </select>
+
+        <label>
+            Image de référence (facultatif)
+        </label>
+
+        <input
+            id="referenceImage"
+            type="file"
+            accept="image/*">
+
+        <br>
+
+        <button
+            class="primary-button"
+            onclick="generateImage()">
+            🎨 Générer
+        </button>
 
         <div
-            class="messages"
-            id="messages">
-
-            <div
-                class="welcome"
-                id="welcome">
-
-                <h1>Bonjour 👋</h1>
-
-                <p>
-                    Je suis Messie IA.
-                    Comment puis-je t'aider aujourd'hui ?
-                </p>
-
-            </div>
-
+            id="generationStatus"
+            class="result-box"
+            style="display:none;">
         </div>
 
-        <div class="composer">
+        <div id="generatedImages"></div>
 
-            <div class="composer-inner">
+    </div>
 
-                <button
-                    class="icon-btn"
-                    id="voiceBtn"
-                    title="Enregistrement vocal"
-                    onclick="toggleRecording()">
-                    🎤
-                </button>
+</div>
 
-                <textarea
-                    id="messageInput"
-                    placeholder="Écris ton message..."
-                    rows="1"
-                    onkeydown="handleKey(event)"></textarea>
 
-                <button
-                    class="send-btn"
-                    onclick="sendMessage()">
-                    ➤
-                </button>
 
-            </div>
 
-        </div>
 
-    </section>
 
-    <!-- =========================
-         CONVERSATIONS
-    ========================== -->
 
-    <section
-        id="conversationsView"
-        class="view">
 
-        <div class="conversation-header">
+<div class="profile-card">
 
-            <div>
-                <h2>Conversations</h2>
-                <p style="color:#6b7280;">
-                    Tes conversations enregistrées
-                </p>
-            </div>
+    <h2>👤 Mon compte</h2>
 
-            <button
-                class="send-btn"
-                onclick="showView('messages')"
-                title="Retour aux messages">
-                💬
-            </button>
+    <p>
+        Tu peux enregistrer ton nom sur cet appareil.
+    </p>
 
-        </div>
+    <label>Nom</label>
+
+    <input
+        id="profileName"
+        type="text"
+        placeholder="Ton nom">
+
+    <button
+        class="primary-button"
+        onclick="saveProfile()">
+        Enregistrer
+    </button>
+
+    <div
+        id="profileStatus"
+        class="status">
+    </div>
+
+
+    <div class="login-box">
+
+        <h3>Connexion</h3>
+
+        <p>
+            Cette partie prépare l'interface du compte.
+            L'authentification réelle nécessite des routes
+            serveur dédiées.
+        </p>
+
+        <input
+            id="email"
+            type="email"
+            placeholder="Adresse e-mail">
+
+        <input
+            id="password"
+            type="password"
+            placeholder="Mot de passe">
+
+        <button
+            class="primary-button"
+            onclick="loginInfo()">
+            Se connecter
+        </button>
 
         <div
-            id="conversationList"
-            class="conversation-list">
+            id="loginStatus"
+            class="status">
         </div>
 
-    </section>
+    </div>
 
-    <!-- =========================
-         PROFILE
-    ========================== -->
+</div>
 
-    <section
-        id="profileView"
-        class="view">
 
-        <div class="profile-card">
 
-            <h2>Mon compte</h2>
-
-            <p style="color:#6b7280;">
-                Les informations du compte sont enregistrées
-                localement sur cet appareil.
-            </p>
-
-            <label>Nom</label>
-
-            <input
-                id="profileName"
-                type="text"
-                placeholder="Ton nom">
-
-            <button onclick="saveProfile()">
-                Enregistrer
-            </button>
-
-            <p id="profileStatus"
-               style="color:#16a34a;">
-            </p>
-
-        </div>
-
-    </section>
-
-</main>
 
 
 
