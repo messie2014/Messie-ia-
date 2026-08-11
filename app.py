@@ -1,249 +1,83 @@
 import os
+import base64
 import requests
 
-from flask import Flask, request, jsonify, send_from_directory
+from flask import Flask, render_template, request, jsonify
+
+
+app = Flask(__name__)
 
 
 # ============================================================
 # CONFIGURATION
 # ============================================================
 
-app = Flask(__name__, static_folder="static")
+OPENROUTER_API_KEY = os.environ.get("OPENROUTER_API_KEY")
+
+OPENROUTER_URL = "https://openrouter.ai/api/v1"
+
+
+# ------------------------------------------------------------
+# MODÈLES
+# ------------------------------------------------------------
+
+# Modèle utilisé pour les conversations normales.
+CHAT_MODEL = os.environ.get(
+    "OPENROUTER_CHAT_MODEL",
+    "openai/gpt-4o-mini"
+)
+
+
+# Modèle utilisé pour analyser les images.
+VISION_MODEL = os.environ.get(
+    "OPENROUTER_VISION_MODEL",
+    "google/gemini-2.5-flash"
+)
+
+
+# Modèle utilisé pour générer / modifier les images.
+#
+# Tu peux le changer depuis les variables d'environnement
+# Render sans modifier le code.
+#
+# Exemple :
+# google/gemini-2.5-flash-image
+#
+IMAGE_MODEL = os.environ.get(
+    "OPENROUTER_IMAGE_MODEL",
+    "google/gemini-2.5-flash-image"
+)
 
 
 # ============================================================
-# PAGE PRINCIPALE
+# VÉRIFICATION API KEY
 # ============================================================
 
-@app.route("/")
-def home():
+def check_api_key():
 
-    return send_from_directory(
-        os.path.join(app.root_path, "static"),
-        "index.html"
-    )
+    if not OPENROUTER_API_KEY:
+
+        return False
+
+    return True
 
 
 # ============================================================
-# API CHAT - OPENROUTER
+# HEADERS OPENROUTER
 # ============================================================
 
-@app.route("/api/chat", methods=["POST"])
-def chat():
+def openrouter_headers():
 
-    # --------------------------------------------------------
-    # Récupérer la clé OpenRouter
-    # --------------------------------------------------------
-
-    api_key = os.environ.get(
-        "OPENROUTER_API_KEY"
-    )
-
-    if not api_key:
-
-        return jsonify({
-            "error":
-                "La clé OPENROUTER_API_KEY n'est pas configurée."
-        }), 500
-
-
-    # --------------------------------------------------------
-    # Récupérer les données
-    # --------------------------------------------------------
-
-    data = request.get_json(
-        silent=True
-    ) or {}
-
-
-    message = data.get(
-        "message",
-        ""
-    )
-
-
-    if not isinstance(message, str):
-
-        message = ""
-
-
-    message = message.strip()
-
-
-    # --------------------------------------------------------
-    # Vérifier le message
-    # --------------------------------------------------------
-
-    if not message:
-
-        return jsonify({
-            "error": "Message vide."
-        }), 400
-
-
-    # --------------------------------------------------------
-    # Récupérer l'historique
-    # --------------------------------------------------------
-
-    history = data.get(
-        "history",
-        []
-    )
-
-
-    if not isinstance(history, list):
-
-        history = []
-
-
-    # --------------------------------------------------------
-    # Limiter l'historique
-    # --------------------------------------------------------
-
-    history = history[-20:]
-
-
-    # --------------------------------------------------------
-    # Préparer le contexte
-    # --------------------------------------------------------
-
-    messages = [
-
-        {
-            "role": "system",
-
-            "content": (
-                "Tu es Messie IA, un assistant intelligent "
-                "utile, respectueux, naturel et précis. "
-
-                "Tu réponds principalement en français. "
-
-                "Tu dois utiliser le contexte de la "
-                "conversation lorsqu'il est disponible. "
-
-                "Lorsque l'utilisateur pose une question "
-                "qui dépend d'un message précédent, "
-                "utilise les messages précédents pour "
-                "comprendre sa demande. "
-
-                "Réponds directement à la question. "
-
-                "Évite les réponses inutiles ou répétitives. "
-
-                "Si l'utilisateur écrit dans une autre "
-                "langue, réponds dans cette langue. "
-
-                "Ne prétends pas avoir accès à des informations "
-                "que tu n'as pas."
-            )
-        }
-
-    ]
-
-
-    # --------------------------------------------------------
-    # Ajouter l'historique
-    # --------------------------------------------------------
-
-    for item in history:
-
-        if not isinstance(
-            item,
-            dict
-        ):
-            continue
-
-
-        role = item.get(
-            "role"
-        )
-
-
-        content = item.get(
-            "content"
-        )
-
-
-        # Vérifier le rôle
-
-        if role not in [
-            "user",
-            "assistant"
-        ]:
-
-            continue
-
-
-        # Vérifier le contenu
-
-        if not isinstance(
-            content,
-            str
-        ):
-
-            continue
-
-
-        content = content.strip()
-
-
-        if not content:
-
-            continue
-
-
-        messages.append({
-
-            "role": role,
-
-            "content": content
-
-        })
-
-
-    # --------------------------------------------------------
-    # Éviter de doubler le dernier message utilisateur
-    # --------------------------------------------------------
-
-    if not messages or messages[-1].get(
-        "role"
-    ) != "user" or messages[-1].get(
-        "content"
-    ) != message:
-
-        messages.append({
-
-            "role": "user",
-
-            "content": message
-
-        })
-
-
-    # --------------------------------------------------------
-    # OpenRouter
-    # --------------------------------------------------------
-
-    url = (
-        "https://openrouter.ai/api/v1/"
-        "chat/completions"
-    )
-
-
-    # --------------------------------------------------------
-    # Headers
-    # --------------------------------------------------------
-
-    headers = {
+    return {
 
         "Authorization":
-            f"Bearer {api_key}",
+            f"Bearer {OPENROUTER_API_KEY}",
 
         "Content-Type":
             "application/json",
 
         "HTTP-Referer":
-            "https://messie-ia.onrender.com",
+            request.host_url.rstrip("/"),
 
         "X-Title":
             "Messie IA"
@@ -251,60 +85,226 @@ def chat():
     }
 
 
-    # --------------------------------------------------------
-    # Requête OpenRouter
-    # --------------------------------------------------------
+# ============================================================
+# PAGE PRINCIPALE
+# ============================================================
 
-    payload = {
+@app.route("/")
+def index():
 
-        "model":
-            "openrouter/free",
-
-        "messages":
-            messages,
-
-        "temperature":
-            0.7,
-
-        "max_tokens":
-            1000
-
-    }
+    return render_template("index.html")
 
 
-    # --------------------------------------------------------
-    # Envoyer la requête
-    # --------------------------------------------------------
+# ============================================================
+# CHAT TEXTE
+# ============================================================
+
+@app.route(
+    "/api/chat",
+    methods=["POST"]
+)
+def chat():
 
     try:
 
+        if not check_api_key():
+
+            return jsonify({
+
+                "error":
+                    "OPENROUTER_API_KEY n'est pas configurée sur le serveur."
+
+            }), 500
+
+
+        data = request.get_json(
+            silent=True
+        )
+
+
+        if not data:
+
+            return jsonify({
+
+                "error":
+                    "Données invalides."
+
+            }), 400
+
+
+        message = data.get(
+            "message",
+            ""
+        )
+
+
+        history = data.get(
+            "history",
+            []
+        )
+
+
+        if not isinstance(
+            message,
+            str
+        ):
+
+            return jsonify({
+
+                "error":
+                    "Le message doit être du texte."
+
+            }), 400
+
+
+        message = message.strip()
+
+
+        if not message:
+
+            return jsonify({
+
+                "error":
+                    "Le message est vide."
+
+            }), 400
+
+
+        # ----------------------------------------------------
+        # HISTORIQUE
+        # ----------------------------------------------------
+
+        messages = [
+
+            {
+
+                "role":
+                    "system",
+
+                "content":
+                    (
+                        "Tu es Messie IA, "
+                        "un assistant intelligent, "
+                        "utile, clair et respectueux. "
+                        "Réponds en français sauf si "
+                        "l'utilisateur demande une autre langue. "
+                        "N'affiche jamais d'informations techniques "
+                        "internes de sécurité ou de modération."
+                    )
+
+            }
+
+        ]
+
+
+        if isinstance(
+            history,
+            list
+        ):
+
+            for item in history:
+
+                if not isinstance(
+                    item,
+                    dict
+                ):
+
+                    continue
+
+
+                role = item.get(
+                    "role"
+                )
+
+
+                content = item.get(
+                    "content"
+                )
+
+
+                if role not in (
+                    "user",
+                    "assistant"
+                ):
+
+                    continue
+
+
+                if not isinstance(
+                    content,
+                    str
+                ):
+
+                    continue
+
+
+                if not content.strip():
+
+                    continue
+
+
+                messages.append({
+
+                    "role":
+                        role,
+
+                    "content":
+                        content
+
+                })
+
+
+        # ----------------------------------------------------
+        # MESSAGE ACTUEL
+        # ----------------------------------------------------
+
+        messages.append({
+
+            "role":
+                "user",
+
+            "content":
+                message
+
+        })
+
+
+        payload = {
+
+            "model":
+                CHAT_MODEL,
+
+            "messages":
+                messages,
+
+            "temperature":
+                0.7
+
+        }
+
+
         response = requests.post(
 
-            url,
+            f"{OPENROUTER_URL}/chat/completions",
 
-            headers=headers,
+            headers=
+                openrouter_headers(),
 
-            json=payload,
+            json=
+                payload,
 
-            timeout=60
+            timeout=
+                120
 
         )
 
 
-        # ----------------------------------------------------
-        # Lire le JSON
-        # ----------------------------------------------------
-
         try:
 
-            result = response.json()
+            result =
+                response.json()
 
-        except ValueError:
-
-            print(
-                "Réponse OpenRouter invalide :",
-                response.text
-            )
+        except Exception:
 
             return jsonify({
 
@@ -314,43 +314,27 @@ def chat():
             }), 502
 
 
-        # ----------------------------------------------------
-        # Gestion des erreurs OpenRouter
-        # ----------------------------------------------------
+        if not response.ok:
 
-        if response.status_code != 200:
+            error_message = (
 
-            print(
-                "Erreur OpenRouter :",
                 result
-            )
+                    .get("error", {})
+                    .get(
+                        "message",
+                        "Erreur OpenRouter."
+                    )
 
-
-            error_data = result.get(
-                "error",
-                {}
-            )
-
-
-            if isinstance(
-                error_data,
-                dict
-            ):
-
-                error_message = error_data.get(
-
-                    "message",
-
-                    "Une erreur est survenue avec OpenRouter."
-
+                if isinstance(
+                    result.get("error"),
+                    dict
                 )
 
-            else:
+                else
 
-                error_message = (
-                    "Une erreur est survenue "
-                    "avec OpenRouter."
-                )
+                "Erreur OpenRouter."
+
+            )
 
 
             return jsonify({
@@ -362,8 +346,11 @@ def chat():
 
 
         # ----------------------------------------------------
-        # Récupérer les choix
+        # EXTRACTION
         # ----------------------------------------------------
+
+        answer = ""
+
 
         choices = result.get(
             "choices",
@@ -371,60 +358,50 @@ def chat():
         )
 
 
-        if not choices:
+        if choices:
 
-            print(
-                "OpenRouter n'a renvoyé aucun choix :",
-                result
-            )
-
-            return jsonify({
-
-                "error":
-                    "OpenRouter n'a renvoyé aucune réponse."
-
-            }), 500
+            first =
+                choices[0]
 
 
-        # ----------------------------------------------------
-        # Récupérer le message IA
-        # ----------------------------------------------------
+            if isinstance(
+                first,
+                dict
+            ):
 
-        ai_message = choices[0].get(
-
-            "message",
-
-            {}
-
-        )
-
-
-        answer = ai_message.get(
-
-            "content",
-
-            ""
-
-        )
+                message_data =
+                    first.get(
+                        "message",
+                        {}
+                    )
 
 
-        # ----------------------------------------------------
-        # Vérifier la réponse
-        # ----------------------------------------------------
+                if isinstance(
+                    message_data,
+                    dict
+                ):
+
+                    content =
+                        message_data.get(
+                            "content",
+                            ""
+                        )
+
+
+                    if isinstance(
+                        content,
+                        str
+                    ):
+
+                        answer =
+                            content
+
 
         if not answer:
 
-            return jsonify({
+            answer =
+                "Je n'ai pas pu générer une réponse."
 
-                "error":
-                    "La réponse de Messie IA est vide."
-
-            }), 500
-
-
-        # ----------------------------------------------------
-        # Réponse au navigateur
-        # ----------------------------------------------------
 
         return jsonify({
 
@@ -434,29 +411,21 @@ def chat():
         })
 
 
-    # --------------------------------------------------------
-    # Timeout
-    # --------------------------------------------------------
-
-    except requests.exceptions.Timeout:
+    except requests.Timeout:
 
         return jsonify({
 
             "error":
-                "OpenRouter met trop de temps à répondre."
+                "Le délai de réponse d'OpenRouter a été dépassé."
 
         }), 504
 
 
-    # --------------------------------------------------------
-    # Erreur réseau
-    # --------------------------------------------------------
-
-    except requests.exceptions.RequestException as e:
+    except requests.RequestException as error:
 
         print(
-            "Erreur réseau :",
-            str(e)
+            "OpenRouter request error:",
+            error
         )
 
 
@@ -465,34 +434,755 @@ def chat():
             "error":
                 "Impossible de contacter OpenRouter."
 
-        }), 500
+        }), 502
 
 
-    # --------------------------------------------------------
-    # Autre erreur
-    # --------------------------------------------------------
-
-    except Exception as e:
+    except Exception as error:
 
         print(
-            "Erreur serveur :",
-            str(e)
+            "Chat error:",
+            error
         )
 
 
         return jsonify({
 
             "error":
-                "Une erreur inattendue est survenue."
+                "Une erreur interne est survenue."
 
         }), 500
 
 
 # ============================================================
-# TEST DU SERVEUR
+# ANALYSE D'IMAGE
 # ============================================================
 
-@app.route("/health")
+@app.route(
+    "/api/analyze-image",
+    methods=["POST"]
+)
+def analyze_image():
+
+    try:
+
+        if not check_api_key():
+
+            return jsonify({
+
+                "error":
+                    "OPENROUTER_API_KEY n'est pas configurée."
+
+            }), 500
+
+
+        data = request.get_json(
+            silent=True
+        )
+
+
+        if not data:
+
+            return jsonify({
+
+                "error":
+                    "Données invalides."
+
+            }), 400
+
+
+        image_data =
+            data.get(
+                "image",
+                ""
+            )
+
+
+        prompt =
+            data.get(
+                "prompt",
+                "Décris cette image en détail."
+            )
+
+
+        if not isinstance(
+            image_data,
+            str
+        ):
+
+            return jsonify({
+
+                "error":
+                    "Image invalide."
+
+            }), 400
+
+
+        if not image_data.startswith(
+            "data:image/"
+        ):
+
+            return jsonify({
+
+                "error":
+                    "Format d'image non supporté."
+
+            }), 400
+
+
+        payload = {
+
+            "model":
+                VISION_MODEL,
+
+            "messages": [
+
+                {
+
+                    "role":
+                        "user",
+
+                    "content": [
+
+                        {
+
+                            "type":
+                                "text",
+
+                            "text":
+                                prompt
+
+                        },
+
+                        {
+
+                            "type":
+                                "image_url",
+
+                            "image_url": {
+
+                                "url":
+                                    image_data
+
+                            }
+
+                        }
+
+                    ]
+
+                }
+
+            ]
+
+        }
+
+
+        response = requests.post(
+
+            f"{OPENROUTER_URL}/chat/completions",
+
+            headers=
+                openrouter_headers(),
+
+            json=
+                payload,
+
+            timeout=
+                120
+
+        )
+
+
+        try:
+
+            result =
+                response.json()
+
+        except Exception:
+
+            return jsonify({
+
+                "error":
+                    "Réponse invalide d'OpenRouter."
+
+            }), 502
+
+
+        if not response.ok:
+
+            return jsonify({
+
+                "error":
+                    get_openrouter_error(
+                        result
+                    )
+
+            }), response.status_code
+
+
+        answer = ""
+
+
+        choices =
+            result.get(
+                "choices",
+                []
+            )
+
+
+        if choices:
+
+            answer =
+                choices[0] \
+                    .get(
+                        "message",
+                        {}
+                    ) \
+                    .get(
+                        "content",
+                        ""
+                    )
+
+
+        return jsonify({
+
+            "response":
+                answer
+
+        })
+
+
+    except requests.RequestException:
+
+        return jsonify({
+
+            "error":
+                "Impossible de contacter OpenRouter."
+
+        }), 502
+
+
+    except Exception as error:
+
+        print(
+            "Image analysis error:",
+            error
+        )
+
+
+        return jsonify({
+
+            "error":
+                "Erreur pendant l'analyse de l'image."
+
+        }), 500
+
+
+# ============================================================
+# GÉNÉRATION / MODIFICATION D'IMAGE
+# ============================================================
+
+@app.route(
+    "/api/generate-image",
+    methods=["POST"]
+)
+def generate_image():
+
+    try:
+
+        if not check_api_key():
+
+            return jsonify({
+
+                "error":
+                    "OPENROUTER_API_KEY n'est pas configurée."
+
+            }), 500
+
+
+        data = request.get_json(
+            silent=True
+        )
+
+
+        if not data:
+
+            return jsonify({
+
+                "error":
+                    "Données invalides."
+
+            }), 400
+
+
+        prompt =
+            data.get(
+                "prompt",
+                ""
+            )
+
+
+        prompt =
+            prompt.strip()
+
+
+        if not prompt:
+
+            return jsonify({
+
+                "error":
+                    "Décris l'image que tu veux créer ou modifier."
+
+            }), 400
+
+
+        # ----------------------------------------------------
+        # OPTIONS
+        # ----------------------------------------------------
+
+        aspect_ratio =
+            data.get(
+                "aspect_ratio",
+                "1:1"
+            )
+
+
+        resolution =
+            data.get(
+                "resolution",
+                "1K"
+            )
+
+
+        quality =
+            data.get(
+                "quality",
+                "auto"
+            )
+
+
+        output_format =
+            data.get(
+                "output_format",
+                "png"
+            )
+
+
+        n =
+            data.get(
+                "n",
+                1
+            )
+
+
+        # ----------------------------------------------------
+        # VALIDATION
+        # ----------------------------------------------------
+
+        allowed_ratios = {
+
+            "1:1",
+            "16:9",
+            "9:16",
+            "4:3",
+            "3:4"
+
+        }
+
+
+        if aspect_ratio not in allowed_ratios:
+
+            aspect_ratio =
+                "1:1"
+
+
+        allowed_resolutions = {
+
+            "512",
+            "1K",
+            "2K",
+            "4K"
+
+        }
+
+
+        if resolution not in allowed_resolutions:
+
+            resolution =
+                "1K"
+
+
+        allowed_quality = {
+
+            "auto",
+            "low",
+            "medium",
+            "high"
+
+        }
+
+
+        if quality not in allowed_quality:
+
+            quality =
+                "auto"
+
+
+        allowed_formats = {
+
+            "png",
+            "jpeg",
+            "webp"
+
+        }
+
+
+        if output_format not in allowed_formats:
+
+            output_format =
+                "png"
+
+
+        try:
+
+            n =
+                int(n)
+
+        except Exception:
+
+            n =
+                1
+
+
+        n =
+            max(
+                1,
+                min(
+                    n,
+                    4
+                )
+            )
+
+
+        # ----------------------------------------------------
+        # PAYLOAD
+        # ----------------------------------------------------
+
+        payload = {
+
+            "model":
+                IMAGE_MODEL,
+
+            "prompt":
+                prompt,
+
+            "n":
+                n,
+
+            "resolution":
+                resolution,
+
+            "aspect_ratio":
+                aspect_ratio,
+
+            "quality":
+                quality,
+
+            "output_format":
+                output_format
+
+        }
+
+
+        # ----------------------------------------------------
+        # IMAGE DE RÉFÉRENCE
+        # ----------------------------------------------------
+
+        reference_image =
+            data.get(
+                "reference_image"
+            )
+
+
+        if (
+            isinstance(
+                reference_image,
+                str
+            )
+            and
+            reference_image.startswith(
+                "data:image/"
+            )
+        ):
+
+            payload[
+                "input_references"
+            ] = [
+
+                {
+
+                    "type":
+                        "image_url",
+
+                    "image_url": {
+
+                        "url":
+                            reference_image
+
+                    }
+
+                }
+
+            ]
+
+
+        # ----------------------------------------------------
+        # APPEL OPENROUTER
+        # ----------------------------------------------------
+
+        response = requests.post(
+
+            f"{OPENROUTER_URL}/images",
+
+            headers=
+                openrouter_headers(),
+
+            json=
+                payload,
+
+            timeout=
+                300
+
+        )
+
+
+        try:
+
+            result =
+                response.json()
+
+        except Exception:
+
+            return jsonify({
+
+                "error":
+                    "OpenRouter a renvoyé une réponse invalide."
+
+            }), 502
+
+
+        if not response.ok:
+
+            return jsonify({
+
+                "error":
+                    get_openrouter_error(
+                        result
+                    )
+
+            }), response.status_code
+
+
+        # ----------------------------------------------------
+        # EXTRACTION DES IMAGES
+        # ----------------------------------------------------
+
+        images = []
+
+
+        for image in result.get(
+            "data",
+            []
+        ):
+
+            if not isinstance(
+                image,
+                dict
+            ):
+
+                continue
+
+
+            b64 =
+                image.get(
+                    "b64_json"
+                )
+
+
+            if not b64:
+
+                continue
+
+
+            media_type =
+                image.get(
+                    "media_type",
+                    "image/png"
+                )
+
+
+            images.append({
+
+                "data":
+                    f"data:{media_type};base64,{b64}",
+
+                "media_type":
+                    media_type
+
+            })
+
+
+        if not images:
+
+            return jsonify({
+
+                "error":
+                    "OpenRouter n'a renvoyé aucune image."
+
+            }), 502
+
+
+        # ----------------------------------------------------
+        # COÛT
+        # ----------------------------------------------------
+
+        usage =
+            result.get(
+                "usage",
+                {}
+            )
+
+
+        cost = None
+
+
+        if isinstance(
+            usage,
+            dict
+        ):
+
+            cost =
+                usage.get(
+                    "cost"
+                )
+
+
+        return jsonify({
+
+            "images":
+                images,
+
+            "usage": {
+
+                "cost":
+                    cost
+
+            },
+
+            "model":
+                IMAGE_MODEL
+
+        })
+
+
+    except requests.Timeout:
+
+        return jsonify({
+
+            "error":
+                "La génération de l'image prend trop de temps. Réessaie."
+
+        }), 504
+
+
+    except requests.RequestException as error:
+
+        print(
+            "Image request error:",
+            error
+        )
+
+
+        return jsonify({
+
+            "error":
+                "Impossible de contacter le service d'images OpenRouter."
+
+        }), 502
+
+
+    except Exception as error:
+
+        print(
+            "Generate image error:",
+            error
+        )
+
+
+        return jsonify({
+
+            "error":
+                "Erreur interne pendant la génération."
+
+        }), 500
+
+
+# ============================================================
+# ERREUR OPENROUTER
+# ============================================================
+
+def get_openrouter_error(data):
+
+    if not isinstance(
+        data,
+        dict
+    ):
+
+        return "Erreur OpenRouter."
+
+
+    error =
+        data.get(
+            "error"
+        )
+
+
+    if isinstance(
+        error,
+        dict
+    ):
+
+        message =
+            error.get(
+                "message"
+            )
+
+
+        if isinstance(
+            message,
+            str
+        ):
+
+            return message
+
+
+    if isinstance(
+        error,
+        str
+    ):
+
+        return error
+
+
+    return "Erreur OpenRouter."
+
+
+# ============================================================
+# HEALTH CHECK
+# ============================================================
+
+@app.route(
+    "/health"
+)
 def health():
 
     return jsonify({
@@ -500,35 +1190,38 @@ def health():
         "status":
             "ok",
 
-        "service":
-            "Messie IA"
+        "app":
+            "Messie IA",
+
+        "openrouter":
+            bool(
+                OPENROUTER_API_KEY
+            )
 
     })
 
 
 # ============================================================
-# DÉMARRAGE
+# LANCEMENT
 # ============================================================
 
 if __name__ == "__main__":
 
-    port = int(
-
-        os.environ.get(
-
-            "PORT",
-
-            10000
-
+    port =
+        int(
+            os.environ.get(
+                "PORT",
+                5000
+            )
         )
-
-    )
 
 
     app.run(
 
         host="0.0.0.0",
 
-        port=port
+        port=port,
 
-    )
+        debug=False
+
+                    )
