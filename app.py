@@ -61,7 +61,7 @@ CHAT_MODEL = os.environ.get(
 
 VISION_MODEL = os.environ.get(
     "OPENROUTER_VISION_MODEL",
-    "openrouter/free"
+    "google/gemini-3-flash-preview"
 )
 
 
