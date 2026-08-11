@@ -1,25 +1,31 @@
 import os
 import traceback
+import requests
 
 from flask import Flask, render_template, request, jsonify
-import requests
 
 
 # ============================================================
 # MESSIE IA
-# Serveur Flask
 # ============================================================
 
-app = Flask(__name__)
+app = Flask(
+    __name__,
+    template_folder="templates"
+)
 
 
 # ============================================================
 # CONFIGURATION
 # ============================================================
 
-OPENROUTER_API_KEY = os.environ.get("OPENROUTER_API_KEY")
+OPENROUTER_API_KEY = os.environ.get(
+    "OPENROUTER_API_KEY"
+)
 
-OPENROUTER_URL = "https://openrouter.ai/api/v1"
+OPENROUTER_URL = (
+    "https://openrouter.ai/api/v1"
+)
 
 CHAT_MODEL = os.environ.get(
     "OPENROUTER_CHAT_MODEL",
@@ -38,13 +44,16 @@ VISION_MODEL = os.environ.get(
 
 def openrouter_headers():
 
-    headers = {
-        "Authorization": f"Bearer {OPENROUTER_API_KEY}",
-        "Content-Type": "application/json",
-        "X-Title": "Messie IA"
-    }
+    return {
+        "Authorization":
+            f"Bearer {OPENROUTER_API_KEY}",
 
-    return headers
+        "Content-Type":
+            "application/json",
+
+        "X-Title":
+            "Messie IA"
+    }
 
 
 # ============================================================
@@ -55,56 +64,109 @@ def openrouter_headers():
 def index():
 
     try:
-        return render_template("index.html")
+
+        return render_template(
+            "index.html"
+        )
 
     except Exception as error:
 
-        print("\n========== ERREUR INDEX ==========")
+        print(
+            "\n========== ERREUR INDEX =========="
+        )
+
         traceback.print_exc()
-        print("==================================\n")
 
-        return f"""
-        <html>
-        <head>
-            <meta charset="UTF-8">
-            <title>Erreur Messie IA</title>
-        </head>
+        print(
+            "==================================\n"
+        )
 
-        <body style="
-            background:#111;
-            color:white;
-            font-family:Arial;
-            padding:30px;
-        ">
+        return jsonify({
 
-            <h1 style="color:#ff4444;">
-                Erreur Messie IA
-            </h1>
+            "success": False,
 
-            <p>
-                Impossible de charger index.html.
-            </p>
+            "error":
+                "Impossible de charger index.html.",
 
-            <pre style="
-                background:#222;
-                padding:20px;
-                border-radius:10px;
-                white-space:pre-wrap;
-            ">{error}</pre>
+            "details":
+                str(error)
 
-            <p>
-                Vérifie que le fichier se trouve ici :
-            </p>
+        }), 500
 
-            <pre style="
-                background:#222;
-                padding:20px;
-                border-radius:10px;
-            ">templates/index.html</pre>
 
-        </body>
-        </html>
-        """, 500
+# ============================================================
+# DIAGNOSTIC DES FICHIERS
+# ============================================================
+
+@app.route("/debug-files", methods=["GET"])
+def debug_files():
+
+    try:
+
+        base_directory = os.path.dirname(
+            os.path.abspath(__file__)
+        )
+
+        templates_directory = os.path.join(
+            base_directory,
+            "templates"
+        )
+
+        index_file = os.path.join(
+            templates_directory,
+            "index.html"
+        )
+
+
+        return jsonify({
+
+            "success": True,
+
+            "base_directory":
+                base_directory,
+
+            "files":
+                os.listdir(base_directory),
+
+            "templates_exists":
+                os.path.isdir(
+                    templates_directory
+                ),
+
+            "templates_files":
+                (
+                    os.listdir(
+                        templates_directory
+                    )
+                    if os.path.isdir(
+                        templates_directory
+                    )
+                    else []
+                ),
+
+            "index_exists":
+                os.path.isfile(
+                    index_file
+                ),
+
+            "index_path":
+                index_file
+
+        })
+
+
+    except Exception as error:
+
+        traceback.print_exc()
+
+        return jsonify({
+
+            "success": False,
+
+            "error":
+                str(error)
+
+        }), 500
 
 
 # ============================================================
@@ -115,9 +177,18 @@ def index():
 def health():
 
     return jsonify({
-        "status": "ok",
-        "app": "Messie IA",
-        "openrouter": bool(OPENROUTER_API_KEY)
+
+        "status":
+            "ok",
+
+        "app":
+            "Messie IA",
+
+        "openrouter":
+            bool(
+                OPENROUTER_API_KEY
+            )
+
     })
 
 
@@ -129,8 +200,13 @@ def health():
 def api_test():
 
     return jsonify({
-        "success": True,
-        "message": "Messie IA fonctionne correctement."
+
+        "success":
+            True,
+
+        "message":
+            "Messie IA fonctionne correctement."
+
     })
 
 
@@ -138,7 +214,10 @@ def api_test():
 # CHAT
 # ============================================================
 
-@app.route("/api/chat", methods=["POST"])
+@app.route(
+    "/api/chat",
+    methods=["POST"]
+)
 def chat():
 
     try:
@@ -146,34 +225,66 @@ def chat():
         if not OPENROUTER_API_KEY:
 
             return jsonify({
-                "success": False,
-                "error": (
-                    "OPENROUTER_API_KEY n'est pas configurée "
-                    "dans les variables d'environnement Render."
-                )
+
+                "success":
+                    False,
+
+                "error":
+                    (
+                        "OPENROUTER_API_KEY "
+                        "n'est pas configurée "
+                        "dans Render."
+                    )
+
             }), 500
 
 
-        data = request.get_json(silent=True)
+        data = request.get_json(
+            silent=True
+        )
 
-        if not isinstance(data, dict):
+
+        if not isinstance(
+            data,
+            dict
+        ):
 
             return jsonify({
-                "success": False,
-                "error": "Données invalides."
+
+                "success":
+                    False,
+
+                "error":
+                    "Données invalides."
+
             }), 400
 
 
-        message = data.get("message", "")
+        message = data.get(
+            "message",
+            ""
+        )
 
-        history = data.get("history", [])
+
+        history = data.get(
+            "history",
+            []
+        )
 
 
-        if not isinstance(message, str):
+        if not isinstance(
+            message,
+            str
+        ):
 
             return jsonify({
-                "success": False,
-                "error": "Le message doit être du texte."
+
+                "success":
+                    False,
+
+                "error":
+                    "Le message doit être du texte."
+
             }), 400
 
 
@@ -183,21 +294,32 @@ def chat():
         if not message:
 
             return jsonify({
-                "success": False,
-                "error": "Le message est vide."
+
+                "success":
+                    False,
+
+                "error":
+                    "Le message est vide."
+
             }), 400
 
 
         messages = [
 
             {
-                "role": "system",
-                "content": (
-                    "Tu es Messie IA, un assistant intelligent, "
-                    "utile, clair et respectueux. "
-                    "Réponds en français sauf si l'utilisateur "
-                    "demande une autre langue."
-                )
+
+                "role":
+                    "system",
+
+                "content":
+                    (
+                        "Tu es Messie IA, "
+                        "un assistant intelligent, "
+                        "utile, clair et respectueux. "
+                        "Réponds en français sauf si "
+                        "l'utilisateur demande une autre langue."
+                    )
+
             }
 
         ]
@@ -207,22 +329,41 @@ def chat():
         # HISTORIQUE
         # ----------------------------------------------------
 
-        if isinstance(history, list):
+        if isinstance(
+            history,
+            list
+        ):
 
             for item in history:
 
-                if not isinstance(item, dict):
-                    continue
-
-                role = item.get("role")
-                content = item.get("content")
-
-
-                if role not in ("user", "assistant"):
+                if not isinstance(
+                    item,
+                    dict
+                ):
                     continue
 
 
-                if not isinstance(content, str):
+                role = item.get(
+                    "role"
+                )
+
+
+                content = item.get(
+                    "content"
+                )
+
+
+                if role not in (
+                    "user",
+                    "assistant"
+                ):
+                    continue
+
+
+                if not isinstance(
+                    content,
+                    str
+                ):
                     continue
 
 
@@ -234,8 +375,13 @@ def chat():
 
 
                 messages.append({
-                    "role": role,
-                    "content": content
+
+                    "role":
+                        role,
+
+                    "content":
+                        content
+
                 })
 
 
@@ -244,18 +390,26 @@ def chat():
         # ----------------------------------------------------
 
         messages.append({
-            "role": "user",
-            "content": message
+
+            "role":
+                "user",
+
+            "content":
+                message
+
         })
 
 
         payload = {
 
-            "model": CHAT_MODEL,
+            "model":
+                CHAT_MODEL,
 
-            "messages": messages,
+            "messages":
+                messages,
 
-            "temperature": 0.7
+            "temperature":
+                0.7
 
         }
 
@@ -264,76 +418,120 @@ def chat():
 
             f"{OPENROUTER_URL}/chat/completions",
 
-            headers=openrouter_headers(),
+            headers=
+                openrouter_headers(),
 
-            json=payload,
+            json=
+                payload,
 
-            timeout=120
+            timeout=
+                120
 
         )
 
 
         try:
 
-            result = response.json()
+            result =
+                response.json()
 
         except Exception:
 
             return jsonify({
-                "success": False,
-                "error": "Réponse invalide d'OpenRouter."
+
+                "success":
+                    False,
+
+                "error":
+                    "Réponse invalide d'OpenRouter."
+
             }), 502
 
 
         if not response.ok:
 
             return jsonify({
-                "success": False,
-                "error": get_openrouter_error(result)
+
+                "success":
+                    False,
+
+                "error":
+                    get_openrouter_error(
+                        result
+                    )
+
             }), response.status_code
 
 
-        choices = result.get("choices", [])
+        choices =
+            result.get(
+                "choices",
+                []
+            )
+
 
         answer = ""
 
 
-        if isinstance(choices, list) and choices:
+        if (
+            isinstance(
+                choices,
+                list
+            )
+            and
+            choices
+        ):
 
-            first = choices[0]
+            first =
+                choices[0]
 
 
-            if isinstance(first, dict):
+            if isinstance(
+                first,
+                dict
+            ):
 
-                message_data = first.get(
-                    "message",
-                    {}
-                )
-
-
-                if isinstance(message_data, dict):
-
-                    content = message_data.get(
-                        "content",
-                        ""
+                message_data =
+                    first.get(
+                        "message",
+                        {}
                     )
 
 
-                    if isinstance(content, str):
+                if isinstance(
+                    message_data,
+                    dict
+                ):
 
-                        answer = content
+                    content =
+                        message_data.get(
+                            "content",
+                            ""
+                        )
+
+
+                    if isinstance(
+                        content,
+                        str
+                    ):
+
+                        answer =
+                            content
 
 
         if not answer:
 
-            answer = "Je n'ai pas pu générer une réponse."
+            answer =
+                "Je n'ai pas pu générer une réponse."
 
 
         return jsonify({
 
-            "success": True,
+            "success":
+                True,
 
-            "response": answer
+            "response":
+                answer
 
         })
 
@@ -342,7 +540,8 @@ def chat():
 
         return jsonify({
 
-            "success": False,
+            "success":
+                False,
 
             "error":
                 "Le délai de réponse est dépassé."
@@ -352,11 +551,16 @@ def chat():
 
     except requests.RequestException as error:
 
-        print("OpenRouter error:", error)
+        print(
+            "OpenRouter request error:",
+            error
+        )
+
 
         return jsonify({
 
-            "success": False,
+            "success":
+                False,
 
             "error":
                 "Impossible de contacter OpenRouter."
@@ -366,13 +570,18 @@ def chat():
 
     except Exception as error:
 
-        print("Chat error:", error)
+        print(
+            "Chat error:",
+            error
+        )
 
         traceback.print_exc()
 
+
         return jsonify({
 
-            "success": False,
+            "success":
+                False,
 
             "error":
                 "Erreur interne du serveur."
@@ -396,7 +605,8 @@ def analyze_image():
 
             return jsonify({
 
-                "success": False,
+                "success":
+                    False,
 
                 "error":
                     "OPENROUTER_API_KEY n'est pas configurée."
@@ -416,7 +626,8 @@ def analyze_image():
 
             return jsonify({
 
-                "success": False,
+                "success":
+                    False,
 
                 "error":
                     "Données invalides."
@@ -424,19 +635,18 @@ def analyze_image():
             }), 400
 
 
-        image_data = data.get(
-            "image",
-            ""
-        )
+        image_data =
+            data.get(
+                "image",
+                ""
+            )
 
 
-        prompt = data.get(
-
-            "prompt",
-
-            "Décris cette image en détail."
-
-        )
+        prompt =
+            data.get(
+                "prompt",
+                "Décris cette image en détail."
+            )
 
 
         if not isinstance(
@@ -446,7 +656,8 @@ def analyze_image():
 
             return jsonify({
 
-                "success": False,
+                "success":
+                    False,
 
                 "error":
                     "Image invalide."
@@ -460,7 +671,8 @@ def analyze_image():
 
             return jsonify({
 
-                "success": False,
+                "success":
+                    False,
 
                 "error":
                     "Format d'image non supporté."
@@ -525,20 +737,23 @@ def analyze_image():
             json=
                 payload,
 
-            timeout=120
+            timeout=
+                120
 
         )
 
 
         try:
 
-            result = response.json()
+            result =
+                response.json()
 
         except Exception:
 
             return jsonify({
 
-                "success": False,
+                "success":
+                    False,
 
                 "error":
                     "Réponse invalide d'OpenRouter."
@@ -550,18 +765,22 @@ def analyze_image():
 
             return jsonify({
 
-                "success": False,
+                "success":
+                    False,
 
                 "error":
-                    get_openrouter_error(result)
+                    get_openrouter_error(
+                        result
+                    )
 
             }), response.status_code
 
 
-        choices = result.get(
-            "choices",
-            []
-        )
+        choices =
+            result.get(
+                "choices",
+                []
+            )
 
 
         answer = ""
@@ -569,7 +788,8 @@ def analyze_image():
 
         if choices:
 
-            first = choices[0]
+            first =
+                choices[0]
 
 
             if isinstance(
@@ -577,10 +797,11 @@ def analyze_image():
                 dict
             ):
 
-                message_data = first.get(
-                    "message",
-                    {}
-                )
+                message_data =
+                    first.get(
+                        "message",
+                        {}
+                    )
 
 
                 if isinstance(
@@ -588,10 +809,11 @@ def analyze_image():
                     dict
                 ):
 
-                    content = message_data.get(
-                        "content",
-                        ""
-                    )
+                    content =
+                        message_data.get(
+                            "content",
+                            ""
+                        )
 
 
                     if isinstance(
@@ -599,14 +821,17 @@ def analyze_image():
                         str
                     ):
 
-                        answer = content
+                        answer =
+                            content
 
 
         return jsonify({
 
-            "success": True,
+            "success":
+                True,
 
-            "response": answer
+            "response":
+                answer
 
         })
 
@@ -615,7 +840,8 @@ def analyze_image():
 
         return jsonify({
 
-            "success": False,
+            "success":
+                False,
 
             "error":
                 "Le délai d'analyse est dépassé."
@@ -626,13 +852,15 @@ def analyze_image():
     except requests.RequestException as error:
 
         print(
-            "Vision error:",
+            "Vision request error:",
             error
         )
 
+
         return jsonify({
 
-            "success": False,
+            "success":
+                False,
 
             "error":
                 "Impossible de contacter OpenRouter."
@@ -649,9 +877,11 @@ def analyze_image():
 
         traceback.print_exc()
 
+
         return jsonify({
 
-            "success": False,
+            "success":
+                False,
 
             "error":
                 "Erreur pendant l'analyse de l'image."
@@ -660,7 +890,7 @@ def analyze_image():
 
 
 # ============================================================
-# GESTION DES ERREURS OPENROUTER
+# ERREUR OPENROUTER
 # ============================================================
 
 def get_openrouter_error(data):
@@ -673,9 +903,10 @@ def get_openrouter_error(data):
         return "Erreur OpenRouter."
 
 
-    error = data.get(
-        "error"
-    )
+    error =
+        data.get(
+            "error"
+        )
 
 
     if isinstance(
@@ -683,9 +914,10 @@ def get_openrouter_error(data):
         dict
     ):
 
-        message = error.get(
-            "message"
-        )
+        message =
+            error.get(
+                "message"
+            )
 
 
         if isinstance(
@@ -714,18 +946,31 @@ def get_openrouter_error(data):
 @app.errorhandler(Exception)
 def global_error(error):
 
-    print("\n================================")
-    print("ERREUR GLOBALE MESSIE IA")
-    print("================================")
+    print(
+        "\n================================"
+    )
+
+    print(
+        "ERREUR GLOBALE MESSIE IA"
+    )
+
+    print(
+        "================================"
+    )
+
 
     traceback.print_exc()
 
-    print("================================\n")
+
+    print(
+        "================================\n"
+    )
 
 
     return jsonify({
 
-        "success": False,
+        "success":
+            False,
 
         "error":
             str(error),
@@ -753,8 +998,27 @@ if __name__ == "__main__":
 
 
     print(
-        "Messie IA démarré sur le port",
+        "================================"
+    )
+
+    print(
+        "MESSIE IA"
+    )
+
+    print(
+        "PORT:",
         port
+    )
+
+    print(
+        "OPENROUTER:",
+        bool(
+            OPENROUTER_API_KEY
+        )
+    )
+
+    print(
+        "================================"
     )
 
 
