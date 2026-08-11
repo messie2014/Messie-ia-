@@ -1,868 +1,1152 @@
-import os
-import requests
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
 
-from flask import Flask, render_template, request, jsonify
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Messie IA</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+            background: #f5f7fb;
+            color: #202124;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+        }
+
+        .app {
+            width: 100%;
+            max-width: 900px;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background: white;
+        }
+
+        /* =========================
+           HEADER
+        ========================= */
+
+        header {
+            height: 65px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 18px;
+            border-bottom: 1px solid #e5e7eb;
+            background: white;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #111827;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .brand-text h1 {
+            margin: 0;
+            font-size: 18px;
+        }
+
+        .brand-text span {
+            font-size: 12px;
+            color: #6b7280;
+        }
+
+        .clear-button {
+            border: 0;
+            background: #f3f4f6;
+            color: #374151;
+            padding: 9px 12px;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        .clear-button:hover {
+            background: #e5e7eb;
+        }
+
+        /* =========================
+           CHAT
+        ========================= */
+
+        #messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .welcome {
+            max-width: 650px;
+            margin: 70px auto;
+            text-align: center;
+        }
+
+        .welcome-logo {
+            width: 70px;
+            height: 70px;
+            margin: 0 auto 20px;
+            border-radius: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #111827;
+            color: white;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .welcome h2 {
+            margin: 0 0 10px;
+            font-size: 28px;
+        }
+
+        .welcome p {
+            margin: 0;
+            color: #6b7280;
+            line-height: 1.6;
+        }
+
+        .message {
+            display: flex;
+            margin-bottom: 18px;
+        }
+
+        .message.user {
+            justify-content: flex-end;
+        }
+
+        .message.assistant {
+            justify-content: flex-start;
+        }
+
+        .bubble {
+            max-width: 78%;
+            padding: 12px 15px;
+            border-radius: 17px;
+            line-height: 1.55;
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+        }
+
+        .user .bubble {
+            background: #111827;
+            color: white;
+            border-bottom-right-radius: 5px;
+        }
+
+        .assistant .bubble {
+            background: #f1f3f5;
+            color: #202124;
+            border-bottom-left-radius: 5px;
+        }
+
+        .error .bubble {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .loading {
+            display: inline-flex;
+            gap: 5px;
+            align-items: center;
+        }
+
+        .dot {
+            width: 7px;
+            height: 7px;
+            background: #6b7280;
+            border-radius: 50%;
+            animation: blink 1.2s infinite;
+        }
+
+        .dot:nth-child(2) {
+            animation-delay: .2s;
+        }
+
+        .dot:nth-child(3) {
+            animation-delay: .4s;
+        }
+
+        @keyframes blink {
+            0%, 80%, 100% {
+                opacity: .3;
+            }
+
+            40% {
+                opacity: 1;
+            }
+        }
+
+        /* =========================
+           IMAGE PREVIEW
+        ========================= */
+
+        #imagePreviewContainer {
+            display: none;
+            padding: 10px 16px 0;
+        }
+
+        .preview-box {
+            position: relative;
+            display: inline-block;
+        }
+
+        #imagePreview {
+            max-width: 180px;
+            max-height: 140px;
+            border-radius: 12px;
+            border: 1px solid #ddd;
+        }
+
+        #removeImage {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            width: 25px;
+            height: 25px;
+            border: 0;
+            border-radius: 50%;
+            background: #111827;
+            color: white;
+            cursor: pointer;
+        }
+
+        /* =========================
+           INPUT
+        ========================= */
+
+        .composer {
+            padding: 12px 15px 15px;
+            border-top: 1px solid #e5e7eb;
+            background: white;
+        }
+
+        .input-row {
+            display: flex;
+            align-items: flex-end;
+            gap: 8px;
+            border: 1px solid #d1d5db;
+            border-radius: 18px;
+            padding: 7px;
+            background: #fff;
+        }
+
+        textarea {
+            flex: 1;
+            resize: none;
+            border: 0;
+            outline: none;
+            min-height: 42px;
+            max-height: 140px;
+            padding: 10px;
+            font-size: 15px;
+            font-family: inherit;
+        }
+
+        .icon-button,
+        .send-button {
+            width: 42px;
+            height: 42px;
+            border: 0;
+            border-radius: 13px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .icon-button {
+            background: #f3f4f6;
+            font-size: 19px;
+        }
+
+        .icon-button:hover {
+            background: #e5e7eb;
+        }
+
+        .send-button {
+            background: #111827;
+            color: white;
+            font-size: 18px;
+        }
+
+        .send-button:hover {
+            background: #000;
+        }
+
+        .send-button:disabled {
+            opacity: .5;
+            cursor: not-allowed;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .hint {
+            text-align: center;
+            margin-top: 8px;
+            font-size: 11px;
+            color: #9ca3af;
+        }
+
+        @media (max-width: 600px) {
+
+            header {
+                height: 60px;
+            }
+
+            #messages {
+                padding: 14px;
+            }
+
+            .bubble {
+                max-width: 88%;
+            }
+
+            .welcome {
+                margin: 50px auto;
+            }
+
+            .welcome h2 {
+                font-size: 24px;
+            }
+
+            .composer {
+                padding: 9px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="app">
+
+    <!-- =========================
+         HEADER
+    ========================== -->
+
+    <header>
+
+        <div class="brand">
+
+            <div class="logo">
+                M
+            </div>
+
+            <div class="brand-text">
+
+                <h1>Messie IA</h1>
+
+                <span>
+                    Votre assistant intelligent
+                </span>
+
+            </div>
+
+        </div>
+
+        <button
+            class="clear-button"
+            id="clearButton"
+            type="button"
+        >
+            Nouvelle discussion
+        </button>
+
+    </header>
 
 
-# ============================================================
-# APPLICATION
-# ============================================================
+    <!-- =========================
+         MESSAGES
+    ========================== -->
 
-app = Flask(
-    __name__,
-    template_folder="templates"
-)
+    <main id="messages">
 
+        <div
+            class="welcome"
+            id="welcome"
+        >
 
-# ============================================================
-# CONFIGURATION OPENROUTER
-# ============================================================
+            <div class="welcome-logo">
+                M
+            </div>
 
-OPENROUTER_API_KEY = os.environ.get(
-    "OPENROUTER_API_KEY"
-)
+            <h2>
+                Bonjour 👋
+            </h2>
 
-OPENROUTER_URL = "https://openrouter.ai/api/v1"
+            <p>
+                Je suis Messie IA.
+                Pose-moi une question, demande-moi
+                de t'aider à écrire, apprendre,
+                réfléchir ou analyser une image.
+            </p>
 
+        </div>
 
-CHAT_MODEL = os.environ.get(
-    "OPENROUTER_CHAT_MODEL",
-    "openai/gpt-4o-mini"
-)
-
-
-VISION_MODEL = os.environ.get(
-    "OPENROUTER_VISION_MODEL",
-    "google/gemini-2.5-flash"
-)
+    </main>
 
 
-# ============================================================
-# HEADERS
-# ============================================================
+    <!-- =========================
+         APERÇU IMAGE
+    ========================== -->
 
-def openrouter_headers():
+    <div id="imagePreviewContainer">
 
-    return {
+        <div class="preview-box">
 
-        "Authorization":
-            "Bearer " + OPENROUTER_API_KEY,
+            <img
+                id="imagePreview"
+                alt="Image sélectionnée"
+            >
 
-        "Content-Type":
-            "application/json",
+            <button
+                id="removeImage"
+                type="button"
+            >
+                ×
+            </button>
 
-        "X-Title":
-            "Messie IA"
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         COMPOSER
+    ========================== -->
+
+    <section class="composer">
+
+        <div class="input-row">
+
+            <label
+                class="icon-button"
+                title="Ajouter une image"
+            >
+
+                📎
+
+                <input
+                    type="file"
+                    id="imageInput"
+                    accept="image/*"
+                >
+
+            </label>
+
+
+            <textarea
+                id="messageInput"
+                placeholder="Écris ton message..."
+                rows="1"
+            ></textarea>
+
+
+            <button
+                class="send-button"
+                id="sendButton"
+                type="button"
+                title="Envoyer"
+            >
+                ➤
+            </button>
+
+        </div>
+
+        <div class="hint">
+            Messie IA peut parfois faire des erreurs.
+        </div>
+
+    </section>
+
+</div>
+
+
+<script>
+
+    // ========================================================
+    // VARIABLES
+    // ========================================================
+
+    const messagesContainer =
+        document.getElementById("messages");
+
+    const welcome =
+        document.getElementById("welcome");
+
+    const messageInput =
+        document.getElementById("messageInput");
+
+    const sendButton =
+        document.getElementById("sendButton");
+
+    const clearButton =
+        document.getElementById("clearButton");
+
+    const imageInput =
+        document.getElementById("imageInput");
+
+    const imagePreview =
+        document.getElementById("imagePreview");
+
+    const imagePreviewContainer =
+        document.getElementById(
+            "imagePreviewContainer"
+        );
+
+    const removeImage =
+        document.getElementById(
+            "removeImage"
+        );
+
+
+    let history = [];
+
+    let selectedImage = null;
+
+    let loading = false;
+
+
+    // ========================================================
+    // AJOUTER UN MESSAGE
+    // ========================================================
+
+    function addMessage(
+        role,
+        content,
+        isError = false
+    ) {
+
+        if (welcome) {
+            welcome.style.display = "none";
+        }
+
+
+        const wrapper =
+            document.createElement("div");
+
+
+        wrapper.className =
+            "message " +
+            role +
+            (isError ? " error" : "");
+
+
+        const bubble =
+            document.createElement("div");
+
+
+        bubble.className =
+            "bubble";
+
+
+        bubble.textContent =
+            content;
+
+
+        wrapper.appendChild(
+            bubble
+        );
+
+
+        messagesContainer.appendChild(
+            wrapper
+        );
+
+
+        messagesContainer.scrollTop =
+            messagesContainer.scrollHeight;
+
+
+        return wrapper;
+    }
+
+
+    // ========================================================
+    // INDICATEUR DE CHARGEMENT
+    // ========================================================
+
+    function addLoading() {
+
+        if (welcome) {
+            welcome.style.display = "none";
+        }
+
+
+        const wrapper =
+            document.createElement("div");
+
+
+        wrapper.className =
+            "message assistant";
+
+
+        wrapper.id =
+            "loadingMessage";
+
+
+        const bubble =
+            document.createElement("div");
+
+
+        bubble.className =
+            "bubble";
+
+
+        bubble.innerHTML = `
+            <span class="loading">
+                <span class="dot"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+            </span>
+        `;
+
+
+        wrapper.appendChild(
+            bubble
+        );
+
+
+        messagesContainer.appendChild(
+            wrapper
+        );
+
+
+        messagesContainer.scrollTop =
+            messagesContainer.scrollHeight;
 
     }
 
 
-# ============================================================
-# PAGE PRINCIPALE
-# ============================================================
+    function removeLoading() {
 
-@app.route("/")
-def index():
-
-    return render_template(
-        "index.html"
-    )
+        const element =
+            document.getElementById(
+                "loadingMessage"
+            );
 
 
-# ============================================================
-# HEALTH CHECK
-# ============================================================
+        if (element) {
+            element.remove();
+        }
 
-@app.route("/health")
-def health():
-
-    return jsonify({
-
-        "status":
-            "ok",
-
-        "app":
-            "Messie IA",
-
-        "openrouter":
-            bool(
-                OPENROUTER_API_KEY
-            )
-
-    })
+    }
 
 
-# ============================================================
-# CHAT
-# ============================================================
+    // ========================================================
+    // ENVOYER MESSAGE
+    // ========================================================
 
-@app.route(
-    "/api/chat",
-    methods=["POST"]
-)
-def chat():
+    async function sendMessage() {
 
-    try:
-
-        # ----------------------------------------------------
-        # VÉRIFICATION CLÉ
-        # ----------------------------------------------------
-
-        if not OPENROUTER_API_KEY:
-
-            return jsonify({
-
-                "success":
-                    False,
-
-                "error":
-                    (
-                        "La clé OPENROUTER_API_KEY "
-                        "n'est pas configurée dans Render."
-                    )
-
-            }), 500
+        if (loading) {
+            return;
+        }
 
 
-        # ----------------------------------------------------
-        # DONNÉES
-        # ----------------------------------------------------
-
-        data = request.get_json(
-            silent=True
-        )
+        const text =
+            messageInput.value.trim();
 
 
-        if not isinstance(
-            data,
-            dict
-        ):
+        // ----------------------------------------------------
+        // IMAGE
+        // ----------------------------------------------------
 
-            return jsonify({
+        if (selectedImage) {
 
-                "success":
-                    False,
+            if (!text) {
 
-                "error":
-                    "Données invalides."
+                await analyzeImage();
 
-            }), 400
-
-
-        message = data.get(
-            "message",
-            ""
-        )
-
-
-        history = data.get(
-            "history",
-            []
-        )
-
-
-        if not isinstance(
-            message,
-            str
-        ):
-
-            return jsonify({
-
-                "success":
-                    False,
-
-                "error":
-                    "Le message doit être du texte."
-
-            }), 400
-
-
-        message = message.strip()
-
-
-        if not message:
-
-            return jsonify({
-
-                "success":
-                    False,
-
-                "error":
-                    "Le message est vide."
-
-            }), 400
-
-
-        # ----------------------------------------------------
-        # MESSAGES
-        # ----------------------------------------------------
-
-        messages = [
-
-            {
-
-                "role":
-                    "system",
-
-                "content":
-                    (
-                        "Tu es Messie IA, "
-                        "un assistant intelligent, "
-                        "utile, clair et respectueux. "
-                        "Réponds en français sauf si "
-                        "l'utilisateur demande une autre langue."
-                    )
+                return;
 
             }
 
-        ]
-
-
-        # ----------------------------------------------------
-        # HISTORIQUE
-        # ----------------------------------------------------
-
-        if isinstance(
-            history,
-            list
-        ):
-
-            for item in history:
-
-                if not isinstance(
-                    item,
-                    dict
-                ):
-
-                    continue
-
-
-                role = item.get(
-                    "role"
-                )
-
-
-                content = item.get(
-                    "content"
-                )
-
-
-                if role not in (
-                    "user",
-                    "assistant"
-                ):
-
-                    continue
-
-
-                if not isinstance(
-                    content,
-                    str
-                ):
-
-                    continue
-
-
-                content = content.strip()
-
-
-                if not content:
-
-                    continue
-
-
-                messages.append({
-
-                    "role":
-                        role,
-
-                    "content":
-                        content
-
-                })
-
-
-        # ----------------------------------------------------
-        # MESSAGE ACTUEL
-        # ----------------------------------------------------
-
-        messages.append({
-
-            "role":
-                "user",
-
-            "content":
-                message
-
-        })
-
-
-        # ----------------------------------------------------
-        # REQUÊTE OPENROUTER
-        # ----------------------------------------------------
-
-        payload = {
-
-            "model":
-                CHAT_MODEL,
-
-            "messages":
-                messages,
-
-            "temperature":
-                0.7
-
         }
 
 
-        response = requests.post(
+        if (!text) {
+            return;
+        }
 
-            OPENROUTER_URL +
-            "/chat/completions",
 
-            headers=
-                openrouter_headers(),
+        loading = true;
 
-            json=
-                payload,
+        sendButton.disabled = true;
 
-            timeout=
-                120
 
-        )
+        addMessage(
+            "user",
+            text
+        );
 
 
-        # ----------------------------------------------------
-        # RÉPONSE JSON
-        # ----------------------------------------------------
+        messageInput.value = "";
 
-        try:
+        autoResize();
 
-            result =
-                response.json()
 
-        except Exception:
+        addLoading();
 
-            return jsonify({
 
-                "success":
-                    False,
+        try {
 
-                "error":
-                    "OpenRouter a renvoyé une réponse invalide."
+            const response =
+                await fetch(
+                    "/api/chat",
+                    {
 
-            }), 502
+                        method: "POST",
 
-
-        # ----------------------------------------------------
-        # ERREUR OPENROUTER
-        # ----------------------------------------------------
-
-        if not response.ok:
-
-            return jsonify({
-
-                "success":
-                    False,
-
-                "error":
-                    get_openrouter_error(
-                        result
-                    )
-
-            }), response.status_code
-
-
-        # ----------------------------------------------------
-        # EXTRACTION RÉPONSE
-        # ----------------------------------------------------
-
-        choices =
-            result.get(
-                "choices",
-                []
-            )
-
-
-        answer = ""
-
-
-        if isinstance(
-            choices,
-            list
-        ) and choices:
-
-            first =
-                choices[0]
-
-
-            if isinstance(
-                first,
-                dict
-            ):
-
-                message_data =
-                    first.get(
-                        "message",
-                        {}
-                    )
-
-
-                if isinstance(
-                    message_data,
-                    dict
-                ):
-
-                    content =
-                        message_data.get(
-                            "content",
-                            ""
-                        )
-
-
-                    if isinstance(
-                        content,
-                        str
-                    ):
-
-                        answer =
-                            content
-
-
-        if not answer:
-
-            answer =
-                "Je n'ai pas pu générer une réponse."
-
-
-        # ----------------------------------------------------
-        # RÉPONSE AU NAVIGATEUR
-        # ----------------------------------------------------
-
-        return jsonify({
-
-            "success":
-                True,
-
-            "response":
-                answer
-
-        })
-
-
-    # --------------------------------------------------------
-    # TIMEOUT
-    # --------------------------------------------------------
-
-    except requests.Timeout:
-
-        return jsonify({
-
-            "success":
-                False,
-
-            "error":
-                (
-                    "Le délai de réponse d'OpenRouter "
-                    "a été dépassé."
-                )
-
-        }), 504
-
-
-    # --------------------------------------------------------
-    # ERREUR RÉSEAU
-    # --------------------------------------------------------
-
-    except requests.RequestException as error:
-
-        print(
-            "OpenRouter error:",
-            error
-        )
-
-
-        return jsonify({
-
-            "success":
-                False,
-
-            "error":
-                "Impossible de contacter OpenRouter."
-
-        }), 502
-
-
-    # --------------------------------------------------------
-    # ERREUR GÉNÉRALE
-    # --------------------------------------------------------
-
-    except Exception as error:
-
-        print(
-            "Chat error:",
-            error
-        )
-
-
-        return jsonify({
-
-            "success":
-                False,
-
-            "error":
-                "Erreur interne du serveur."
-
-        }), 500
-
-
-# ============================================================
-# ANALYSE D'IMAGE
-# ============================================================
-
-@app.route(
-    "/api/analyze-image",
-    methods=["POST"]
-)
-def analyze_image():
-
-    try:
-
-        if not OPENROUTER_API_KEY:
-
-            return jsonify({
-
-                "success":
-                    False,
-
-                "error":
-                    "OPENROUTER_API_KEY n'est pas configurée."
-
-            }), 500
-
-
-        data = request.get_json(
-            silent=True
-        )
-
-
-        if not isinstance(
-            data,
-            dict
-        ):
-
-            return jsonify({
-
-                "success":
-                    False,
-
-                "error":
-                    "Données invalides."
-
-            }), 400
-
-
-        image_data = data.get(
-            "image",
-            ""
-        )
-
-
-        prompt = data.get(
-            "prompt",
-            "Décris cette image en détail."
-        )
-
-
-        if not isinstance(
-            image_data,
-            str
-        ):
-
-            return jsonify({
-
-                "success":
-                    False,
-
-                "error":
-                    "Image invalide."
-
-            }), 400
-
-
-        if not image_data.startswith(
-            "data:image/"
-        ):
-
-            return jsonify({
-
-                "success":
-                    False,
-
-                "error":
-                    "Format d'image non supporté."
-
-            }), 400
-
-
-        payload = {
-
-            "model":
-                VISION_MODEL,
-
-            "messages": [
-
-                {
-
-                    "role":
-                        "user",
-
-                    "content": [
-
-                        {
-
-                            "type":
-                                "text",
-
-                            "text":
-                                prompt
-
+                        headers: {
+                            "Content-Type":
+                                "application/json"
                         },
 
-                        {
+                        body:
+                            JSON.stringify({
 
-                            "type":
-                                "image_url",
+                                message:
+                                    text,
 
-                            "image_url": {
+                                history:
+                                    history
 
-                                "url":
-                                    image_data
+                            })
 
-                            }
+                    }
+                );
 
-                        }
 
-                    ]
+            let data;
 
-                }
 
-            ]
+            try {
+
+                data =
+                    await response.json();
+
+            } catch {
+
+                throw new Error(
+                    "Le serveur a renvoyé une réponse invalide."
+                );
+
+            }
+
+
+            removeLoading();
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    data.error ||
+                    "Impossible de contacter Messie IA."
+                );
+
+            }
+
+
+            if (!data.response) {
+
+                throw new Error(
+                    "Messie IA n'a pas renvoyé de réponse."
+                );
+
+            }
+
+
+            addMessage(
+                "assistant",
+                data.response
+            );
+
+
+            history.push({
+
+                role:
+                    "user",
+
+                content:
+                    text
+
+            });
+
+
+            history.push({
+
+                role:
+                    "assistant",
+
+                content:
+                    data.response
+
+            });
+
+
+        } catch (error) {
+
+            removeLoading();
+
+
+            addMessage(
+                "assistant",
+                error.message ||
+                "Impossible de contacter Messie IA.",
+                true
+            );
+
+        } finally {
+
+            loading = false;
+
+            sendButton.disabled =
+                false;
 
         }
 
+    }
 
-        response = requests.post(
 
-            OPENROUTER_URL +
-            "/chat/completions",
+    // ========================================================
+    // ANALYSER UNE IMAGE
+    // ========================================================
 
-            headers=
-                openrouter_headers(),
+    async function analyzeImage() {
 
-            json=
-                payload,
+        if (!selectedImage) {
+            return;
+        }
 
-            timeout=
-                120
 
-        )
+        loading = true;
 
+        sendButton.disabled = true;
 
-        result =
-            response.json()
 
+        const prompt =
+            messageInput.value.trim() ||
+            "Décris et analyse cette image en détail.";
 
-        if not response.ok:
 
-            return jsonify({
+        addMessage(
+            "user",
+            prompt
+        );
 
-                "success":
-                    False,
 
-                "error":
-                    get_openrouter_error(
-                        result
-                    )
+        messageInput.value = "";
 
-            }), response.status_code
+        autoResize();
 
 
-        choices =
-            result.get(
-                "choices",
-                []
-            )
+        addLoading();
 
 
-        answer = ""
+        try {
 
+            const response =
+                await fetch(
+                    "/api/analyze-image",
+                    {
 
-        if choices:
+                        method: "POST",
 
-            first =
-                choices[0]
+                        headers: {
+                            "Content-Type":
+                                "application/json"
+                        },
 
+                        body:
+                            JSON.stringify({
 
-            message_data =
-                first.get(
-                    "message",
-                    {}
-                )
+                                image:
+                                    selectedImage,
 
+                                prompt:
+                                    prompt
 
-            if isinstance(
-                message_data,
-                dict
-            ):
+                            })
 
-                content =
-                    message_data.get(
-                        "content",
-                        ""
-                    )
+                    }
+                );
 
 
-                if isinstance(
-                    content,
-                    str
-                ):
+            const data =
+                await response.json();
 
-                    answer =
-                        content
 
+            removeLoading();
 
-        return jsonify({
 
-            "success":
-                True,
+            if (!response.ok) {
 
-            "response":
-                answer
+                throw new Error(
+                    data.error ||
+                    "Impossible d'analyser l'image."
+                );
 
-        })
+            }
 
 
-    except requests.Timeout:
+            addMessage(
+                "assistant",
+                data.response ||
+                "Je n'ai pas pu analyser cette image."
+            );
 
-        return jsonify({
 
-            "success":
-                False,
+        } catch (error) {
 
-            "error":
-                "Le délai d'analyse est dépassé."
+            removeLoading();
 
-        }), 504
 
+            addMessage(
+                "assistant",
+                error.message ||
+                "Impossible d'analyser l'image.",
+                true
+            );
 
-    except requests.RequestException:
+        } finally {
 
-        return jsonify({
+            loading = false;
 
-            "success":
-                False,
+            sendButton.disabled =
+                false;
 
-            "error":
-                "Impossible de contacter OpenRouter."
+        }
 
-        }), 502
+    }
 
 
-    except Exception as error:
+    // ========================================================
+    // IMAGE SÉLECTIONNÉE
+    // ========================================================
 
-        print(
-            "Image analysis error:",
-            error
-        )
+    imageInput.addEventListener(
+        "change",
+        function () {
 
+            const file =
+                this.files[0];
 
-        return jsonify({
 
-            "success":
-                False,
+            if (!file) {
+                return;
+            }
 
-            "error":
-                "Erreur pendant l'analyse de l'image."
 
-        }), 500
+            if (!file.type.startsWith("image/")) {
 
+                alert(
+                    "Veuillez sélectionner une image."
+                );
 
-# ============================================================
-# ERREUR OPENROUTER
-# ============================================================
+                return;
 
-def get_openrouter_error(data):
+            }
 
-    if not isinstance(
-        data,
-        dict
-    ):
 
-        return "Erreur OpenRouter."
+            const reader =
+                new FileReader();
 
 
-    error =
-        data.get(
-            "error"
-        )
+            reader.onload =
+                function (event) {
 
+                    selectedImage =
+                        event.target.result;
 
-    if isinstance(
-        error,
-        dict
-    ):
 
-        message =
-            error.get(
-                "message"
-            )
+                    imagePreview.src =
+                        selectedImage;
 
 
-        if isinstance(
-            message,
-            str
-        ):
+                    imagePreviewContainer.style.display =
+                        "block";
 
-            return message
+                };
 
 
-    if isinstance(
-        error,
-        str
-    ):
+            reader.readAsDataURL(
+                file
+            );
 
-        return error
+        }
+    );
 
 
-    return "Erreur OpenRouter."
+    // ========================================================
+    // SUPPRIMER IMAGE
+    // ========================================================
 
+    removeImage.addEventListener(
+        "click",
+        function () {
 
-# ============================================================
-# LANCEMENT
-# ============================================================
+            selectedImage = null;
 
-if __name__ == "__main__":
+            imageInput.value = "";
 
-    port = int(
+            imagePreview.src = "";
 
-        os.environ.get(
-            "PORT",
-            "5000"
-        )
+            imagePreviewContainer.style.display =
+                "none";
 
-    )
+        }
+    );
 
 
-    app.run(
+    // ========================================================
+    // NOUVELLE DISCUSSION
+    // ========================================================
 
-        host="0.0.0.0",
+    clearButton.addEventListener(
+        "click",
+        function () {
 
-        port=port,
+            history = [];
 
-        debug=False
+            selectedImage = null;
 
-    )
+            imageInput.value = "";
+
+            imagePreview.src = "";
+
+            imagePreviewContainer.style.display =
+                "none";
+
+
+            messagesContainer.innerHTML = `
+                <div
+                    class="welcome"
+                    id="welcome"
+                >
+
+                    <div class="welcome-logo">
+                        M
+                    </div>
+
+                    <h2>
+                        Bonjour 👋
+                    </h2>
+
+                    <p>
+                        Je suis Messie IA.
+                        Pose-moi une question,
+                        demande-moi de t'aider,
+                        d'apprendre ou d'analyser
+                        une image.
+                    </p>
+
+                </div>
+            `;
+
+        }
+    );
+
+
+    // ========================================================
+    // ENTRÉE CLAVIER
+    // ========================================================
+
+    messageInput.addEventListener(
+        "keydown",
+        function (event) {
+
+            if (
+                event.key === "Enter" &&
+                !event.shiftKey
+            ) {
+
+                event.preventDefault();
+
+                sendMessage();
+
+            }
+
+        }
+    );
+
+
+    // ========================================================
+    // REDIMENSIONNEMENT TEXTAREA
+    // ========================================================
+
+    function autoResize() {
+
+        messageInput.style.height =
+            "auto";
+
+
+        messageInput.style.height =
+            Math.min(
+                messageInput.scrollHeight,
+                140
+            ) + "px";
+
+    }
+
+
+    messageInput.addEventListener(
+        "input",
+        autoResize
+    );
+
+
+    // ========================================================
+    // BOUTON ENVOYER
+    // ========================================================
+
+    sendButton.addEventListener(
+        "click",
+        sendMessage
+    );
+
+</script>
+
+</body>
+</html>
 
 
 
