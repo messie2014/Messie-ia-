@@ -1363,8 +1363,143 @@
     // ========================================================
 
     generateButton.addEventListener(
-        "click",
-        async function() {
+"click",
+async function() {
+
+    const prompt =
+        promptElement.value.trim();
+
+    if (!prompt) {
+
+        alert(
+            "Décris l'image que tu veux créer."
+        );
+
+        return;
+    }
+
+    setStatus(
+        "Génération de l'image..."
+    );
+
+    generateButton.disabled =
+        true;
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/generate-image",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+                    body: JSON.stringify({
+
+                        prompt:
+                            prompt,
+
+                        aspect_ratio:
+                            "1:1",
+
+                        resolution:
+                            "1K",
+
+                        quality:
+                            "auto",
+
+                        output_format:
+                            "png"
+
+                    })
+                }
+            );
+
+        // On lit d'abord la réponse comme du texte.
+        // Cela permet de voir la vraie réponse du serveur
+        // même si elle n'est pas au format JSON.
+
+        const responseText =
+            await response.text();
+
+        let data;
+
+        try {
+
+            data =
+                JSON.parse(
+                    responseText
+                );
+
+        } catch (jsonError) {
+
+            console.error(
+                "Réponse non JSON du serveur:",
+                responseText
+            );
+
+            throw new Error(
+                "Le serveur a renvoyé une réponse inattendue : " +
+                responseText.substring(0, 300)
+            );
+        }
+
+        if (!response.ok) {
+
+            throw new Error(
+                data.error ||
+                "Erreur du serveur."
+            );
+        }
+
+        if (
+            !data.success ||
+            !data.images ||
+            !data.images.length
+        ) {
+
+            throw new Error(
+                data.error ||
+                "Aucune image générée."
+            );
+        }
+
+        data.images.forEach(
+            image => {
+
+                addMessage(
+                    "assistant",
+                    "Voici ton image :",
+                    image.data
+                );
+
+            }
+        );
+
+    } catch (error) {
+
+        console.error(
+            "Erreur génération image:",
+            error
+        );
+
+        addMessage(
+            "assistant",
+            "❌ " + error.message
+        );
+
+    }
+
+    generateButton.disabled =
+        false;
+
+    setStatus("");
+
+}
+
+);
 
             const prompt =
                 promptElement.value.trim();
