@@ -1628,8 +1628,6 @@ def chat():
     "max_tokens": 500
 }
 
-        }
-
 
         print(
             "Messie IA CHAT - modèle:",
