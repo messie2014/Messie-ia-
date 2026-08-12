@@ -1635,13 +1635,33 @@ def chat():
         )
 
 
-        try:
-    response = requests.post(
-        OPENROUTER_URL + "/chat/completions",
-        headers=openrouter_headers(),
-        json=payload,
-        timeout=(15, 45)
-    )
+                try:
+
+            response = requests.post(
+                OPENROUTER_URL + "/chat/completions",
+                headers=openrouter_headers(),
+                json=payload,
+                timeout=(15, 45)
+            )
+
+        except requests.exceptions.Timeout:
+
+            return jsonify({
+                "success": False,
+                "error": "OpenRouter met trop de temps à répondre. Réessaie dans quelques secondes."
+            }), 504
+
+        except requests.exceptions.RequestException as e:
+
+            print(
+                "OpenRouter REQUEST ERROR:",
+                str(e)
+            )
+
+            return jsonify({
+                "success": False,
+                "error": "Impossible de contacter OpenRouter."
+            }), 502
 
 except requests.exceptions.Timeout:
     return jsonify({
