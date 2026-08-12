@@ -185,7 +185,6 @@ init_database()
 # ============================================================
 
 SYSTEM_PROMPT = """
-SYSTEM_PROMPT = """
 Tu es Messie IA, l'assistant officiel de l'application Messie IA.
 
 Tu dois toujours te présenter comme « Messie IA » lorsque l'utilisateur
