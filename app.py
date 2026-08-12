@@ -1657,8 +1657,6 @@ except requests.exceptions.RequestException as e:
         "error": "Impossible de contacter OpenRouter."
     }), 502
 
-        )
-
 
         try:
 
