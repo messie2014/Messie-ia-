@@ -10,8 +10,7 @@ from flask import (
     render_template,
     request,
     jsonify,
-    session,
-    redirect
+    session
 )
 
 from werkzeug.security import (
@@ -40,6 +39,13 @@ app.secret_key = os.environ.get(
     "SECRET_KEY",
     "messie-ia-change-this-secret-key"
 )
+
+# Sécurité supplémentaire pour les cookies de session
+app.config["SESSION_COOKIE_HTTPONLY"] = True
+app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
+
+if os.environ.get("RENDER"):
+    app.config["SESSION_COOKIE_SECURE"] = True
 
 
 # ============================================================
@@ -92,6 +98,11 @@ def get_db():
     )
 
     connection.row_factory = sqlite3.Row
+
+    # Active les clés étrangères SQLite
+    connection.execute(
+        "PRAGMA foreign_keys = ON"
+    )
 
     return connection
 
@@ -220,8 +231,6 @@ Si tu n'es pas certain d'une information, indique-le clairement.
 
 Tu es l'assistant officiel de l'application Messie IA.
 """.strip()
-
-
 
 
 # ============================================================
@@ -716,6 +725,8 @@ def register():
 
         connection.close()
 
+
+        session.clear()
 
         session["user_id"] = user_id
 
@@ -1455,9 +1466,6 @@ def chat():
         ]
 
 
-        # Si un utilisateur est connecté et qu'une conversation
-        # existe, on récupère son historique depuis SQLite.
-
         user = current_user()
 
 
@@ -1622,11 +1630,19 @@ def chat():
         # ----------------------------------------------------
 
         payload = {
-    "model": CHAT_MODEL,
-    "messages": messages,
-    "temperature": 0.7,
-    "max_tokens": 500
-}
+
+            "model":
+                CHAT_MODEL,
+
+            "messages":
+                messages,
+
+            "temperature":
+                0.7,
+
+            "max_tokens":
+                500
+        }
 
 
         print(
@@ -1635,7 +1651,12 @@ def chat():
         )
 
 
-                try:
+        # ====================================================
+        # CORRECTION PRINCIPALE :
+        # UN SEUL BLOC TRY / EXCEPT
+        # ====================================================
+
+        try:
 
             response = requests.post(
                 OPENROUTER_URL + "/chat/completions",
@@ -1644,39 +1665,41 @@ def chat():
                 timeout=(15, 45)
             )
 
+
         except requests.exceptions.Timeout:
 
             return jsonify({
-                "success": False,
-                "error": "OpenRouter met trop de temps à répondre. Réessaie dans quelques secondes."
+
+                "success":
+                    False,
+
+                "error":
+                    "OpenRouter met trop de temps à répondre. Réessaie dans quelques secondes."
+
             }), 504
 
-        except requests.exceptions.RequestException as e:
+
+        except requests.exceptions.RequestException as error:
 
             print(
                 "OpenRouter REQUEST ERROR:",
-                str(e)
+                str(error)
             )
 
             return jsonify({
-                "success": False,
-                "error": "Impossible de contacter OpenRouter."
+
+                "success":
+                    False,
+
+                "error":
+                    "Impossible de contacter OpenRouter."
+
             }), 502
 
-except requests.exceptions.Timeout:
-    return jsonify({
-        "success": False,
-        "error": "OpenRouter met trop de temps à répondre. Réessaie dans quelques secondes."
-    }), 504
 
-except requests.exceptions.RequestException as e:
-    print("OpenRouter REQUEST ERROR:", str(e))
-
-    return jsonify({
-        "success": False,
-        "error": "Impossible de contacter OpenRouter."
-    }), 502
-
+        # ----------------------------------------------------
+        # RÉPONSE OPENROUTER
+        # ----------------------------------------------------
 
         try:
 
@@ -2141,6 +2164,32 @@ def analyze_image():
                 )
 
         })
+
+
+    except requests.Timeout:
+
+        return jsonify({
+
+            "success":
+                False,
+
+            "error":
+                "L'analyse de l'image prend trop de temps."
+
+        }), 504
+
+
+    except requests.RequestException:
+
+        return jsonify({
+
+            "success":
+                False,
+
+            "error":
+                "Impossible de contacter OpenRouter."
+
+        }), 502
 
 
     except Exception as error:
@@ -2725,6 +2774,3 @@ if __name__ == "__main__":
         port=port,
         debug=False
     )
-
-
-
