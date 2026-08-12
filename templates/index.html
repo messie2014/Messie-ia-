@@ -433,9 +433,21 @@
         ＋ Nouvelle conversation
     </button>
 
-    <div class="conversation-title">
-        Mes conversations
-    </div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;"><div class="conversation-title" style="margin-bottom:0;">
+    Mes conversations
+</div>
+
+<button
+    onclick="document.getElementById('sidebar').classList.remove('open')"
+    style="border:0;background:transparent;color:white;font-size:18px;cursor:pointer;"
+    title="Retour à la conversation"
+>
+    ←
+</button>
+
+</div>
+
+</button>
 
     <div id="conversationList"></div>
 
