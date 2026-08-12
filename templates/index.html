@@ -1,6 +1,6 @@
-<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8">
-
-<meta
+<!DOCTYPE html><html lang="fr">
+<head>
+    <meta charset="UTF-8"><meta
     name="viewport"
     content="width=device-width, initial-scale=1.0"
 >
@@ -18,8 +18,16 @@
         box-sizing: border-box;
     }
 
+    html,
     body {
         margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+    }
+
+    body {
         font-family: Arial, sans-serif;
         background: #f3f4f6;
         color: #111827;
@@ -36,7 +44,8 @@
     }
 
     .app {
-        min-height: 100vh;
+        width: 100%;
+        height: 100vh;
         display: flex;
     }
 
@@ -46,6 +55,8 @@
 
     .sidebar {
         width: 280px;
+        height: 100vh;
+        flex-shrink: 0;
         background: #111827;
         color: white;
         padding: 18px;
@@ -75,12 +86,27 @@
     .conversation-title {
         font-size: 13px;
         opacity: .7;
-        margin-bottom: 10px;
+        margin-bottom: 8px;
+    }
+
+    .back-button {
+        border: 0;
+        background: transparent;
+        color: white;
+        text-align: left;
+        padding: 7px 0;
+        margin-bottom: 8px;
+        font-size: 14px;
+    }
+
+    .back-button:hover {
+        opacity: .8;
     }
 
     #conversationList {
         overflow-y: auto;
         flex: 1;
+        min-height: 0;
     }
 
     .conversation {
@@ -102,6 +128,7 @@
         border-top: 1px solid #374151;
         padding-top: 15px;
         margin-top: 15px;
+        flex-shrink: 0;
     }
 
     .account-name {
@@ -131,19 +158,27 @@
 
     .main {
         flex: 1;
+        min-width: 0;
+        height: 100vh;
         display: flex;
         flex-direction: column;
-        min-width: 0;
     }
 
     .topbar {
         height: 64px;
+        flex-shrink: 0;
         background: white;
         border-bottom: 1px solid #e5e7eb;
         display: flex;
         align-items: center;
         justify-content: space-between;
         padding: 0 18px;
+    }
+
+    .topbar-left {
+        display: flex;
+        align-items: center;
+        gap: 10px;
     }
 
     .topbar-title {
@@ -155,6 +190,7 @@
         border: 0;
         background: transparent;
         font-size: 24px;
+        padding: 5px;
     }
 
     /* ==================================================
@@ -163,6 +199,7 @@
 
     #messages {
         flex: 1;
+        min-height: 0;
         overflow-y: auto;
         padding: 25px;
     }
@@ -214,6 +251,7 @@
     }
 
     .image-preview {
+        display: block;
         max-width: 280px;
         max-height: 280px;
         border-radius: 12px;
@@ -225,6 +263,7 @@
     ================================================== */
 
     .composer {
+        flex-shrink: 0;
         background: white;
         border-top: 1px solid #e5e7eb;
         padding: 14px;
@@ -268,6 +307,12 @@
         background: #f3f4f6;
     }
 
+    .tool-button:disabled,
+    .send-button:disabled {
+        opacity: .6;
+        cursor: not-allowed;
+    }
+
     .send-button {
         margin-left: auto;
         border: 0;
@@ -275,6 +320,10 @@
         background: #2563eb;
         color: white;
         padding: 10px 17px;
+    }
+
+    .send-button:hover {
+        background: #1d4ed8;
     }
 
     .recording {
@@ -290,6 +339,7 @@
         font-size: 12px;
         color: #6b7280;
         margin-top: 7px;
+        min-height: 16px;
     }
 
     /* ==================================================
@@ -369,6 +419,11 @@
 
     @media (max-width: 760px) {
 
+        html,
+        body {
+            overflow: hidden;
+        }
+
         .sidebar {
             position: fixed;
             z-index: 50;
@@ -409,6 +464,11 @@
         .send-button {
             margin-left: 0;
         }
+
+        .tool-button,
+        .send-button {
+            padding: 9px 10px;
+        }
     }
 
 </style>
@@ -429,25 +489,22 @@
     <button
         id="newChatButton"
         class="new-chat"
+        type="button"
     >
         ＋ Nouvelle conversation
     </button>
 
     <div class="conversation-title">
-    Mes conversations
-</div>
+        Mes conversations
+    </div>
 
-<button
-    onclick="document.getElementById('sidebar').classList.remove('open')"
-    style="border:0;background:transparent;color:white;font-size:18px;cursor:pointer;"
-    title="Retour à la conversation"
->
-    ←
-</button>
-
-</div>
-
-</button>
+    <button
+        id="backToChatButton"
+        class="back-button"
+        type="button"
+    >
+        ← Retour à la conversation
+    </button>
 
     <div id="conversationList"></div>
 
@@ -470,6 +527,7 @@
         <button
             id="accountButton"
             class="account-button"
+            type="button"
         >
             Se connecter
         </button>
@@ -487,11 +545,13 @@
 
     <header class="topbar">
 
-        <div>
+        <div class="topbar-left">
 
             <button
                 id="mobileMenu"
                 class="mobile-menu"
+                type="button"
+                aria-label="Menu"
             >
                 ☰
             </button>
@@ -657,6 +717,7 @@
         <button
             id="authSubmit"
             class="primary"
+            type="button"
         >
             Se connecter
         </button>
@@ -664,6 +725,7 @@
         <button
             id="authClose"
             class="secondary"
+            type="button"
         >
             Fermer
         </button>
@@ -693,6 +755,12 @@
     let authMode = "login";
 
     let selectedImage = null;
+
+    let recognition = null;
+
+    let isRecording = false;
+
+    let voiceTextBeforeRecording = "";
 
 
     // ========================================================
@@ -771,6 +839,9 @@
     const sidebar =
         document.getElementById("sidebar");
 
+    const backToChatButton =
+        document.getElementById("backToChatButton");
+
 
     // ========================================================
     // OUTILS
@@ -778,20 +849,8 @@
 
     function setStatus(text) {
 
-        statusElement.textContent = text || "";
-
-    }
-
-
-    function escapeHtml(text) {
-
-        const div =
-            document.createElement("div");
-
-        div.textContent =
-            text;
-
-        return div.innerHTML;
+        statusElement.textContent =
+            text || "";
 
     }
 
@@ -843,6 +902,7 @@
                 img
             );
 
+
             if (content) {
 
                 const text =
@@ -887,11 +947,14 @@
 
     async function newConversation() {
 
-        currentConversationId = null;
+        currentConversationId =
+            null;
 
-        localHistory = [];
+        localHistory =
+            [];
 
-        messagesElement.innerHTML = "";
+        messagesElement.innerHTML =
+            "";
 
         messagesElement.appendChild(
             welcomeElement
@@ -899,6 +962,11 @@
 
         welcomeElement.style.display =
             "block";
+
+
+        sidebar.classList.remove(
+            "open"
+        );
 
 
         try {
@@ -920,6 +988,17 @@
                 );
 
 
+            if (response.status === 401) {
+
+                setStatus(
+                    "Connecte-toi pour sauvegarder les conversations."
+                );
+
+                return;
+
+            }
+
+
             const data =
                 await response.json();
 
@@ -935,7 +1014,10 @@
 
         } catch (error) {
 
-            console.log(error);
+            console.log(
+                "Nouvelle conversation:",
+                error
+            );
 
         }
 
@@ -976,6 +1058,7 @@
 
             if (
                 !data.success ||
+                !data.conversations ||
                 !data.conversations.length
             ) {
 
@@ -991,19 +1074,30 @@
                 conversation => {
 
                     const button =
-                        document.createElement("button");
+                        document.createElement(
+                            "button"
+                        );
 
                     button.className =
                         "conversation";
+
+                    button.type =
+                        "button";
 
                     button.textContent =
                         "💬 " +
                         conversation.title;
 
-                    button.onclick =
-                        () => loadConversation(
-                            conversation.id
-                        );
+                    button.addEventListener(
+                        "click",
+                        function() {
+
+                            loadConversation(
+                                conversation.id
+                            );
+
+                        }
+                    );
 
                     conversationList.appendChild(
                         button
@@ -1015,7 +1109,10 @@
 
         } catch (error) {
 
-            console.log(error);
+            console.log(
+                "Chargement conversations:",
+                error
+            );
 
         }
 
@@ -1023,7 +1120,7 @@
 
 
     // ========================================================
-    // CHARGER CONVERSATION
+    // CHARGER UNE CONVERSATION
     // ========================================================
 
     async function loadConversation(
@@ -1042,9 +1139,12 @@
                 await response.json();
 
 
-            if (!data.success) {
+            if (!response.ok || !data.success) {
 
-                return;
+                throw new Error(
+                    data.error ||
+                    "Conversation introuvable."
+                );
 
             }
 
@@ -1053,37 +1153,55 @@
                 id;
 
 
-            localHistory = [];
+            localHistory =
+                [];
 
 
-            messagesElement.innerHTML = "";
+            messagesElement.innerHTML =
+                "";
 
 
             const conversation =
                 data.conversation;
 
 
-            conversation.messages.forEach(
-                message => {
+            if (
+                !conversation.messages ||
+                !conversation.messages.length
+            ) {
 
-                    addMessage(
-                        message.role,
-                        message.content
-                    );
+                messagesElement.appendChild(
+                    welcomeElement
+                );
 
+                welcomeElement.style.display =
+                    "block";
 
-                    localHistory.push({
+            } else {
 
-                        role:
+                conversation.messages.forEach(
+                    message => {
+
+                        addMessage(
                             message.role,
-
-                        content:
                             message.content
+                        );
 
-                    });
 
-                }
-            );
+                        localHistory.push({
+
+                            role:
+                                message.role,
+
+                            content:
+                                message.content
+
+                        });
+
+                    }
+                );
+
+            }
 
 
             sidebar.classList.remove(
@@ -1093,7 +1211,15 @@
 
         } catch (error) {
 
-            console.log(error);
+            console.log(
+                "Chargement conversation:",
+                error
+            );
+
+            addMessage(
+                "assistant",
+                "❌ " + error.message
+            );
 
         }
 
@@ -1141,6 +1267,7 @@
         sendButton.disabled =
             true;
 
+
         setStatus(
             "Messie IA réfléchit..."
         );
@@ -1175,8 +1302,27 @@
                 );
 
 
-            const data =
-                await response.json();
+            const responseText =
+                await response.text();
+
+
+            let data;
+
+
+            try {
+
+                data =
+                    JSON.parse(
+                        responseText
+                    );
+
+            } catch (jsonError) {
+
+                throw new Error(
+                    "Le serveur a renvoyé une réponse inattendue."
+                );
+
+            }
 
 
             if (!response.ok) {
@@ -1235,6 +1381,12 @@
 
         } catch (error) {
 
+            console.error(
+                "Erreur chat:",
+                error
+            );
+
+
             addMessage(
                 "assistant",
                 "❌ " + error.message
@@ -1255,7 +1407,7 @@
 
 
     // ========================================================
-    // IMAGE
+    // ANALYSE D'IMAGE
     // ========================================================
 
     fileInput.addEventListener(
@@ -1267,6 +1419,18 @@
 
 
             if (!file) {
+
+                return;
+
+            }
+
+
+            if (!file.type.startsWith("image/")) {
+
+                addMessage(
+                    "assistant",
+                    "❌ Veuillez sélectionner une image."
+                );
 
                 return;
 
@@ -1320,8 +1484,27 @@
                             );
 
 
-                        const data =
-                            await response.json();
+                        const responseText =
+                            await response.text();
+
+
+                        let data;
+
+
+                        try {
+
+                            data =
+                                JSON.parse(
+                                    responseText
+                                );
+
+                        } catch (jsonError) {
+
+                            throw new Error(
+                                "Le serveur a renvoyé une réponse inattendue."
+                            );
+
+                        }
 
 
                         if (!response.ok) {
@@ -1334,6 +1517,16 @@
                         }
 
 
+                        if (!data.success) {
+
+                            throw new Error(
+                                data.error ||
+                                "Impossible d'analyser l'image."
+                            );
+
+                        }
+
+
                         addMessage(
                             "assistant",
                             data.response
@@ -1341,6 +1534,12 @@
 
 
                     } catch (error) {
+
+                        console.error(
+                            "Erreur image:",
+                            error
+                        );
+
 
                         addMessage(
                             "assistant",
@@ -1375,143 +1574,8 @@
     // ========================================================
 
     generateButton.addEventListener(
-"click",
-async function() {
-
-    const prompt =
-        promptElement.value.trim();
-
-    if (!prompt) {
-
-        alert(
-            "Décris l'image que tu veux créer."
-        );
-
-        return;
-    }
-
-    setStatus(
-        "Génération de l'image..."
-    );
-
-    generateButton.disabled =
-        true;
-
-    try {
-
-        const response =
-            await fetch(
-                "/api/generate-image",
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type":
-                            "application/json"
-                    },
-                    body: JSON.stringify({
-
-                        prompt:
-                            prompt,
-
-                        aspect_ratio:
-                            "1:1",
-
-                        resolution:
-                            "1K",
-
-                        quality:
-                            "auto",
-
-                        output_format:
-                            "png"
-
-                    })
-                }
-            );
-
-        // On lit d'abord la réponse comme du texte.
-        // Cela permet de voir la vraie réponse du serveur
-        // même si elle n'est pas au format JSON.
-
-        const responseText =
-            await response.text();
-
-        let data;
-
-        try {
-
-            data =
-                JSON.parse(
-                    responseText
-                );
-
-        } catch (jsonError) {
-
-            console.error(
-                "Réponse non JSON du serveur:",
-                responseText
-            );
-
-            throw new Error(
-                "Le serveur a renvoyé une réponse inattendue : " +
-                responseText.substring(0, 300)
-            );
-        }
-
-        if (!response.ok) {
-
-            throw new Error(
-                data.error ||
-                "Erreur du serveur."
-            );
-        }
-
-        if (
-            !data.success ||
-            !data.images ||
-            !data.images.length
-        ) {
-
-            throw new Error(
-                data.error ||
-                "Aucune image générée."
-            );
-        }
-
-        data.images.forEach(
-            image => {
-
-                addMessage(
-                    "assistant",
-                    "Voici ton image :",
-                    image.data
-                );
-
-            }
-        );
-
-    } catch (error) {
-
-        console.error(
-            "Erreur génération image:",
-            error
-        );
-
-        addMessage(
-            "assistant",
-            "❌ " + error.message
-        );
-
-    }
-
-    generateButton.disabled =
-        false;
-
-    setStatus("");
-
-}
-
-);
+        "click",
+        async function() {
 
             const prompt =
                 promptElement.value.trim();
@@ -1570,8 +1634,32 @@ async function() {
                     );
 
 
-                const data =
-                    await response.json();
+                const responseText =
+                    await response.text();
+
+
+                let data;
+
+
+                try {
+
+                    data =
+                        JSON.parse(
+                            responseText
+                        );
+
+                } catch (jsonError) {
+
+                    console.error(
+                        "Réponse non JSON:",
+                        responseText
+                    );
+
+                    throw new Error(
+                        "Le serveur a renvoyé une réponse inattendue."
+                    );
+
+                }
 
 
                 if (!response.ok) {
@@ -1611,7 +1699,17 @@ async function() {
                 );
 
 
+                promptElement.value =
+                    "";
+
+
             } catch (error) {
+
+                console.error(
+                    "Erreur génération image:",
+                    error
+                );
+
 
                 addMessage(
                     "assistant",
@@ -1637,13 +1735,6 @@ async function() {
     // ========================================================
     // 🎙️ VOCAL → TEXTE
     // ========================================================
-
-    let recognition = null;
-
-    let isRecording = false;
-
-    let voiceTextBeforeRecording = "";
-
 
     function setupVoice() {
 
@@ -1758,11 +1849,6 @@ async function() {
                         transcript;
 
                 }
-
-
-                promptElement.dispatchEvent(
-                    new Event("input")
-                );
 
             };
 
@@ -1987,41 +2073,52 @@ async function() {
         "click",
         async function() {
 
-            const response =
-                await fetch(
-                    "/api/me"
-                );
+            try {
 
-
-            const data =
-                await response.json();
-
-
-            if (data.logged_in) {
-
-                const shouldLogout =
-                    confirm(
-                        "Voulez-vous vous déconnecter ?"
-                    );
-
-
-                if (shouldLogout) {
-
+                const response =
                     await fetch(
-                        "/api/logout",
-                        {
-                            method: "POST"
-                        }
+                        "/api/me"
                     );
 
 
-                    location.reload();
+                const data =
+                    await response.json();
+
+
+                if (data.logged_in) {
+
+                    const shouldLogout =
+                        confirm(
+                            "Voulez-vous vous déconnecter ?"
+                        );
+
+
+                    if (shouldLogout) {
+
+                        await fetch(
+                            "/api/logout",
+                            {
+                                method: "POST"
+                            }
+                        );
+
+
+                        location.reload();
+
+                    }
+
+                } else {
+
+                    openLogin();
 
                 }
 
-            } else {
+            } catch (error) {
 
-                openLogin();
+                console.log(
+                    "Compte:",
+                    error
+                );
 
             }
 
@@ -2126,8 +2223,27 @@ async function() {
                     );
 
 
-                const data =
-                    await response.json();
+                const responseText =
+                    await response.text();
+
+
+                let data;
+
+
+                try {
+
+                    data =
+                        JSON.parse(
+                            responseText
+                        );
+
+                } catch (jsonError) {
+
+                    throw new Error(
+                        "Le serveur a renvoyé une réponse inattendue."
+                    );
+
+                }
 
 
                 if (!response.ok) {
@@ -2229,7 +2345,10 @@ async function() {
 
         } catch (error) {
 
-            console.log(error);
+            console.log(
+                "Utilisateur:",
+                error
+            );
 
         }
 
@@ -2237,7 +2356,7 @@ async function() {
 
 
     // ========================================================
-    // NOUVELLE CONVERSATION
+    // BOUTONS
     // ========================================================
 
     document
@@ -2248,13 +2367,21 @@ async function() {
         );
 
 
-    // ========================================================
-    // ENVOI
-    // ========================================================
-
     sendButton.addEventListener(
         "click",
         sendMessage
+    );
+
+
+    backToChatButton.addEventListener(
+        "click",
+        function() {
+
+            sidebar.classList.remove(
+                "open"
+            );
+
+        }
     );
 
 
@@ -2277,10 +2404,6 @@ async function() {
         }
     );
 
-
-    // ========================================================
-    // MENU MOBILE
-    // ========================================================
 
     mobileMenu.addEventListener(
         "click",
@@ -2309,4 +2432,5 @@ async function() {
 
     initialize();
 
-</script></body></html>
+</script></body>
+</html>
